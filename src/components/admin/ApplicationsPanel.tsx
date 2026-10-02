@@ -121,9 +121,18 @@ export default function ApplicationsPanel() {
 
   const handleReject = async (id: string) => {
     setActionLoading(id);
-    await supabase.from("escort_applications").update({ status: "rejected" }).eq("id", id);
-    setActionLoading(null);
-    fetchApplications();
+    try {
+      await fetch("/api/applications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: "rejected" }),
+      });
+    } catch (err) {
+      console.error("Failed to reject application:", err);
+    } finally {
+      setActionLoading(null);
+      fetchApplications();
+    }
   };
 
   // Compute badge counts from allApps
