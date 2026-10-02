@@ -14,10 +14,12 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1790874662307-pretty-babes-spa-profile.png"
     ],
+    "videos": [],
     "shortBio": "Welcome to Pretty Babes Spa along Kanyanya-Bahai Road for total physical recovery and deep relaxation",
     "description": "Welcome to Pretty Babes Spa along Kanyanya-Bahai Road. Services: Full Body Massage, Incalls & Outcalls, BJ & HandJob, Threesome, Group Sex, Squirting. Contact 0764802869 / @prettybabes.spa",
     "phone": "0764802869",
     "whatsapp": "0764802869",
+    "email": "",
     "instagram": "@prettybabes.spa",
     "services": [
       "Full Body Massage",
@@ -27,8 +29,6 @@ export const staticProfiles: ProfileType[] = [
       "Group Sex",
       "Squirting"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": true,
@@ -52,10 +52,12 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1790874632710-spa-bella-vida-profile.png"
     ],
+    "videos": [],
     "shortBio": "Step Into Pure Serenity & Bliss at Spa Bella Vida along Kisaasi-Bukoto Road",
     "description": "Step Into Pure Serenity & Bliss at Spa Bella Vida. Located along Kisaasi-Bukoto Road. Services: Full Body Massage, Incalls & Outcalls, BJ & HandJob, Threesome, Group Sex, Squirting. Contact 0706902609 / @spabellavida",
     "phone": "0706902609",
     "whatsapp": "0706902609",
+    "email": "",
     "instagram": "@spabellavida",
     "services": [
       "Full Body Massage",
@@ -65,8 +67,6 @@ export const staticProfiles: ProfileType[] = [
       "Group Sex",
       "Squirting"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": true,
@@ -92,12 +92,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1788696560718-1hcgge326p7.jpg",
       "/storage/profile-images/1788696561492-odq270rkp6r.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Ready to serve you as my king with all erotic services you wish ðŸ˜˜ ",
     "phone": "0744280651",
+    "whatsapp": "0744280651",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -110,6 +112,7 @@ export const staticProfiles: ProfileType[] = [
     "id": "cc9e4fb9-a675-48e4-be02-ad14af0c0101",
     "name": "Angel",
     "age": 28,
+    "height": "",
     "bodyType": "Curvy",
     "complexion": "Brown",
     "location": "Kampala ",
@@ -120,13 +123,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1788632659003-lsnih7yna6q.jpeg",
       "/storage/profile-images/1788632661840-noyfrt58boi.jpeg"
     ],
+    "videos": [],
     "shortBio": "Iâ€™m a very open minded person and Iâ€™m here to give you great services feel free to inbox me by whats",
     "description": "",
     "phone": "0758482819",
     "whatsapp": "0758482819",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -139,6 +143,7 @@ export const staticProfiles: ProfileType[] = [
     "id": "51047df6-a7b6-498b-bdd2-56c91bfaa812",
     "name": "Miss spicy",
     "age": 23,
+    "height": "",
     "bodyType": "Curvy",
     "complexion": "Chocolate",
     "location": "Ntinda ",
@@ -149,13 +154,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1786456675482-zib6k9fjvc.jpg",
       "/storage/profile-images/1786456676756-ikcksrlpvy.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0761766507",
     "whatsapp": "+256761766507",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -180,17 +186,19 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1784101027711-8d9cw3m77wy.jpg",
       "/storage/profile-images/1784101037201-547m6yqxri6.jpg"
     ],
+    "videos": [
+      "/storage/profile-images/1784101105076-f8wglctl5d9.mp4"
+    ],
     "shortBio": "",
     "description": "In calls, out calls, massage, short, long, full package, full night, inbox me â¤ï¸ðŸ’¦ ",
     "phone": "0778544213",
+    "whatsapp": "0778544213",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [
-      "/storage/profile-images/1784101105076-f8wglctl5d9.mp4"
-    ],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -213,15 +221,17 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1789024384532-wjhuedgwqwr.jpg",
       "/storage/profile-images/1789024392545-f9doo8pc1.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "I do in calls and outcalls,  full package, long, short,  Blow job, handjob, I also do Massage, full night, inbox or call me my loveâ¤ï¸ ",
     "phone": "0764553989",
+    "whatsapp": "0764553989",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -244,15 +254,17 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1781290234490-u5dqr112xkc.jpg",
       "/storage/profile-images/1781290244843-y3lil0h67.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "I do out calls only",
     "phone": "0792921824",
+    "whatsapp": "0792921824",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -274,15 +286,17 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1781117660814-l9o6r7m4tyo.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0768930776",
+    "whatsapp": "0768930776",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -304,15 +318,17 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1781117018370-kfxqy82fuv.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0756218977",
+    "whatsapp": "0756218977",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -334,15 +350,17 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1789125435197-bdet7v0z4qe.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0744280651 ",
+    "whatsapp": "0744280651 ",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -364,15 +382,17 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780346072382-txql4h3a6y.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0761766507",
+    "whatsapp": "0761766507",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -397,15 +417,17 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1779032860987-baj2n74k22b.jpg",
       "/storage/profile-images/1779032861884-z240qcnuiap.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "I am Nattiely66ðŸ¥° located in kitante kololo, I offer companionship, massage, BJ, handjob, indoor and outdoor calls, come let me make you feel good daddyâ¤ï¸ðŸ˜˜ ",
     "phone": "0769706123",
+    "whatsapp": "0769706123",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -428,15 +450,17 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1778318367096-d1uw2yfrn9.jpeg",
       "/storage/profile-images/1778318374726-b8ht515y07e.jpeg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "+256708681458",
+    "whatsapp": "+256708681458",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -459,13 +483,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1780571616355-sy8s95izgsk.jpg",
       "/storage/profile-images/1780571638021-qrac3z6aycc.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "I do all types of massages, body to body, Erotic, deep tissue exclusives and companionshipðŸ¥°â™¥ï¸. Come experience the ultimate care, relaxation and entertainment ðŸ˜â¤ï¸.\n\nSwedish......30k, \nHalf body........25k, \nHard massage........40k, \nScrab and massage........70k, \nHot towel........70k, \n4 hands.........60k, \nBody to body.........100k, \nExtra things \nBJ with condom..........20k, \nBJ with out............40k, \nShot............50k, \nHand job..........15k, ",
     "phone": "0744163506",
     "whatsapp": "0744163506",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -493,15 +518,17 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1778413171649-lyj3cv1hh6.jpeg",
       "/storage/profile-images/1778413188183-zclx10h1899.jpeg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Daddy, I got it all that you need ðŸ¥°ðŸ†ðŸ˜› ",
     "phone": "0730552010",
+    "whatsapp": "0730552010",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -524,15 +551,17 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1783976651139-ok87si4hi9l.jpeg",
       "/storage/profile-images/1783976659279-w71apzitw1l.jpeg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0705000807",
+    "whatsapp": "0705000807",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -588,14 +617,6 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1778086719341-yod1eoxlp1o.jpg",
       "/storage/profile-images/1778086720501-xekwancje2.jpg"
     ],
-    "shortBio": "",
-    "description": "Indulge in the cityâ€™s most requested massage serviceðŸŒŸ . At Kampala Cream Best service massage spa â™¥ï¸ðŸ¥° , we pride ourselves on delivering a \"Best Service\" experience every time. From our skilled therapists to our calming atmosphere, your satisfaction is our priority. Treat yourself to the luxury you deserve.\nBook your session now and feel the difference.â™¥ï¸ðŸ’‹ðŸ†ðŸ˜ ",
-    "phone": "0706638728",
-    "whatsapp": "0707019018",
-    "services": [
-      "Dating",
-      "Companionship"
-    ],
     "videos": [
       "/storage/profile-images/1776417291422-7bs8y78x0uv.mp4",
       "/storage/profile-images/1776417434995-jhko99pddbn.mp4",
@@ -604,7 +625,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1776417784006-oyh5yj4smdn.mp4",
       "/storage/profile-images/1778086609091-9ys35ls5mgg.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "Indulge in the cityâ€™s most requested massage serviceðŸŒŸ . At Kampala Cream Best service massage spa â™¥ï¸ðŸ¥° , we pride ourselves on delivering a \"Best Service\" experience every time. From our skilled therapists to our calming atmosphere, your satisfaction is our priority. Treat yourself to the luxury you deserve.\nBook your session now and feel the difference.â™¥ï¸ðŸ’‹ðŸ†ðŸ˜ ",
+    "phone": "0706638728",
+    "whatsapp": "0707019018",
+    "email": "",
+    "instagram": "",
+    "services": [
+      "Dating",
+      "Companionship"
+    ],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -623,11 +653,12 @@ export const staticProfiles: ProfileType[] = [
     "bodyType": "Slim",
     "complexion": "Medium",
     "location": "Kasubi",
-    "rating": 4.9,
-    "profileImage": "/storage/profile-images/1790874162864-qreen.png",
+    "rating": 4.5,
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/profile-images/1790977501127-5bt2n8s.jpg",
     "images": [
-      "/storage/profile-images/1790874162864-qreen.png"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/profile-images/1790977501127-5bt2n8s.jpg"
     ],
+    "videos": [],
     "shortBio": "Available in Kasubi for relaxing erotic massage and companionship",
     "description": "Specialized in massage, dating, companionship and discreet encounters in Kasubi.",
     "phone": "0741024012",
@@ -638,12 +669,10 @@ export const staticProfiles: ProfileType[] = [
       "Companionship",
       "Hookups"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": true,
-    "isPremium": true,
+    "isPremium": false,
     "isAd": false,
     "isVerified": true,
     "adImages": []
@@ -661,14 +690,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1776371713442-rydx3c7qf4j.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0709831254",
+    "whatsapp": "0709831254",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -690,12 +721,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1776371578095-y03crj6h43.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0744163506",
+    "whatsapp": "0744163506",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -718,12 +751,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1780507511460-rhkc054jt0q.jpg",
       "/storage/profile-images/1776367731615-tju7piadu4i.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0748074491",
+    "whatsapp": "0748074491",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -747,18 +782,19 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1790811587882-kyomugisha-faith-2.jpg",
       "/storage/profile-images/1790811587883-kyomugisha-faith-3.jpg"
     ],
+    "videos": [],
     "shortBio": "Sexy & experienced mature companion available in Kireka",
     "description": "Available for incalls and outcalls in Kireka and surrounding areas.",
     "phone": "0778781452",
     "whatsapp": "0778781452",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship",
       "Incalls",
       "Outcalls"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": true,
@@ -780,15 +816,17 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775430840575-u83l3sbztcf.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0789177678",
+    "whatsapp": "0789177678",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -810,19 +848,21 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775939810646-id4g18u0j8.jpg"
     ],
+    "videos": [
+      "/storage/profile-images/1775939835821-o9h48ia5fsg.mp4",
+      "/storage/profile-images/1775939877011-fhj57o3s8xk.mp4"
+    ],
     "shortBio": "",
     "description": "BJ, Sex Companionship\n",
     "phone": "0744163506",
+    "whatsapp": "0744163506",
+    "email": "",
+    "instagram": "",
     "services": [
       "BJ",
       "Anal",
       "sex Companionship"
     ],
-    "videos": [
-      "/storage/profile-images/1775939835821-o9h48ia5fsg.mp4",
-      "/storage/profile-images/1775939877011-fhj57o3s8xk.mp4"
-    ],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -844,12 +884,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775301582935-80p53dh3jja.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0730791442",
+    "whatsapp": "0730791442",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -872,12 +914,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775299501964-xvbwmxpjl3r.jpg",
       "/storage/profile-images/1775299515727-w5ehhxn95vj.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Minimum 150,000 ugx",
     "phone": "0756319412",
+    "whatsapp": "0756319412",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -899,14 +943,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775299155080-9fvozjvg8qa.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0730552010",
+    "whatsapp": "0730552010",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -928,14 +974,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1781257920893-prpy1uunse.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0764851121",
+    "whatsapp": "0764851121",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -957,14 +1005,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780507815020-7c1fl152vys.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Good n profetional massages, out calls only",
     "phone": "0744163506",
+    "whatsapp": "0744163506",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -986,14 +1036,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1781260143890-jhkdt5dz2cc.jpeg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0701284932",
+    "whatsapp": "0701284932",
+    "email": "",
+    "instagram": "",
     "services": [
       "BJ sex Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1015,14 +1067,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775299048506-xy18auq6ql.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0701284932",
+    "whatsapp": "0701284932",
+    "email": "",
+    "instagram": "",
     "services": [
       "Sex BJ Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1044,16 +1098,18 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1776328643970-iquv4jd72dj.jpg"
     ],
-    "shortBio": "",
-    "description": "",
-    "phone": "0779984978",
-    "services": [
-      "BJ Sex Companionship"
-    ],
     "videos": [
       "/storage/profile-images/1776328687368-11us12nxan9.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "",
+    "phone": "0779984978",
+    "whatsapp": "0779984978",
+    "email": "",
+    "instagram": "",
+    "services": [
+      "BJ Sex Companionship"
+    ],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1075,14 +1131,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775300305791-qt9zpbdx5w.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0780335075",
+    "whatsapp": "0780335075",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1104,12 +1162,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775302211720-erxv89wq0c5.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0742320659",
+    "whatsapp": "0742320659",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1132,12 +1192,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1777198018944-re3yaxnvgm.jpg",
       "/storage/profile-images/1777198034875-o9md7ll2of.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "+256757114621",
+    "whatsapp": "+256757114621",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1159,14 +1221,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775300903484-hdf182brj5.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0780335075",
+    "whatsapp": "0780335075",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1188,14 +1252,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775300701643-pln1ddo08jf.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0784941905",
+    "whatsapp": "0784941905",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1217,14 +1283,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1781258742769-wovdykp4hi.jpeg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0766438634",
+    "whatsapp": "0766438634",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1247,14 +1315,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775300536281-tsw5rih2cjl.jpg",
       "/storage/profile-images/1775300541744-hps6slj23iu.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0701284932",
+    "whatsapp": "0701284932",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1277,14 +1347,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775299005357-w1fqh2rrnj.jpg",
       "/storage/profile-images/1775299014804-t0wfezqvus.jpg"
     ],
+    "videos": [],
     "shortBio": "Your favorite escape is just a message away",
     "description": "Hi there I am Cara, and I believe the best moments in life are the ones where you can truly be yourself, I'm a wrm, down to earth companion who loves good conversation, genuine laughs, creating a relaxed atmosphere where the outside world just fades away.  Come let me make you feel better, happy and have fun all night or dayâ¤ï¸ðŸ˜˜ðŸ˜",
     "phone": "0780335075",
+    "whatsapp": "0780335075",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1309,14 +1381,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775301393537-m7kg5v486tr.jpg",
       "/storage/profile-images/1775301401678-b92oqz423cg.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0752326403",
+    "whatsapp": "0752326403",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1339,14 +1413,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775301765700-tl7o485lk5a.jpg",
       "/storage/profile-images/1775301778082-ckn510wyvx.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0741750547",
+    "whatsapp": "0741750547",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1370,14 +1446,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775301642969-roidq0cpex9.jpg",
       "/storage/profile-images/1775301648895-eqb050iw18i.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0752464464",
+    "whatsapp": "0752464464",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1401,14 +1479,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775302053100-99wk1pbkmuc.jpg",
       "/storage/profile-images/1775302067326-1tau877uh64.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0708681458",
+    "whatsapp": "0708681458",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1431,14 +1511,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775302590917-gme6m2fk7ia.jpg",
       "/storage/profile-images/1775302598603-lo11uxa6el.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0702331016",
+    "whatsapp": "0702331016",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1461,16 +1543,18 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775302727752-xfc5hx8jj1i.jpg",
       "/storage/profile-images/1775302735632-55la8k4gm4m.jpg"
     ],
-    "shortBio": "",
-    "description": "",
-    "phone": "0776786998",
-    "services": [
-      "Companionship"
-    ],
     "videos": [
       "/storage/profile-images/1775302743005-ar3vv0zdbxs.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "",
+    "phone": "0776786998",
+    "whatsapp": "0776786998",
+    "email": "",
+    "instagram": "",
+    "services": [
+      "Companionship"
+    ],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -1492,16 +1576,18 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775302490810-mxo3skz8k6.jpg"
     ],
-    "shortBio": "",
-    "description": "",
-    "phone": "0778544213",
-    "services": [
-      "Companionship"
-    ],
     "videos": [
       "/storage/profile-images/1775302513305-njbx0rsymsg.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "",
+    "phone": "0778544213",
+    "whatsapp": "0778544213",
+    "email": "",
+    "instagram": "",
+    "services": [
+      "Companionship"
+    ],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1524,14 +1610,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775302850675-2365fxl6r0h.jpg",
       "/storage/profile-images/1775302856147-gnv5kgsfu5u.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0779710900",
+    "whatsapp": "0779710900",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1553,14 +1641,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780296984395-rpz01r2pz8.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0705000807",
+    "whatsapp": "0705000807",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1582,12 +1672,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775330487708-h6qfb4wzrkp.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0776416628",
+    "whatsapp": "0776416628",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1613,15 +1705,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1780683483482-tx5jsglb72q.jpg",
       "/storage/profile-images/1780683524544-j02o294x0no.jpg"
     ],
+    "videos": [
+      "/storage/profile-images/1780684334562-yye5xb7n7tr.mp4"
+    ],
     "shortBio": "",
     "description": "Forget the clinical feel of a standard massage spa. Soft Touch Spa is designed for the modern gentleman who demands more from his downtimeðŸ˜ðŸ† . Our stunning escorts are trained to melt away your stress through expert massage before pivoting to a more intimate, personalized experience.ðŸ¥°ðŸ’‹ \nâ€‹What to Expect: Hot oil treatments, Nuru-style play, and gorgeous ladies who love what they do.â¤ï¸ðŸ”¥ ",
     "phone": "0707019018",
     "whatsapp": "0707019018",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [
-      "/storage/profile-images/1780684334562-yye5xb7n7tr.mp4"
-    ],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -1646,14 +1739,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775300963193-kpjf4zgkpq.jpg",
       "/storage/profile-images/1775300974924-4cpowmlivkn.jpg"
     ],
-    "shortBio": "",
-    "description": "",
-    "phone": "0769706123",
-    "services": [],
     "videos": [
       "/storage/profile-images/1775300984305-cahnxx3osdd.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "",
+    "phone": "0769706123",
+    "whatsapp": "0769706123",
+    "email": "",
+    "instagram": "",
+    "services": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1675,14 +1770,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775300365181-05xxh8ofpx6.jpg"
     ],
-    "shortBio": "",
-    "description": "",
-    "phone": "0766438634",
-    "services": [],
     "videos": [
       "/storage/profile-images/1775300786206-mf9bibqc1h.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "",
+    "phone": "0766438634",
+    "whatsapp": "0766438634",
+    "email": "",
+    "instagram": "",
+    "services": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -1704,15 +1801,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1783964365743-mk6bnt6bue.jpeg"
     ],
+    "videos": [
+      "/storage/profile-images/1783964587673-2vswrdfyfav.mp4"
+    ],
     "shortBio": "",
     "description": "Incalls and outcalls,  short, long, massage, and full night, inbox meâ¤ï¸ðŸ˜ ",
     "phone": "0786832851",
     "whatsapp": "0767051900",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [
-      "/storage/profile-images/1783964587673-2vswrdfyfav.mp4"
-    ],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -1734,12 +1832,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775299595463-jwwoh16vtj.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0744055803",
+    "whatsapp": "0744055803",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1761,14 +1861,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775299918040-szeso3o9fv.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "I am to give what u have always dreamed ofâ¤ï¸, come Let me take you to your fantasies daddyðŸ’‹ðŸ’•ðŸ’—",
     "phone": "0792775940",
+    "whatsapp": "0792775940",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1790,14 +1892,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780508194417-v4vdn6cgcd.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Come let me tell you to paradise ðŸ˜˜ðŸ˜",
     "phone": "0780335075",
+    "whatsapp": "0780335075",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1819,12 +1923,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775306594528-o24jk4qb8y7.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0769706123",
+    "whatsapp": "0769706123",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1847,14 +1953,16 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775300595938-fzkt4tbji0i.jpg",
       "/storage/profile-images/1775300605030-qkaft94vd1b.jpg"
     ],
-    "shortBio": "",
-    "description": "",
-    "phone": "0768623550",
-    "services": [],
     "videos": [
       "/storage/profile-images/1773750436421-j3clcdhlcaf.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "",
+    "phone": "0768623550",
+    "whatsapp": "0768623550",
+    "email": "",
+    "instagram": "",
+    "services": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1876,14 +1984,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780508859062-cbonj78jsoo.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Calm and positive mindedðŸ¥°",
     "phone": "0790781679",
+    "whatsapp": "0790781679",
+    "email": "",
+    "instagram": "",
     "services": [
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1901,16 +2011,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Light",
     "location": "Munyonyo",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773737894161-b2hu7iczxfn.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299005357-w1fqh2rrnj.jpg",
     "images": [
-      "/storage/profile-images/1773737894161-b2hu7iczxfn.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299005357-w1fqh2rrnj.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0703518487",
+    "whatsapp": "0703518487",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1932,12 +2044,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780508949212-nks8p69ez8f.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0777863589",
+    "whatsapp": "0777863589",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1955,16 +2069,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Dark",
     "location": "Wakiso",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773668251659-0vaxks8dds1d.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299014804-t0wfezqvus.jpg",
     "images": [
-      "/storage/profile-images/1773668251659-0vaxks8dds1d.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299014804-t0wfezqvus.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0744047506",
+    "whatsapp": "0744047506",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -1987,12 +2103,14 @@ export const staticProfiles: ProfileType[] = [
       "/storage/profile-images/1775300097389-6gcrxoocmdt.jpg",
       "/storage/profile-images/1775300106497-qiscfekxm6.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls",
     "phone": "0763672721",
+    "whatsapp": "0763672721",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2014,12 +2132,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775300276356-tmdyb58c29.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls ",
     "phone": "0703518487",
+    "whatsapp": "0703518487",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2037,16 +2157,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Medium",
     "location": "Kyanja",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773666596625-28xfvklx6ds.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299048506-xy18auq6ql.jpg",
     "images": [
-      "/storage/profile-images/1773666596625-28xfvklx6ds.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299048506-xy18auq6ql.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls, short - 150,000 ugx",
     "phone": "0786625582",
+    "whatsapp": "0786625582",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2068,12 +2190,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1776251250880-mshkqvkf0tb.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls",
     "phone": "0758535858",
+    "whatsapp": "0758535858",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2091,19 +2215,21 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Brown",
     "location": "Zana",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773662139114-r1o9gy8ufy9.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299062736-hrif9c8y625.jpg",
     "images": [
-      "/storage/profile-images/1773662139114-r1o9gy8ufy9.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299062736-hrif9c8y625.jpg"
     ],
-    "shortBio": "",
-    "description": "Incalls and outcalls",
-    "phone": "0746285302",
-    "services": [],
     "videos": [
       "/storage/profile-images/1773662259650-chj6tt75yso.mp4",
       "/storage/profile-images/1773662303730-0fgwkuph55ws.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "Incalls and outcalls",
+    "phone": "0746285302",
+    "whatsapp": "0746285302",
+    "email": "",
+    "instagram": "",
+    "services": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2121,16 +2247,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Light",
     "location": "Nsambya",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773661669447-f999rwpwazj.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299155080-9fvozjvg8qa.jpg",
     "images": [
-      "/storage/profile-images/1773661669447-f999rwpwazj.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299155080-9fvozjvg8qa.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls ",
     "phone": "0752389985",
+    "whatsapp": "0752389985",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2148,16 +2276,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Light",
     "location": "Kansanga",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773660884666-wgnprom5l7t.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299158358-gs7fntyj2k.jpg",
     "images": [
-      "/storage/profile-images/1773660884666-wgnprom5l7t.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299158358-gs7fntyj2k.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls ",
     "phone": "0730750794",
+    "whatsapp": "0730750794",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2179,12 +2309,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780508424842-3fajul47l4q.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls, short - 80,000ugx ",
     "phone": "0780335075",
+    "whatsapp": "0780335075",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2202,16 +2334,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Brown",
     "location": "Mbarara",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773660093686-ha6wbt5zabi.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299269076-x4uyilvg9jm.jpg",
     "images": [
-      "/storage/profile-images/1773660093686-ha6wbt5zabi.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299269076-x4uyilvg9jm.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls, short - 80,000ugx",
     "phone": "0751368109",
+    "whatsapp": "0751368109",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2229,16 +2363,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Brown",
     "location": "Mbarara",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773660026683-r9nsrtrcom.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299346495-esq8npo722m.jpg",
     "images": [
-      "/storage/profile-images/1773660026683-r9nsrtrcom.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299346495-esq8npo722m.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls, short - minimum 80,000ugx",
     "phone": "0760359546",
+    "whatsapp": "0760359546",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2256,18 +2392,20 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Light",
     "location": "Makyindye",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773658881924-7aupg07ki0c.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299377420-i802aitjrwg.jpg",
     "images": [
-      "/storage/profile-images/1773658881924-7aupg07ki0c.jpg",
-      "/storage/profile-images/1773661267404-oxsqwko3uvs.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299377420-i802aitjrwg.jpg"
     ],
-    "shortBio": "",
-    "description": "Incalls and outcalls , short - minimum 80,000ugx",
-    "services": [],
     "videos": [
       "/storage/profile-images/1773661278662-englgp8veik.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "Incalls and outcalls , short - minimum 80,000ugx",
+    "phone": "",
+    "whatsapp": "",
+    "email": "",
+    "instagram": "",
+    "services": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2285,18 +2423,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Brown",
     "location": "Rubaga Road",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773657907785-6ykyfw56nnp.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299464236-airrssifn79.jpg",
     "images": [
-      "/storage/profile-images/1773657907785-6ykyfw56nnp.jpg",
-      "/storage/profile-images/1773657928822-p8m7y0k7m3j.jpg",
-      "/storage/profile-images/1773657943206-u8ar8zhdui.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299464236-airrssifn79.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Outcalls only - minimum 80,000ugx",
     "phone": "0708155868",
+    "whatsapp": "0708155868",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2314,21 +2452,21 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Dark",
     "location": "Jinja",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773757584706-vbkq6ihmg7.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299501964-xvbwmxpjl3r.jpg",
     "images": [
-      "/storage/profile-images/1773757584706-vbkq6ihmg7.jpg",
-      "/storage/profile-images/1773757601375-2ebke03n8df.jpg",
-      "/storage/profile-images/1773757610630-s4k4rpub3fs.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299501964-xvbwmxpjl3r.jpg"
     ],
-    "shortBio": "",
-    "description": "Incalls and outcalls ",
-    "phone": "0759074729",
-    "services": [],
     "videos": [
       "/storage/profile-images/1773757621788-t50mlhvq73q.mp4",
       "/storage/profile-images/1773757671273-ww8zko3lsm.mp4"
     ],
-    "reviews": [],
+    "shortBio": "",
+    "description": "Incalls and outcalls ",
+    "phone": "0759074729",
+    "whatsapp": "0759074729",
+    "email": "",
+    "instagram": "",
+    "services": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2350,15 +2488,17 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1776369595911-1n5l6ronuzz.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "Incalls and outcalls \nMinimum 100,000 ugx",
     "phone": "0776786998",
+    "whatsapp": "0776786998",
+    "email": "",
+    "instagram": "",
     "services": [
       "Dating",
       "Companionship"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -2380,12 +2520,14 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780297098424-yi9ml62df6.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0780295906",
+    "whatsapp": "0780295906",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": true,
     "isArchived": false,
     "isVip": false,
@@ -2403,16 +2545,18 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Dark",
     "location": "Kalerwe",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773522653230-kubsa1knin9.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299515727-w5ehhxn95vj.jpg",
     "images": [
-      "/storage/profile-images/1773522653230-kubsa1knin9.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299515727-w5ehhxn95vj.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0757298097",
+    "whatsapp": "0757298097",
+    "email": "",
+    "instagram": "",
     "services": [],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2430,18 +2574,20 @@ export const staticProfiles: ProfileType[] = [
     "complexion": "Medium",
     "location": "Mbarara",
     "rating": 4.5,
-    "profileImage": "/storage/profile-images/1773521483990-d2t5tf0wye9.jpg",
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299595463-jwwoh16vtj.jpg",
     "images": [
-      "/storage/profile-images/1773521483990-d2t5tf0wye9.jpg"
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/storage/profile-images/1775299595463-jwwoh16vtj.jpg"
     ],
+    "videos": [],
     "shortBio": "Outcalls",
     "description": "",
     "phone": "0747465366",
+    "whatsapp": "0747465366",
+    "email": "",
+    "instagram": "",
     "services": [
       "Massagesexbj"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2463,14 +2609,16 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1780509091877-3izu3gqg162.jpg"
     ],
+    "videos": [],
     "shortBio": "Available for outcalls ",
     "description": "",
     "phone": "+256708681458",
+    "whatsapp": "+256708681458",
+    "email": "",
+    "instagram": "",
     "services": [
       "All"
     ],
-    "videos": [],
-    "reviews": [],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2492,14 +2640,46 @@ export const staticProfiles: ProfileType[] = [
     "images": [
       "/storage/profile-images/1775306523787-ls2ia005mr9.jpg"
     ],
+    "videos": [],
     "shortBio": "",
     "description": "",
     "phone": "0764851121",
+    "whatsapp": "0764851121",
+    "email": "",
+    "instagram": "",
     "services": [
       "sexbj"
     ],
+    "isPinned": false,
+    "isArchived": false,
+    "isVip": false,
+    "isPremium": false,
+    "isAd": false,
+    "isVerified": true,
+    "adImages": []
+  },
+  {
+    "id": "prof-1790977589891-s5t3z",
+    "name": "Calvin Kevin",
+    "age": 19,
+    "height": "6'5\"",
+    "bodyType": "Slim",
+    "complexion": "Medium",
+    "location": "Kampala",
+    "rating": 4.5,
+    "profileImage": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/profile-images/1790977545564-iyq7url.jpg",
+    "images": [
+      "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/profile-images/1790977545564-iyq7url.jpg"
+    ],
     "videos": [],
-    "reviews": [],
+    "shortBio": "",
+    "description": "",
+    "phone": "0703731639",
+    "whatsapp": "0703731639",
+    "services": [
+      "Dating",
+      "Companionship"
+    ],
     "isPinned": false,
     "isArchived": false,
     "isVip": false,
@@ -2509,5 +2689,3 @@ export const staticProfiles: ProfileType[] = [
     "adImages": []
   }
 ];
-
-
