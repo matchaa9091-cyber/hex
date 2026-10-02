@@ -181,33 +181,36 @@ const BecomeEscortPage = () => {
     }
     setLoading(true);
     try {
-      const { data, error: dbError } = await supabase
-        .from("escort_applications")
-        .insert({
-          name: form.name.trim(),
-          age: form.age ? parseInt(form.age) : null,
-          height: form.height.trim() || null,
-          body_type: form.body_type || null,
-          complexion: form.complexion || null,
-          location: form.location,
-          phone: form.phone.trim(),
-          whatsapp: form.whatsapp.trim() || form.phone.trim(),
-          short_bio: form.short_bio.trim() || null,
-          description: form.description.trim() || null,
-          services: form.services.split(",").map(s => s.trim()).filter(Boolean),
-          status: "pending_payment",
-          plan: "monthly",
-          profile_image: form.profileImage,
-          images: form.images,
-          videos: form.videos,
-        })
-        .select("id")
-        .single();
+      const payload = {
+        name: form.name.trim(),
+        age: form.age ? parseInt(form.age) : 20,
+        height: form.height.trim() || null,
+        body_type: form.body_type || null,
+        complexion: form.complexion || null,
+        location: form.location,
+        phone: form.phone.trim(),
+        whatsapp: form.whatsapp.trim() || form.phone.trim(),
+        short_bio: form.short_bio.trim() || null,
+        description: form.description.trim() || null,
+        services: form.services.split(",").map(s => s.trim()).filter(Boolean),
+        status: "pending_payment",
+        plan: "monthly",
+        profile_image: form.profileImage,
+        images: form.images,
+        videos: form.videos,
+      };
 
-      if (dbError) {
-        console.error("Database Insert Error:", dbError);
-        throw dbError;
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.id) {
+        throw new Error(data.error || "Failed to submit application");
       }
+
       setApplicationId(data.id);
       setShowPaymentModal(true);
     } catch (err: any) {
@@ -227,19 +230,24 @@ const BecomeEscortPage = () => {
     setError("");
     setLoading(true);
     try {
-      const { data, error: dbError } = await supabase
-        .from("escort_applications")
-        .insert({
-          name: vipProfileIdentifier.trim(),
-          phone: vipProfileIdentifier.trim(),
-          location: "Existing Profile",
-          status: "pending_payment",
-          plan: "vip_boost",
-        })
-        .select("id")
-        .single();
+      const payload = {
+        name: vipProfileIdentifier.trim(),
+        phone: vipProfileIdentifier.trim(),
+        location: "Existing Profile",
+        status: "pending_payment",
+        plan: "vip_boost",
+      };
 
-      if (dbError) throw dbError;
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.id) {
+        throw new Error(data.error || "Failed to submit boost request");
+      }
 
       setApplicationId(data.id);
       setShowVipModal(false);

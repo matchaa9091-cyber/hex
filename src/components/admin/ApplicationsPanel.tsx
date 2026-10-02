@@ -49,15 +49,19 @@ export default function ApplicationsPanel() {
 
   const fetchApplications = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from("escort_applications")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    const all = data || [];
-    setAllApps(all);
-    applyFilter(filter, all);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/applications");
+      if (res.ok) {
+        const data = await res.json();
+        const all = Array.isArray(data) ? data : [];
+        setAllApps(all);
+        applyFilter(filter, all);
+      }
+    } catch (err) {
+      console.error("Failed to fetch applications:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const applyFilter = (f: FilterKey, source: Application[]) => {
@@ -80,71 +84,41 @@ export default function ApplicationsPanel() {
   const handleApprove = async (app: Application) => {
     setActionLoading(app.id);
     try {
-      if (app.plan === "vip_boost") {
-        // Try to find existing profile in profiles table by phone or name
-        const { data: existing } = await supabase
-          .from("profiles")
-          .select("id")
-          .or(`phone.eq.${app.phone},name.ilike.%${app.name}%`)
-          .limit(1);
+      const profilePayload = {
+        name: app.name,
+        age: app.age || 20,
+        location: app.location || "Kampala",
+        phone: app.phone,
+        whatsapp: app.whatsapp || app.phone,
+        short_bio: app.short_bio || "",
+        body_type: app.body_type || "Slim",
+        complexion: app.complexion || "Medium",
+        profile_image: app.profile_image || "/placeholder.svg",
+        images: app.images || [],
+        videos: app.videos || [],
+        is_archived: false,
+        is_pinned: app.plan === "monthly" || app.plan === "vip" || app.plan === "vip_boost",
+        is_vip: app.plan === "monthly" || app.plan === "vip" || app.plan === "vip_boost",
+        rating: 4.5,
+      };
 
-        if (existing && existing.length > 0) {
-          // Upgrade existing profile to VIP/pinned for the week
-          await supabase
-            .from("profiles")
-            .update({ is_pinned: true, is_vip: true })
-            .eq("id", existing[0].id);
-        } else if (app.profile_image) {
-          // If they attached a profile image, insert as new VIP profile
-          await supabase.from("profiles").insert({
-            name: app.name,
-            age: app.age,
-            location: app.location,
-            phone: app.phone,
-            whatsapp: app.whatsapp,
-            short_bio: app.short_bio,
-            body_type: app.body_type,
-            complexion: app.complexion,
-            profile_image: app.profile_image,
-            images: app.images || [],
-            videos: app.videos || [],
-            is_archived: false,
-            is_pinned: true,
-            is_vip: true,
-            rating: 4.5,
-          });
-        }
-      } else {
-        // Full Month or Ordinary Plan: Publish new profile
-        const { error: insertError } = await supabase.from("profiles").insert({
-          name: app.name,
-          age: app.age,
-          location: app.location,
-          phone: app.phone,
-          whatsapp: app.whatsapp,
-          short_bio: app.short_bio,
-          body_type: app.body_type,
-          complexion: app.complexion,
-          profile_image: app.profile_image,
-          images: app.images || [],
-          videos: app.videos || [],
-          is_archived: false,
-          is_pinned: app.plan === "monthly" || app.plan === "vip",
-          is_vip: app.plan === "monthly" || app.plan === "vip",
-          rating: 4.5,
-        });
-        if (insertError) throw insertError;
-      }
+      // Create live profile in Cloudflare D1
+      await fetch("/api/profiles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profilePayload),
+      });
 
-      // Update application status to approved
-      await supabase
-        .from("escort_applications")
-        .update({ status: "approved" })
-        .eq("id", app.id);
+      // Update application status in R2
+      await fetch("/api/applications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: app.id, status: "approved" }),
+      });
 
       fetchApplications();
     } catch (err) {
-      alert("Failed to approve. Check console.");
+      alert("Failed to approve application.");
       console.error(err);
     } finally {
       setActionLoading(null);

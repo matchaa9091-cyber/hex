@@ -170,10 +170,37 @@ const AdminPage = () => {
 
   const fetchProfiles = async () => {
     try {
-      const { data, error } = await supabase.from("profiles").select("*").order("created_at", { ascending: false });
-      if (!error && data && data.length > 0) {
-        setProfiles(data as any as DbProfile[]);
-        return;
+      const res = await fetch("/api/profiles");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          const mappedDbProfiles: DbProfile[] = data.map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            age: p.age || 20,
+            height: p.height || "",
+            body_type: p.bodyType || "",
+            complexion: p.complexion || "",
+            location: p.location,
+            phone: p.phone || "",
+            whatsapp: p.whatsapp || "",
+            email: p.email || "",
+            instagram: p.instagram || "",
+            short_bio: p.shortBio || "",
+            description: p.description || "",
+            services: p.services || [],
+            profile_image: p.profileImage || "",
+            images: p.images || [],
+            videos: p.videos || [],
+            is_pinned: p.isPinned || false,
+            is_archived: p.isArchived || false,
+            is_ad: p.isAd || false,
+            is_verified: p.isVerified || false,
+            ad_images: p.adImages || [],
+          }));
+          setProfiles(mappedDbProfiles);
+          return;
+        }
       }
     } catch (e) {
       console.error("DB fetch error:", e);
@@ -411,7 +438,8 @@ const AdminPage = () => {
     }
     setSaving(true);
 
-    const row = {
+    const payload = {
+      id: editingProfile.id,
       name: editingProfile.name,
       age: editingProfile.age,
       height: editingProfile.height,
@@ -432,68 +460,101 @@ const AdminPage = () => {
       is_verified: editingProfile.isVerified,
       ad_images: editingProfile.adImages,
     };
-    let error;
-    if (editingProfile.id) {
-      // @ts-ignore
-      ({ error } = await supabase.from("profiles").update(row).eq("id", editingProfile.id));
-    } else {
-      // @ts-ignore
-      ({ error } = await supabase.from("profiles").insert(row));
-    }
 
-    if (error) {
-      toast({ title: "Save failed", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Profile saved!" });
-      setEditingProfile(null);
-      await fetchProfiles();
-      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        toast({ title: "Save failed", description: data.error || "Unknown error", variant: "destructive" });
+      } else {
+        toast({ title: "Profile saved to Cloudflare D1!" });
+        setEditingProfile(null);
+        await fetchProfiles();
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      }
+    } catch (err: any) {
+      toast({ title: "Save failed", description: err?.message || "Server error", variant: "destructive" });
     }
     setSaving(false);
   };
 
   const toggleVip = async (id: string, currentVip: boolean) => {
-    const { error } = await supabase.from("profiles").update({ is_pinned: !currentVip }).eq("id", id);
-    if (!error) {
-      toast({ title: !currentVip ? "Promoted to VIP!" : "Removed from VIP" });
-      await fetchProfiles();
-      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
-    } else {
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, field: "is_pinned", value: !currentVip }),
+      });
+      if (res.ok) {
+        toast({ title: !currentVip ? "Promoted to VIP!" : "Removed from VIP" });
+        await fetchProfiles();
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      } else {
+        toast({ title: "Update failed", variant: "destructive" });
+      }
+    } catch {
       toast({ title: "Update failed", variant: "destructive" });
     }
   };
 
   const toggleArchive = async (id: string, currentArchived: boolean) => {
-    const { error } = await supabase.from("profiles").update({ is_archived: !currentArchived } as any).eq("id", id);
-    if (!error) {
-      toast({ title: !currentArchived ? "Profile hidden from public" : "Profile restored to public" });
-      await fetchProfiles();
-      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
-    } else {
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, field: "is_archived", value: !currentArchived }),
+      });
+      if (res.ok) {
+        toast({ title: !currentArchived ? "Profile hidden from public" : "Profile restored to public" });
+        await fetchProfiles();
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      } else {
+        toast({ title: "Update failed", variant: "destructive" });
+      }
+    } catch {
       toast({ title: "Update failed", variant: "destructive" });
     }
   };
 
   const toggleVerify = async (id: string, currentVerified: boolean) => {
-    // @ts-ignore
-    const { error } = await supabase.from("profiles").update({ is_verified: !currentVerified }).eq("id", id);
-    if (!error) {
-      toast({ title: !currentVerified ? "Profile Verified!" : "Verification Removed" });
-      await fetchProfiles();
-      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
-    } else {
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, field: "is_verified", value: !currentVerified }),
+      });
+      if (res.ok) {
+        toast({ title: !currentVerified ? "Profile Verified!" : "Verification Removed" });
+        await fetchProfiles();
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      } else {
+        toast({ title: "Update failed", variant: "destructive" });
+      }
+    } catch {
       toast({ title: "Update failed", variant: "destructive" });
     }
   };
 
   const toggleAd = async (id: string, currentAd: boolean) => {
-    // @ts-ignore
-    const { error } = await supabase.from("profiles").update({ is_ad: !currentAd }).eq("id", id);
-    if (!error) {
-      toast({ title: !currentAd ? "Promoted to Ads!" : "Removed from Ads" });
-      await fetchProfiles();
-      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
-    } else {
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, field: "is_ad", value: !currentAd }),
+      });
+      if (res.ok) {
+        toast({ title: !currentAd ? "Promoted to Ads!" : "Removed from Ads" });
+        await fetchProfiles();
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      } else {
+        toast({ title: "Update failed", variant: "destructive" });
+      }
+    } catch {
       toast({ title: "Update failed", variant: "destructive" });
     }
   };
