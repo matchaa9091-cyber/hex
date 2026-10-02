@@ -170,7 +170,7 @@ const AdminPage = () => {
 
   const fetchProfiles = async () => {
     try {
-      const res = await fetch("/api/profiles");
+      const res = await fetch(`/api/profiles?t=${Date.now()}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -329,42 +329,24 @@ const AdminPage = () => {
   });
 
   const uploadFile = async (file: File, bucket: string = "profile-images"): Promise<string> => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", bucket);
-      
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || "Upload failed");
-      }
-      return data.url;
-    } catch (err: any) {
-      console.warn("Cloudflare R2 upload fallback to Data URL:", err);
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.readAsDataURL(file);
-      });
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", bucket);
+    
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+    
+    const data = await res.json();
+    if (!res.ok || !data.url) {
+      throw new Error(data.error || "Upload to Cloudflare R2 failed");
     }
+    return data.url;
   };
 
   const uploadImage = async (file: File): Promise<string> => {
-    try {
-      return await uploadFile(file, "profile-images");
-    } catch (e) {
-      console.warn("Storage upload failed, using Data URL fallback:", e);
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.readAsDataURL(file);
-      });
-    }
+    return await uploadFile(file, "profile-images");
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: "profile" | "gallery" | "ad_gallery") => {

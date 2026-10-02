@@ -94,16 +94,12 @@ const BecomeEscortPage = () => {
       
       const data = await res.json();
       if (!res.ok || !data.url) {
-        throw new Error(data.error || "Upload failed");
+        throw new Error(data.error || "Upload to Cloudflare R2 failed");
       }
       return data.url;
     } catch (err: any) {
-      console.warn("Cloudflare R2 upload fallback to Data URL:", err);
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.readAsDataURL(file);
-      });
+      console.error("Cloudflare R2 upload error:", err);
+      throw err;
     }
   };
 
