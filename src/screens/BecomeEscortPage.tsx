@@ -9,12 +9,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle, Loader2, ChevronRight, Crown, Phone, X, Sparkles } from "lucide-react";
 import PaymentModal from "@/components/escort-apply/PaymentModal";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 type Screen = "plan" | "form" | "success";
 type Plan = "monthly" | "vip";

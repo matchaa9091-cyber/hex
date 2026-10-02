@@ -564,11 +564,21 @@ const AdminPage = () => {
   };
 
   const handleDelete = async (id: string) => {
-    const { error } = await supabase.from("profiles").delete().eq("id", id);
-    if (!error) {
-      toast({ title: "Profile deleted" });
-      await fetchProfiles();
-      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (res.ok) {
+        toast({ title: "Profile deleted from Cloudflare D1" });
+        await fetchProfiles();
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      } else {
+        toast({ title: "Delete failed", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Delete failed", variant: "destructive" });
     }
   };
 

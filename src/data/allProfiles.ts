@@ -1,7 +1,5 @@
 import { ProfileType } from "@/types/profile";
 import { mockProfiles } from "@/data/mockProfiles";
-import { staticProfiles } from "@/data/staticProfiles";
-import { supabase } from "@/integrations/supabase/client";
 import { slugify } from "@/lib/utils";
 import { unstable_cache } from 'next/cache';
 

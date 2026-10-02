@@ -175,3 +175,18 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: err?.message || "Failed to update profile" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const { id } = await req.json();
+    if (!id) {
+      return NextResponse.json({ error: "Missing profile ID" }, { status: 400 });
+    }
+
+    const sql = `DELETE FROM profiles WHERE id = ?;`;
+    await executeD1Query(sql, [id]);
+    return NextResponse.json({ success: true });
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message || "Failed to delete profile" }, { status: 500 });
+  }
+}
