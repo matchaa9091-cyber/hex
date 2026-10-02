@@ -125,6 +125,7 @@ export async function POST(req: Request) {
       body.whatsapp || body.phone || null,
       body.email || null,
       body.instagram || null,
+      JSON.stringify(body.services || []),
       toBit(body.is_pinned ?? body.isPinned),
       toBit(body.is_archived ?? body.isArchived),
       toBit(body.is_vip ?? body.isVip),
