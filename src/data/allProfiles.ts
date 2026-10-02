@@ -45,18 +45,21 @@ const R2_PUBLIC_BASE = "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
 function transformUrl(url: string | null | undefined): string {
   if (!url) return "/placeholder.svg";
 
-  // R2 Public CDN URLs — keep as-is
-  if (url.includes(".r2.dev/") || url.includes("cloudflarestorage.com")) return url;
+  // Full HTTP/HTTPS URLs (including R2 CDN URLs) — keep exact URL as-is
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
 
-  // Local storage relative paths — convert to R2 CDN for fast global delivery
+  // Relative storage paths
   if (url.startsWith("/storage/profile-images/")) {
+    return `${R2_PUBLIC_BASE}${url}`;
+  }
+  if (url.startsWith("/profile-images/")) {
     return `${R2_PUBLIC_BASE}${url}`;
   }
 
   // Root-relative paths (like /placeholder.svg) — keep as-is
   if (url.startsWith("/")) return url;
 
-  // Extract filename from any legacy Supabase or wsrv.nl URL
+  // Extract filename from any string filename
   const match = url.match(/([a-zA-Z0-9.\-_]+\.(?:jpg|jpeg|png|webp|jfif|avif|mp4|mov))/i);
   if (match && match[1]) {
     return `${R2_PUBLIC_BASE}/storage/profile-images/${match[1]}`;

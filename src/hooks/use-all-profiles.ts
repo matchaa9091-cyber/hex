@@ -6,13 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useAllProfiles(initialData?: ProfileType[], seed?: string) {
   return useQuery({
-    queryKey: ["all-profiles", seed], // Include seed in key to ensure unique cache per shuffle
+    queryKey: ["all-profiles", seed],
     queryFn: async () => {
       return fetchAllProfiles(seed);
     },
-    initialData,
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 }
