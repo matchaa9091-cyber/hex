@@ -5,6 +5,8 @@ const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || "b07234f65853d0f9f8e6fa1
 const DB_ID = process.env.CLOUDFLARE_D1_DATABASE_ID || "9914bf44-9661-4a24-903f-d49c73d6b1fe";
 const D1_TOKEN = process.env.CLOUDFLARE_D1_TOKEN;
 
+const toBit = (v: any) => (v === true || v === 1 || v === "1" || v === "true" ? 1 : 0);
+
 async function executeD1Query(sql: string, params: any[] = []) {
   if (!ACCOUNT_ID || !DB_ID || !D1_TOKEN) {
     throw new Error("Cloudflare D1 credentials missing");
@@ -123,13 +125,12 @@ export async function POST(req: Request) {
       body.whatsapp || body.phone || null,
       body.email || null,
       body.instagram || null,
-      JSON.stringify(body.services || []),
-      body.is_pinned || body.isPinned ? 1 : 0,
-      body.is_archived || body.isArchived ? 1 : 0,
-      body.is_vip || body.isVip ? 1 : 0,
-      body.is_premium || body.isPremium ? 1 : 0,
-      body.is_ad || body.isAd ? 1 : 0,
-      body.is_verified || body.isVerified ? 1 : 0,
+      toBit(body.is_pinned ?? body.isPinned),
+      toBit(body.is_archived ?? body.isArchived),
+      toBit(body.is_vip ?? body.isVip),
+      toBit(body.is_premium ?? body.isPremium),
+      toBit(body.is_ad ?? body.isAd),
+      toBit(body.is_verified ?? body.isVerified),
       JSON.stringify(body.ad_images || body.adImages || []),
     ];
 

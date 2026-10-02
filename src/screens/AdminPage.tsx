@@ -456,9 +456,13 @@ const AdminPage = () => {
       profile_image: editingProfile.profileImage,
       images: editingProfile.images,
       videos: editingProfile.videos,
-      is_ad: editingProfile.isAd,
-      is_verified: editingProfile.isVerified,
-      ad_images: editingProfile.adImages,
+      is_pinned: (editingProfile as any).isPinned ?? (editingProfile as any).is_pinned ?? false,
+      is_vip: (editingProfile as any).isVip ?? (editingProfile as any).is_vip ?? false,
+      is_archived: (editingProfile as any).isArchived ?? (editingProfile as any).is_archived ?? false,
+      is_premium: (editingProfile as any).isPremium ?? (editingProfile as any).is_premium ?? false,
+      is_ad: editingProfile.isAd ?? false,
+      is_verified: editingProfile.isVerified ?? false,
+      ad_images: editingProfile.adImages || [],
     };
 
     try {
