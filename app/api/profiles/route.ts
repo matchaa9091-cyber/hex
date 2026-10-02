@@ -56,7 +56,11 @@ export async function GET() {
       isVerified: Boolean(p.is_verified),
       adImages: typeof p.ad_images === "string" ? JSON.parse(p.ad_images) : (p.ad_images || []),
     }));
-    return NextResponse.json(dbProfiles);
+    return NextResponse.json(dbProfiles, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      }
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err?.message || "Failed to fetch profiles from D1" }, { status: 500 });
   }

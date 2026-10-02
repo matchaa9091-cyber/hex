@@ -37,10 +37,10 @@ export function sortAndShuffleProfiles(profiles: ProfileType[], seed?: string): 
   return [...shuffleArray(pinned, rand), ...shuffleArray(regular, rand)];
 }
 
+const R2_PUBLIC_BASE = "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
+
 /**
- * Transforms ANY image reference to a local Vercel static storage path.
- * Images are served from /public/storage/profile-images/ committed in the repo
- * via Vercel's global Edge CDN (zero CPU, zero Supabase egress, zero bandwidth cost).
+ * Transforms ANY image reference to Cloudflare R2 Public CDN / local static path.
  */
 function transformUrl(url: string | null | undefined): string {
   if (!url) return "/placeholder.svg";
@@ -48,16 +48,18 @@ function transformUrl(url: string | null | undefined): string {
   // R2 Public CDN URLs — keep as-is
   if (url.includes(".r2.dev/") || url.includes("cloudflarestorage.com")) return url;
 
-  // Local Vercel static CDN paths — keep as-is
-  if (url.startsWith("/storage/")) return url;
+  // Local storage relative paths — convert to R2 CDN for fast global delivery
+  if (url.startsWith("/storage/profile-images/")) {
+    return `${R2_PUBLIC_BASE}${url}`;
+  }
 
-  // Root-relative paths — keep as-is
+  // Root-relative paths (like /placeholder.svg) — keep as-is
   if (url.startsWith("/")) return url;
 
   // Extract filename from any legacy Supabase or wsrv.nl URL
   const match = url.match(/([a-zA-Z0-9.\-_]+\.(?:jpg|jpeg|png|webp|jfif|avif|mp4|mov))/i);
   if (match && match[1]) {
-    return `/storage/profile-images/${match[1]}`;
+    return `${R2_PUBLIC_BASE}/storage/profile-images/${match[1]}`;
   }
 
   return url;
@@ -65,7 +67,6 @@ function transformUrl(url: string | null | undefined): string {
 
 /**
  * Get active (non-archived) static profiles to use as offline fallback.
- * Filtering here prevents archived profiles from ever showing publicly when Supabase is unavailable.
  */
 function getActiveStaticProfiles() {
   return staticProfiles.filter(p => !p.isArchived);
@@ -110,11 +111,19 @@ export async function fetchAllProfiles(seed?: string) {
   }
 
   try {
-    const apiRes = await fetch("/api/profiles");
+    const apiRes = await fetch("/api/profiles", { cache: "no-store" });
     if (apiRes.ok) {
       const d1Profiles = await apiRes.json();
       if (Array.isArray(d1Profiles) && d1Profiles.length > 0) {
-        return seed ? sortAndShuffleProfiles(d1Profiles, seed) : d1Profiles;
+        // Map transformUrl across all images in profiles
+        const mapped = d1Profiles.map((p: any) => ({
+          ...p,
+          profileImage: transformUrl(p.profileImage),
+          images: Array.isArray(p.images) ? p.images.map(transformUrl) : [],
+          videos: Array.isArray(p.videos) ? p.videos.map(transformUrl) : [],
+          adImages: Array.isArray(p.adImages) ? p.adImages.map(transformUrl) : [],
+        }));
+        return seed ? sortAndShuffleProfiles(mapped, seed) : mapped;
       }
     }
   } catch (e) {
@@ -125,67 +134,33 @@ export async function fetchAllProfiles(seed?: string) {
 }
 
 export async function fetchProfileById(id: string) {
-  const allStatic = staticProfiles;
-
-  if (FORCE_STATIC_DATA) {
-    return allStatic.find(p => p.id === id || slugify(p.name) === id) || null;
-  }
+  const fallbackProfiles = getActiveStaticProfiles();
 
   try {
-    // @ts-ignore
-    const { data: idData } = await (supabase as any)
-      .from("profiles")
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
-
-    if (idData) return mapDbProfile(idData);
-
-    // Try slug match across all non-archived profiles
-    const { data: allProfiles } = await (supabase as any)
-      .from("profiles")
-      .select("*")
-      .eq("is_archived", false);
-
-    if (allProfiles) {
-      const match = allProfiles.find((p: any) => slugify(p.name) === id);
-      if (match) return mapDbProfile(match);
-    }
-
-    return allStatic.find(p => p.id === id || slugify(p.name) === id) || null;
+    const allProfiles = await fetchAllProfiles();
+    const match = allProfiles.find((p: ProfileType) => p.id === id || slugify(p.name) === id);
+    if (match) return match;
   } catch (err) {
-    console.error("Fetch exception, using static fallback:", err);
-    return allStatic.find(p => p.id === id || slugify(p.name) === id) || null;
+    console.error("Fetch exception in fetchProfileById:", err);
   }
+
+  return fallbackProfiles.find(p => p.id === id || slugify(p.name) === id) || null;
 }
 
-// Quota-Safe Fetcher for Location Pages
-export const fetchProfilesByLocation = unstable_cache(
-  async (location: string) => {
-    const fallback = getActiveStaticProfiles().filter(p =>
+// Quota-Safe Fetcher for Location Pages using Cloudflare D1
+export async function fetchProfilesByLocation(location: string) {
+  const fallback = getActiveStaticProfiles().filter(p =>
+    p.location.toLowerCase().includes(location.toLowerCase())
+  );
+
+  try {
+    const allProfiles = await fetchAllProfiles();
+    const matched = allProfiles.filter((p: ProfileType) =>
       p.location.toLowerCase().includes(location.toLowerCase())
     );
-
-    if (FORCE_STATIC_DATA) {
-      return fallback;
-    }
-
-    try {
-      // @ts-ignore
-      const { data, error } = await (supabase as any)
-        .from("profiles")
-        .select("id, name, location, profile_image, rating, is_pinned, is_vip, is_premium, is_verified")
-        .eq("is_archived", false)
-        .ilike("location", `%${location}%`)
-        .order("is_pinned", { ascending: false });
-
-      if (error || !data || data.length === 0) return fallback;
-      return data.map(mapDbProfile);
-    } catch (err) {
-      console.error(`Error fetching profiles for ${location}:`, err);
-      return fallback;
-    }
-  },
-  ['location-profiles'],
-  { revalidate: 300 }
-);
+    return matched.length > 0 ? matched : fallback;
+  } catch (err) {
+    console.error(`Error fetching profiles for ${location}:`, err);
+    return fallback;
+  }
+}
