@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import { AdCarousel } from "@/components/profiles/AdCarousel";
 import { Crown, ChevronDown } from "lucide-react";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 100;
 
 const cities = [
   { name: "Kampala", path: "/escorts-in/kampala" },
@@ -32,7 +32,7 @@ interface HomePageProps {
 const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [showOtherEscorts, setShowOtherEscorts] = useState(false);
+  const [showOtherEscorts, setShowOtherEscorts] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
