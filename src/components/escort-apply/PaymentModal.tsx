@@ -15,7 +15,7 @@ interface PaymentModalProps {
   onClose: () => void;
 }
 
-const PAYMENT_NUMBER = "0771234567";
+const PAYMENT_NUMBER = "0765040502";
 
 export default function PaymentModal({
   applicationId,
