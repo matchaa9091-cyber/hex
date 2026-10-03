@@ -5,7 +5,8 @@ import { slugify } from "@/lib/utils";
 import { notFound, permanentRedirect } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-export const revalidate = 600; // Cache individual profile data for 10 minutes
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 export const dynamicParams = true;
 
 type Props = {

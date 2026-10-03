@@ -113,7 +113,12 @@ export async function fetchAllProfiles(seed?: string) {
   }
 
   try {
-    const apiRes = await fetch("/api/profiles", { cache: "no-store" });
+    let url = "/api/profiles";
+    if (typeof window === "undefined") {
+      const host = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : (process.env.NEXT_PUBLIC_SITE_URL || "https://www.hexescortsug.com");
+      url = `${host}/api/profiles`;
+    }
+    const apiRes = await fetch(url, { cache: "no-store" });
     if (apiRes.ok) {
       const d1Profiles = await apiRes.json();
       if (Array.isArray(d1Profiles) && d1Profiles.length > 0) {
@@ -137,16 +142,28 @@ export async function fetchAllProfiles(seed?: string) {
 
 export async function fetchProfileById(id: string) {
   const fallbackProfiles = getActiveStaticProfiles();
+  const normalizedTarget = decodeURIComponent(id).toLowerCase().trim();
+  const targetSlug = slugify(normalizedTarget);
 
   try {
     const allProfiles = await fetchAllProfiles();
-    const match = allProfiles.find((p: ProfileType) => p.id === id || slugify(p.name) === id);
+    const match = allProfiles.find((p: ProfileType) => 
+      p.id === id || 
+      slugify(p.name) === id || 
+      p.name.toLowerCase().trim() === normalizedTarget ||
+      slugify(p.name) === targetSlug
+    );
     if (match) return match;
   } catch (err) {
     console.error("Fetch exception in fetchProfileById:", err);
   }
 
-  return fallbackProfiles.find(p => p.id === id || slugify(p.name) === id) || null;
+  return fallbackProfiles.find(p => 
+    p.id === id || 
+    slugify(p.name) === id || 
+    p.name.toLowerCase().trim() === normalizedTarget ||
+    slugify(p.name) === targetSlug
+  ) || null;
 }
 
 // Quota-Safe Fetcher for Location Pages using Cloudflare D1

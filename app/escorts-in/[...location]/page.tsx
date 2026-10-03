@@ -3,9 +3,8 @@ import { fetchProfilesByLocation } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-// 3600 = 1 hour. This means Supabase is only hit ONCE per hour per location.
-// Vercel's Edge Network serves all other traffic for free!
-export const revalidate = 3600; 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 export const dynamicParams = true;
 
 type Props = {
