@@ -45,25 +45,20 @@ export default async function Page({ params }: Props) {
   
   const profile = await fetchProfileById(id);
 
-  if (!profile) {
-    notFound();
-  }
-
   // SEO Optimization: If accessed via ID instead of Slug, redirect to Slug
-  const profileSlug = slugify(profile.name);
-  if (id !== profileSlug && id !== profile.id) {
-     // This handles cases where ID is used but it's not the canonical slug
-     // We allow the exact ID for backward compatibility but redirect to slug
-     permanentRedirect(`/profile/${profileSlug}`);
-  } else if (id === profile.id && id !== profileSlug) {
-    // If accessed via actual database ID, redirect to slug
-    permanentRedirect(`/profile/${profileSlug}`);
+  if (profile) {
+    const profileSlug = slugify(profile.name);
+    if (id !== profileSlug && id !== profile.id) {
+       permanentRedirect(`/profile/${profileSlug}`);
+    } else if (id === profile.id && id !== profileSlug) {
+       permanentRedirect(`/profile/${profileSlug}`);
+    }
   }
 
-  // Deterministic review count based on ID to avoid "duplicate content" flags
-  const reviewCount = (parseInt(profile.id.substring(0, 8), 16) % 100) + 45;
+  const profileSlug = profile ? slugify(profile.name) : slugify(id);
+  const reviewCount = profile ? (parseInt(profile.id.substring(0, 8), 16) % 100) + 45 : 50;
 
-  const jsonLd = {
+  const jsonLd = profile ? {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": `${profile.name} - Elite Escort in ${profile.location}`,
@@ -73,7 +68,6 @@ export default async function Page({ params }: Props) {
       "@type": "Brand",
       "name": "Hex Escorts UG"
     },
-    // This is the magic that gives you Star Ratings in Google!
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": profile.rating?.toString() || "4.8",
@@ -81,7 +75,6 @@ export default async function Page({ params }: Props) {
       "bestRating": "5",
       "worstRating": "1"
     },
-    // This adds the "Price" snippet in Google Search
     "offers": {
       "@type": "Offer",
       "url": `https://www.hexescortsug.com/profile/${profileSlug}`,
@@ -93,12 +86,12 @@ export default async function Page({ params }: Props) {
         "name": "Hex Escorts UG"
       }
     }
-  };
+  } : null;
 
   const breadcrumbItems = [
     { label: "Escorts in Uganda", href: "/escorts-in" },
-    { label: profile.location, href: `/escorts-in/${slugify(profile.location)}` },
-    { label: profile.name, href: `/profile/${profileSlug}`, current: true }
+    ...(profile ? [{ label: profile.location, href: `/escorts-in/${slugify(profile.location)}` }] : []),
+    { label: profile ? profile.name : id, href: `/profile/${profileSlug}`, current: true }
   ];
 
   return (
@@ -111,7 +104,7 @@ export default async function Page({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
         )}
-        <ProfileDetailPageClient profileId={id} initialProfile={profile} />
+        <ProfileDetailPageClient profileId={id} initialProfile={profile || undefined} />
       </div>
     </main>
   );

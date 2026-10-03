@@ -105,6 +105,65 @@ function mapDbProfile(p: any): ProfileType {
   };
 }
 
+const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || "b07234f65853d0f9f8e6fa1896cf06db";
+const DB_ID = process.env.CLOUDFLARE_D1_DATABASE_ID || "9914bf44-9661-4a24-903f-d49c73d6b1fe";
+const D1_TOKEN = process.env.CLOUDFLARE_D1_TOKEN;
+
+async function fetchProfilesDirectFromD1(): Promise<ProfileType[] | null> {
+  if (!D1_TOKEN) return null;
+
+  try {
+    const D1_URI = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/d1/database/${DB_ID}/query`;
+    const res = await fetch(D1_URI, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${D1_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sql: "SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_pinned DESC, created_at DESC;",
+        params: [],
+      }),
+      cache: "no-store",
+    });
+    const data = await res.json();
+    if (data.success && data.result?.[0]?.results) {
+      const results = data.result[0].results;
+      return results.map((p: any) => ({
+        id: String(p.id),
+        name: p.name,
+        age: p.age ?? undefined,
+        height: p.height ?? undefined,
+        bodyType: p.body_type ?? undefined,
+        complexion: p.complexion ?? undefined,
+        location: p.location,
+        rating: Number(p.rating) || 4.5,
+        profileImage: transformUrl(p.profile_image || (p.images && p.images.length > 0 ? p.images[0] : null)),
+        images: (typeof p.images === "string" ? JSON.parse(p.images) : (p.images || [])).map(transformUrl),
+        videos: (typeof p.videos === "string" ? JSON.parse(p.videos) : (p.videos || [])).map(transformUrl),
+        shortBio: p.short_bio || "",
+        description: p.description || "",
+        phone: p.phone ?? undefined,
+        whatsapp: p.whatsapp ?? undefined,
+        email: p.email ?? undefined,
+        instagram: p.instagram ?? undefined,
+        services: typeof p.services === "string" ? JSON.parse(p.services) : (p.services || []),
+        reviews: [],
+        isPinned: Boolean(p.is_pinned),
+        isArchived: Boolean(p.is_archived),
+        isVip: Boolean(p.is_vip),
+        isPremium: Boolean(p.is_premium),
+        isAd: Boolean(p.is_ad),
+        isVerified: Boolean(p.is_verified),
+        adImages: (typeof p.ad_images === "string" ? JSON.parse(p.ad_images) : (p.ad_images || [])).map(transformUrl),
+      }));
+    }
+  } catch (e) {
+    console.error("Direct D1 query error in fetchProfilesDirectFromD1:", e);
+  }
+  return null;
+}
+
 export async function fetchAllProfiles(seed?: string) {
   const fallback = getActiveStaticProfiles();
 
@@ -112,11 +171,22 @@ export async function fetchAllProfiles(seed?: string) {
     return seed ? sortAndShuffleProfiles(fallback, seed) : fallback;
   }
 
+  // Direct Cloudflare D1 query when executing on Server Side (Vercel Server Components)
+  if (typeof window === "undefined") {
+    try {
+      const directD1 = await fetchProfilesDirectFromD1();
+      if (directD1 && directD1.length > 0) {
+        return seed ? sortAndShuffleProfiles(directD1, seed) : directD1;
+      }
+    } catch (e) {
+      console.warn("Direct D1 server fetch failed, trying HTTP fallback:", e);
+    }
+  }
+
   try {
     let url = "/api/profiles";
     if (typeof window === "undefined") {
-      const host = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : (process.env.NEXT_PUBLIC_SITE_URL || "https://www.hexescortsug.com");
-      url = `${host}/api/profiles`;
+      url = "https://www.hexescortsug.com/api/profiles";
     }
     const apiRes = await fetch(url, { cache: "no-store" });
     if (apiRes.ok) {
