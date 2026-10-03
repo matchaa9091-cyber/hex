@@ -21,8 +21,14 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
   const id = profileId;
   
   const { data: allProfiles = [], isLoading } = useAllProfiles();
-  // Use initialProfile immediately (server-rendered data) while client query loads
-  const profile = (allProfiles.length > 0 ? allProfiles.find(p => p.id === id || slugify(p.name) === id) : undefined) ?? initialProfile;
+  const normalizedTarget = decodeURIComponent(id).toLowerCase().trim();
+  const targetSlug = slugify(normalizedTarget);
+  const profile = (allProfiles.length > 0 ? allProfiles.find(p => 
+    p.id === id || 
+    slugify(p.name) === id || 
+    p.name.toLowerCase().trim() === normalizedTarget ||
+    slugify(p.name) === targetSlug
+  ) : undefined) ?? initialProfile;
 
   // Scroll to top when component mounts or profile ID changes
   useEffect(() => {
