@@ -42,32 +42,21 @@ export async function GET(request: Request, { params }: { params: { path: string
     }
   }
 
-  // Fallback: Fetch from Supabase via wsrv.nl proxy (for images) or direct (for videos)
+  // Fallback: Fetch from Cloudflare R2 CDN (or legacy Supabase via wsrv.nl proxy)
+  const r2Url = `https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev/${mediaPath.startsWith("storage/") ? mediaPath : "storage/" + mediaPath}`;
   const supabaseUrl = `https://dkyikirsvpauhbexbhvu.supabase.co/storage/v1/object/public/${mediaPath}`;
   
-  // Only use wsrv.nl for images
   const isImage = /\.(jpg|jpeg|png|webp|jfif|avif)$/i.test(mediaPath);
-  const targetUrl = isImage 
-    ? `https://wsrv.nl/?url=${encodeURIComponent(supabaseUrl)}&w=800&output=webp&q=80`
-    : supabaseUrl;
-
+  
   try {
-    const res = await fetch(targetUrl);
+    let res = await fetch(r2Url);
     if (!res.ok) {
-      // Fallback to direct fetch if proxy fails
-      const fallbackRes = await fetch(supabaseUrl);
-      if (!fallbackRes.ok) return new NextResponse('Not found', { status: fallbackRes.status });
-      return new NextResponse(fallbackRes.body, {
-        headers: {
-          'Content-Type': fallbackRes.headers.get('content-type') || 'application/octet-stream',
-          'Cache-Control': 'public, max-age=3600',
-        },
-      });
+      res = await fetch(supabaseUrl);
     }
-
+    if (!res.ok) return new NextResponse('Not found', { status: 404 });
     return new NextResponse(res.body, {
       headers: {
-        'Content-Type': isImage ? 'image/webp' : (res.headers.get('content-type') || 'application/octet-stream'),
+        'Content-Type': res.headers.get('content-type') || (isImage ? 'image/jpeg' : 'application/octet-stream'),
         'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, immutable',
         'Access-Control-Allow-Origin': '*',
       },
