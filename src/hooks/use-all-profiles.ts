@@ -10,8 +10,8 @@ export function useAllProfiles(initialData?: ProfileType[], seed?: string) {
     queryFn: async () => {
       return fetchAllProfiles(seed);
     },
-    staleTime: 0,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    initialData,
+    staleTime: 60000, // 1 minute in-memory cache for silky smooth instant navigation
+    refetchOnWindowFocus: false,
   });
 }

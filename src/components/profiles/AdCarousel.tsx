@@ -112,7 +112,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                   {/* Poster Banner - Original Uncropped Size */}
                   <Link href={`/profile/${item.slug}`} className="block relative overflow-hidden bg-black flex items-center justify-center p-2.5 min-h-[190px]">
                     <div
-                      className="absolute inset-0 bg-cover bg-center opacity-30 blur-md scale-110"
+                      className="absolute inset-0 bg-cover bg-center opacity-20"
                       style={{ backgroundImage: `url('${item.image}')` }}
                     />
                     <img
