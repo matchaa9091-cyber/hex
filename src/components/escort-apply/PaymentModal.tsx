@@ -44,23 +44,26 @@ export default function PaymentModal({
     }
     setLoading(true);
     try {
-      const { createClient } = await import("@supabase/supabase-js");
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-      const { error: dbError } = await supabase
-        .from("escort_applications")
-        .update({
+      const res = await fetch("/api/applications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: applicationId,
           payment_method: method,
           payment_phone: payPhone.trim(),
           transaction_id: txId.trim(),
           status: "pending_verification",
-        })
-        .eq("id", applicationId);
-      if (dbError) throw dbError;
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "Failed to update application");
+      }
+
       onVerified();
-    } catch {
+    } catch (err: any) {
+      console.error("Verification submit error:", err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
