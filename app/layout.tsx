@@ -114,9 +114,19 @@ export const metadata: Metadata = {
     siteName: "Hex Escorts UG",
     type: "website",
     locale: "en_UG",
+    images: [
+      {
+        url: "https://www.hexescortsug.com/logo.png",
+        width: 1024,
+        height: 1024,
+        alt: "Hex Escorts UG Logo",
+      },
+    ],
   },
   twitter: {
+    card: "summary_large_image",
     description: "Browse verified escorts from across Uganda. Real profiles, reviewed companions.",
+    images: ["https://www.hexescortsug.com/logo.png"],
   },
   alternates: {
     canonical: "/",
@@ -154,13 +164,16 @@ export default function RootLayout({
                 "@type": "WebSite",
                 "name": "Hex Escorts UG",
                 "alternateName": ["Escorts UG", "Hex Escorts"],
-                "url": "https://www.hexescortsug.com"
+                "url": "https://www.hexescortsug.com",
+                "image": "https://www.hexescortsug.com/logo.png"
               },
               {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
                 "name": "Hex Escorts UG",
                 "url": "https://www.hexescortsug.com",
+                "logo": "https://www.hexescortsug.com/logo.png",
+                "image": "https://www.hexescortsug.com/logo.png",
                 "description": "Uganda's #1 verified escort directory. Find sexy girls and escorts in Kampala, Entebbe, Jinja, Mbarara and all major Uganda cities.",
                 "address": {
                   "@type": "PostalAddress",

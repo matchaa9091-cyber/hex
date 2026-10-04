@@ -13,7 +13,7 @@ export function Logo({ size = 40, className, textSize = "2xl" }: LogoProps) {
     <div className={cn("flex items-center", className)}>
       <div className="flex items-center">
         <img 
-          src="/new-logo.jpg" 
+          src="/logo.png" 
           alt="Hex Escorts ug Logo" 
           width={size}
           height={size}
