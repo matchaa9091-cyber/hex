@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "top escorts in africa", "top escorts in uganda", "top escorts in kampala",
     "best escorts", "best uganda sites in uganda", "best escorts ug",
     "all escorts", "pure escorts", "pure escort ug", "pure kampala girls",
-    "premium escorts in uganda", "boobpedia premium escorts", "vip escorts",
+    "premium escorts in uganda", "vip escorts",
     "vip escorts ug", "vip escorts in uganda", "exotic escorts",
     "hostess escorts", "bed escorts", "pearl escorts",
     "affordable escorts", "affordable escorts in kampala",
@@ -32,109 +32,57 @@ export const metadata: Metadata = {
     "ug atlas escorts", "bamba escorts", "lady one escorts", "ocum escorts",
     "premier connect ug", "rayvons rent girl", "uganda divas",
 
-    // Hot & sexy girls
+    // Hot & sexy models / babes
     "uganda hot girls", "hot girls", "sexy girls", "sexy babes", "hot babes",
     "kampala hot girls", "kampala hot escorts", "kampala hot",
     "sweet girls", "sweet escorts", "sweet ebony girls",
-    "ugandan girls", "uganda girls", "uganda girls to fuck",
-    "horny ugandan girls", "horny escorts", "horny", "horny girls",
-    "horny girls ug", "horny girls in uganda", "horny girls to fuck",
+    "ugandan girls", "uganda girls", "ebony girls", "ebony sexy babes",
+    "ebony sexy girls", "ebony kampala", "fine ass escorts",
     "sexy ugandan escorts", "hot sexy ugandan escorts",
     "afro girls", "afrohot", "afrohot girls", "uganda hot babes",
     "top sweet girls", "night girls", "night shift", "shy girls",
 
-    // Hookup
+    // Hookups & companionship
     "hookup", "hookup Uganda", "hookup Kampala", "hookup girls",
     "hookup girls in uganda", "verified hookups in uganda",
-    "hookup and BJ", "verified hookup calls ug", "hookup calls ug",
+    "verified hookup calls ug", "hookup calls ug",
     "sexy hookups in kampala", "sexy hook ups in uganda",
-    "meet and fuck", "fuck and pleasure", "fuck and enjoy",
-    "girls to fuck", "fucking", "have sex", "how to fuck",
-    "order sex", "online sex", "full package", "full package massage",
-    "full package sex", "happiness in bed",
+    "full package", "full package massage", "happiness in bed",
+    "delivery girls", "companionship girls", "dating", "girls to date",
+    "ladies in Uganda", "Uganda girls for hire", "girls in Uganda",
+    "sexy girls Uganda", "hot girls Uganda", "companions Uganda",
+    "escort services Uganda", "escort services Kampala",
+    "independent escorts Uganda",
 
     // Location-based
     "Ntinda escorts", "kasubi escorts", "kisaasi escorts", "kololo escorts",
     "entebbe escorts", "kawempe escorts", "makindye escorts",
     "munyonyo escorts", "muyenga escorts", "gumite escorts",
     "escorts around kampala", "Jinja escorts", "Mbarara escorts",
-    "kampala uganda", "Entebbe escorts",
-    "escort girls agiences",
+    "kampala uganda", "Entebbe escorts", "escorts in Ntinda",
+    "Escorts near Makerere", "dubai escorts", "kikoni sure",
 
     // Call girls
     "call girls", "call girls Uganda", "call girls Kampala", "call girls Najjera",
 
-    // Adult entertainment
-    "Uganda adult entertainment", "Kampala adult entertainment",
-    "adult entertainment", "ug porn", "kampala porn", "ugandan porn",
-    "ug porn sites", "top uganda porn sites", "sex chat",
-    "cam girls", "camming", "stripchat", "stripchat escorts", "cam escorts",
-
-    // Body & explicit
-    "naked girls", "erotic girls", "erotic sex", "ebony girls",
-    "ebony sexy babes", "ebony sexy girls", "ebony sex",
-    "naked sexy girls", "naked ebony girls", "ebony kampala",
-    "ebony pussy", "ebony sexy pussy", "wet pussy", "squirting",
-    "orgasm girls", "squirting girls", "squirting pussy",
-    "fine ass escorts", "ebony prostitutes", "exotic prostitutes",
-
-    // Nudes & leaks
-    "nodo leaks", "nudes", "nude trends", "kampala nudes",
-    "kampala girls nudes", "trending nudes", "nude leaks",
-    "nudes and video call",
-
-    // Massage & spa
+    // Massage & Spa
     "massage", "massage and hook up", "massage and escorts",
-    "escorts and massage", "escorts ans massage",
-    "massage girls", "massage escorts", "massage spas",
-    "legit massage spas", "massage spas in ug", "legit spas",
-    "legit spas in uganda", "uganda massage spas", "spas", "bj",
+    "escorts and massage", "massage girls", "massage escorts",
+    "massage spas", "legit massage spas", "massage spas in ug",
+    "legit spas", "legit spas in uganda", "uganda massage spas", "spas",
 
     // Sugar mummies
-    "sugar mummies", "sugar mummies in uganda", "sugar mummies to fuck",
-    "hot sugar mummies",
+    "sugar mummies", "sugar mummies in uganda", "hot sugar mummies",
 
-    // Delivery & companionship
-    "delivery girls", "companionship girls", "dating", "girls to date",
+    // Local, niche & lifestyle
+    "uganda hot life", "uganda hot", "escort news",
+    "ekibugina escorts", "ekisododo escorts", "enkudi escorts",
+    "gumite babes", "gumite girls", "ziina ug", "ug purity girls",
 
-    // Sexual education terms
-    "how to finger pussy", "sex therapy", "sex therapy ug",
-    "how to not be shy",
-
-    // Prostitution terms
-    "kampala prostitution", "ug prostitutes", "prostitution in uganda",
-    "ug purity girls",
-
-    // Dubai
-    "dubai escorts",
-
-    // Kikoni
-    "kikoni sure",
-
-    // Uganda hot life
-    "uganda hot life", "uganda hot",
-
-    // Verified & legit
+    // Verified & contact
     "Verified escorts Kampala", "verified escorts Uganda",
     "real photos escorts", "whatsapp escorts Uganda",
     "direct contacts escorts",
-
-    // General
-    "escorts Uganda", "escorts in Uganda", "Uganda escorts",
-    "UG escorts", "escorts ug", "escorts in Kampala",
-    "Uganda escort directory", "Uganda escorts directory",
-    "escort news", "escorts in Ntinda", "Escorts near Makerere",
-
-    // Exclusive/niche
-    "ekibugina escorts", "ekisododo escorts", "enkudi escorts",
-    "gumite babes", "gumite girls", "ziina ug",
-
-    // Companion services
-    "ladies in Uganda", "Uganda girls for hire",
-    "girls in Uganda", "girls in uganda to fuck",
-    "girls to fuck in Uganda", "sexy girls Uganda", "hot girls Uganda",
-    "companions Uganda", "escort services Uganda", "escort services Kampala",
-    "independent escorts Uganda",
   ].join(", "),
   verification: {
     google: [
