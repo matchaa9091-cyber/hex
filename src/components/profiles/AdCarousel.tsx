@@ -55,7 +55,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
             <Link
               key={`desktop-${item.id}-${idx}`}
               href={`/profile/${item.slug}`}
-              className="relative shrink-0 w-48 h-64 lg:w-64 lg:h-80 rounded-xl overflow-hidden border border-pink-500/30 hover:border-pink-500 transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)] group"
+              className="relative shrink-0 w-80 h-48 lg:w-[400px] lg:h-[225px] rounded-xl overflow-hidden border border-pink-500/30 hover:border-pink-500 transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)] group"
             >
               <img
                 src={item.image}

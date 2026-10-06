@@ -292,7 +292,7 @@ export default function ApplicationsPanel() {
                   </div>
 
                   {/* Actions */}
-                  {(app.status === "pending_verification" || app.status === "pending_payment") && (
+                  {app.status === "pending_verification" && (
                     <div className="flex gap-2 flex-shrink-0">
                       <Button
                         size="sm"
@@ -303,9 +303,26 @@ export default function ApplicationsPanel() {
                         {actionLoading === app.id ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
                         ) : (
-                          <><CheckCircle className="h-3.5 w-3.5 mr-1" /> Approve & {app.plan === "vip_boost" ? "Boost to VIP" : "Publish"}</>
+                          <><CheckCircle className="h-3.5 w-3.5 mr-1" /> Verify & Approve</>
                         )}
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-red-500/40 text-red-400 hover:bg-red-900/20 h-8 px-3 text-xs"
+                        onClick={() => handleReject(app.id)}
+                        disabled={actionLoading === app.id}
+                      >
+                        <XCircle className="h-3.5 w-3.5 mr-1" /> Reject
+                      </Button>
+                    </div>
+                  )}
+
+                  {app.status === "pending_payment" && (
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-[11px] text-yellow-400 bg-yellow-500/10 border border-yellow-500/30 px-2.5 py-1 rounded-md font-medium">
+                        Awaiting Payment
+                      </span>
                       <Button
                         size="sm"
                         variant="outline"
