@@ -55,15 +55,21 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
             <Link
               key={`desktop-${item.id}-${idx}`}
               href={`/profile/${item.slug}`}
-              className="relative shrink-0 w-80 h-48 lg:w-[400px] lg:h-[225px] rounded-xl overflow-hidden border border-pink-500/30 hover:border-pink-500 transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)] group"
+              className="relative shrink-0 w-[420px] h-72 lg:w-[540px] lg:h-[350px] rounded-2xl overflow-hidden border border-pink-500/30 hover:border-pink-500 transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)] group bg-black flex items-center justify-center"
             >
+              {/* Blurred background glow */}
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-30 blur-md scale-110"
+                style={{ backgroundImage: `url('${item.image}')` }}
+              />
+              {/* Full flyer content displayed uncropped */}
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="relative z-10 w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-3 lg:p-4">
-                <span className="text-[10px] font-black uppercase text-pink-400 mb-1 flex items-center gap-1">
+              <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none flex flex-col justify-end p-3 lg:p-4">
+                <span className="text-[10px] font-black uppercase text-pink-400 mb-0.5 flex items-center gap-1">
                   <Sparkles className="w-3 h-3" /> FEATURED SPA
                 </span>
                 <span className="text-white font-bold text-sm lg:text-base drop-shadow-md group-hover:text-pink-300 transition-colors">

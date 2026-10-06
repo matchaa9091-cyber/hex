@@ -215,59 +215,59 @@ export default function ApplicationsPanel() {
             return (
               <div
                 key={app.id}
-                className={`border rounded-xl p-4 transition-all ${
+                className={`border rounded-2xl p-3 sm:p-3.5 transition-all ${
                   isVipBoost 
                     ? "bg-yellow-950/20 border-yellow-500/40" 
                     : isMonthly 
                       ? "bg-pink-950/20 border-pink-500/40" 
-                      : "bg-gray-800/60 border-gray-700"
+                      : "bg-[#181a20] border-gray-800"
                 }`}
               >
-                <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   {/* Info */}
-                  <div className="flex gap-4 flex-1 min-w-0">
+                  <div className="flex gap-3 items-center flex-1 min-w-0">
                     {app.profile_image ? (
-                      <img src={app.profile_image} alt={app.name} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                      <img src={app.profile_image} alt={app.name} className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover flex-shrink-0 border border-gray-800" />
                     ) : (
-                      <div className="w-16 h-16 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
-                        {isVipBoost ? <Crown className="w-8 h-8 text-yellow-400" /> : <User className="w-8 h-8 text-gray-500" />}
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gray-800 border border-gray-700/60 flex items-center justify-center flex-shrink-0">
+                        {isVipBoost ? <Crown className="w-7 h-7 text-yellow-400" /> : <User className="w-7 h-7 text-gray-500" />}
                       </div>
                     )}
                     
-                    <div className="space-y-1.5 flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-white text-base">{app.name}</span>
-                        {app.age && <span className="text-gray-400 text-sm">· {app.age} yrs</span>}
+                    <div className="space-y-1 flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-bold text-white text-sm sm:text-base">{app.name}</span>
+                        {app.age && <span className="text-gray-400 text-xs sm:text-sm">· {app.age} yrs</span>}
                         
                         {isMonthly ? (
-                          <span className="text-xs px-2.5 py-0.5 rounded-full border bg-pink-500/20 text-pink-400 border-pink-500/30 font-bold tracking-wide flex items-center gap-1">
-                            <Crown className="w-3 h-3 text-pink-400" /> FULL MONTH (30,000 UGX)
+                          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-pink-500/20 text-pink-400 border-pink-500/30 font-bold tracking-wide flex items-center gap-1">
+                            <Crown className="w-2.5 h-2.5 text-pink-400" /> FULL MONTH
                           </span>
                         ) : isVipBoost ? (
-                          <span className="text-xs px-2.5 py-0.5 rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/30 font-bold tracking-wide flex items-center gap-1">
-                            <Zap className="w-3 h-3 text-yellow-400" /> VIP BOOST ADD-ON (10,000 UGX)
+                          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/30 font-bold tracking-wide flex items-center gap-1">
+                            <Zap className="w-2.5 h-2.5 text-yellow-400" /> VIP BOOST
                           </span>
                         ) : (
-                          <span className="text-xs px-2.5 py-0.5 rounded-full border bg-gray-500/20 text-gray-300 border-gray-500/30">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full border bg-gray-500/15 text-gray-300 border-gray-600/30 uppercase font-semibold">
                             ORDINARY
                           </span>
                         )}
 
-                        <span className={`text-xs px-2 py-0.5 rounded-full border ${statusInfo.color}`}>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full border ${statusInfo.color} font-medium`}>
                           {statusInfo.label}
                         </span>
                       </div>
 
                       {/* VIP Boost Alert Banner */}
                       {app.plan === "vip_boost" && (
-                        <div className="p-2.5 bg-yellow-400/10 border border-yellow-400/30 rounded-lg text-xs text-yellow-300">
-                          ⚡ <strong>VIP Boost Request:</strong> Existing model <strong>"{app.name}"</strong> ({app.phone}) wants to upgrade to VIP for 1 week. Approve to pin their profile to the top.
+                        <div className="p-2 bg-yellow-400/10 border border-yellow-400/30 rounded-lg text-xs text-yellow-300">
+                          ⚡ <strong>VIP Boost Request:</strong> Existing model <strong>"{app.name}"</strong> ({app.phone}) wants to upgrade to VIP for 1 week.
                         </div>
                       )}
 
-                      <div className="flex flex-wrap gap-3 text-gray-400 text-sm">
-                        <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {app.location}</span>
-                        <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" /> {app.phone}</span>
+                      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-gray-400 text-xs">
+                        <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-gray-500" /> {app.location}</span>
+                        <span className="flex items-center gap-1"><Phone className="h-3 w-3 text-gray-500" /> {app.phone}</span>
                         {app.body_type && <span>{app.body_type}</span>}
                         {app.complexion && <span>· {app.complexion}</span>}
                         {app.images?.length > 0 && <span className="text-gray-500">· {app.images.length} pics, {app.videos?.length || 0} vids</span>}
@@ -279,24 +279,22 @@ export default function ApplicationsPanel() {
 
                       {/* Payment info */}
                       {app.transaction_id && (
-                        <div className="mt-2 p-2.5 bg-blue-900/20 border border-blue-500/20 rounded-lg text-xs space-y-1">
-                          <p className="text-blue-300 font-medium">Payment Submitted</p>
-                          <p className="text-gray-300">Method: <span className="text-white font-medium uppercase">{app.payment_method}</span></p>
-                          <p className="text-gray-300">Phone Used: <span className="text-white font-medium">{app.payment_phone}</span></p>
+                        <div className="mt-1.5 p-2 bg-blue-900/20 border border-blue-500/20 rounded-lg text-xs space-y-0.5">
+                          <p className="text-blue-300 font-medium">Payment Submitted: <span className="text-white uppercase">{app.payment_method}</span> ({app.payment_phone})</p>
                           <p className="text-gray-300">TX ID: <span className="text-white font-mono font-medium">{app.transaction_id}</span></p>
                         </div>
                       )}
 
-                      <p className="text-gray-600 text-xs mt-1">Submitted: {new Date(app.created_at).toLocaleDateString()}</p>
+                      <p className="text-gray-500 text-[11px]">Applied: {new Date(app.created_at).toLocaleDateString()}</p>
                     </div>
                   </div>
 
                   {/* Actions */}
                   {app.status === "pending_verification" && (
-                    <div className="flex gap-2 flex-shrink-0">
+                    <div className="flex gap-1.5 flex-shrink-0 self-center">
                       <Button
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white h-8 px-3 text-xs"
+                        className="bg-green-600 hover:bg-green-700 text-white h-7 sm:h-8 px-2.5 sm:px-3 text-xs font-semibold rounded-lg shadow-sm"
                         onClick={() => handleApprove(app)}
                         disabled={actionLoading === app.id}
                       >
@@ -309,7 +307,7 @@ export default function ApplicationsPanel() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-red-500/40 text-red-400 hover:bg-red-900/20 h-8 px-3 text-xs"
+                        className="border-red-500/40 text-red-400 hover:bg-red-900/20 h-7 sm:h-8 px-2.5 text-xs rounded-lg"
                         onClick={() => handleReject(app.id)}
                         disabled={actionLoading === app.id}
                       >
@@ -319,16 +317,14 @@ export default function ApplicationsPanel() {
                   )}
 
                   {app.status === "pending_payment" && (
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-[11px] text-yellow-400 bg-yellow-500/10 border border-yellow-500/30 px-2.5 py-1 rounded-md font-medium">
-                        Awaiting Payment
-                      </span>
+                    <div className="flex items-center gap-1.5 flex-shrink-0 self-center">
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="border-red-500/40 text-red-400 hover:bg-red-900/20 h-8 px-3 text-xs"
+                        variant="ghost"
+                        className="text-red-400/80 hover:text-red-300 hover:bg-red-950/30 h-7 px-2 text-xs rounded-lg"
                         onClick={() => handleReject(app.id)}
                         disabled={actionLoading === app.id}
+                        title="Dismiss / Reject Unpaid Draft"
                       >
                         <XCircle className="h-3.5 w-3.5 mr-1" /> Reject
                       </Button>
