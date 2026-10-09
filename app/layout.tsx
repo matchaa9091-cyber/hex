@@ -86,6 +86,7 @@ export const metadata: Metadata = {
   ].join(", "),
   verification: {
     google: [
+      "yK9CcPdgopgidQRXcgWNfzSD-LUmEUh3IXlMEJyZgDE",
       "CB2_zvrFVSNRXPIALZfpGR4eg2Gc8HQIgKh41BJd4OM",
       "37jbT2PcWcRwnnSmVcZxesfTuLLL5uyupKBsSed4pY4", 
       "JFY34OVLDSzS0ieEkEQAHauVc4__UBUFCT-8RYtIyuE",
@@ -148,6 +149,7 @@ export default function RootLayout({
         <meta name="geo.region" content="UG" />
         <meta name="geo.country" content="Uganda" />
         <meta name="language" content="English" />
+        <meta name="google-site-verification" content="yK9CcPdgopgidQRXcgWNfzSD-LUmEUh3IXlMEJyZgDE" />
         <meta name="theme-color" content="#FD2473" />
         <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
