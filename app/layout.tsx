@@ -6,9 +6,9 @@ import React, { Suspense } from "react";
 import PostHogPageview from "./posthog-pageview";
 
 export const metadata: Metadata = {
-  title: "Escorts UG - #1 Verified Hookup Call Girls & Discreet Escorts in Uganda",
+  title: "Uganda Escorts: #1 Verified Call Girls & Companions | Hex Escorts",
   description:
-    "Best Uganda escorts & sexy girls in Kampala. Find discreet hookups, ebony call girls, and verified companions in Entebbe, Jinja, Mbarara and countrywide. Direct WhatsApp contacts for real sexy girls in Uganda. #1 Ugandan escort directory.",
+    "Uganda Escorts: Browse 100% verified Ugandan call girls in Kampala, Entebbe, Jinja & Mbarara. Real photos, verified direct WhatsApp contacts & discreet hookups.",
   keywords: [
     // Core escort terms
     "uganda escorts", "ug escorts", "escorts", "escorts ug", "escorts uganda",
@@ -109,9 +109,9 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   openGraph: {
-    title: "Hex Escorts UG - #1 Verified Hookup Call Girls & Discreet Escorts in Uganda",
+    title: "Uganda Escorts: #1 Verified Call Girls & Companions | Hex Escorts",
     description:
-      "Find discreet, verified escorts in Uganda with real photos and direct WhatsApp contacts. Real profiles from Kampala, Entebbe, Jinja, Mbarara and countrywide.",
+      "Browse 100% verified Ugandan call girls in Kampala, Entebbe, Jinja & Mbarara. Real photos, verified direct WhatsApp contacts & discreet hookups.",
     url: "https://www.hexescortsug.com",
     siteName: "Hex Escorts UG",
     type: "website",
@@ -121,13 +121,14 @@ export const metadata: Metadata = {
         url: "https://www.hexescortsug.com/logo.png",
         width: 1024,
         height: 1024,
-        alt: "Hex Escorts UG Logo",
+        alt: "Uganda Escorts - Hex Escorts UG Logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    description: "Browse verified escorts from across Uganda. Real profiles, reviewed companions.",
+    title: "Uganda Escorts: #1 Verified Call Girls & Companions | Hex Escorts",
+    description: "Browse 100% verified Ugandan call girls. Real photos, verified WhatsApp contacts & discreet hookups.",
     images: ["https://www.hexescortsug.com/logo.png"],
   },
   alternates: {
@@ -168,19 +169,19 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "name": "Hex Escorts UG",
-                "alternateName": ["Escorts UG", "Hex Escorts"],
+                "name": "Hex Escorts UG - Uganda Escorts Directory",
+                "alternateName": ["Uganda Escorts", "Escorts UG", "Uganda Escorts Directory", "Hex Escorts"],
                 "url": "https://www.hexescortsug.com",
                 "image": "https://www.hexescortsug.com/logo.png"
               },
               {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
-                "name": "Hex Escorts UG",
+                "name": "Hex Escorts UG - Uganda Escorts Directory",
                 "url": "https://www.hexescortsug.com",
                 "logo": "https://www.hexescortsug.com/logo.png",
                 "image": "https://www.hexescortsug.com/logo.png",
-                "description": "Uganda's #1 verified escort directory. Find sexy girls and escorts in Kampala, Entebbe, Jinja, Mbarara and all major Uganda cities.",
+                "description": "Uganda's #1 verified escort directory. Find discreet Uganda escorts, sexy call girls, and verified companions in Kampala, Entebbe, Jinja, Mbarara and countrywide.",
                 "address": {
                   "@type": "PostalAddress",
                   "addressCountry": "UG",
@@ -193,6 +194,76 @@ export default function RootLayout({
                 "sameAs": [
                   "https://x.com/vickywiz60",
                   "https://t.me/+yX6mljCz8to2ODE0"
+                ]
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "How do I find verified Escorts in Kampala Uganda?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Finding verified escorts in Kampala Uganda is simple on Hex Escorts UG. Every companion listed as a Kampala call girl or Entebbe escort has been vetted to ensure real photos and direct WhatsApp contacts across Kololo, Nakasero, Ntinda, Najjera, and Makerere."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Are the photos of Ugandan call girls 100% real?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes. Hex Escorts UG enforces strict photo verification. When you book a verified escort or Kampala call girl from our directory, you meet the exact person shown in the photos."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Can I get direct WhatsApp contacts for hookups in Uganda?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Absolutely. We provide direct WhatsApp links for companions in Kampala, Entebbe, Jinja, and Mbarara. There are no agency middlemen, allowing you to connect directly and privately."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Do you have VIP companions for high-end events?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes, our VIP section features elite Ugandan companions and high-class call girls suited for corporate dinners, travel companionship, and exclusive private arrangements."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Is it discreet to book a hookup with Uganda escorts?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Privacy and discretion are top priorities. Our platform requires no client sign-up, ensuring your search for verified companions in Uganda remains completely confidential."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Where can I find independent escorts in Jinja or Mbarara?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "We have dedicated location directories for independent companions in Jinja, Mbarara, Gulu, and Mukono. Filter by city to find top available call girls near you."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "What types of sexy girls and escorts in Uganda are available?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Our directory features diverse companions including curvy ebony babes, slim models, VIP escorts, and massage specialists available for incalls and outcalls across Uganda."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How do I book a hookup with Uganda escorts?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Browse verified profiles on Hex Escorts UG, review their photos and services, and tap the WhatsApp button to chat directly with your selected companion."
+                    }
+                  }
                 ]
               }
             ])

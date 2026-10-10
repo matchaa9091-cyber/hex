@@ -54,9 +54,12 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4">
         {/* SEO Header */}
         <div className="mb-6 sm:mb-8 overflow-x-hidden">
-          <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-primary mb-4 break-words">
-            Verified Escorts in Uganda
+          <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-primary mb-3 break-words">
+            Uganda Escorts – #1 Verified Call Girls &amp; Discreet Companions
           </h1>
+          <p className="text-xs sm:text-sm text-gray-400 mb-4 max-w-3xl leading-relaxed">
+            Welcome to Hex Escorts UG, Uganda&apos;s leading directory for verified escorts and discreet call girls. Connect directly via WhatsApp with genuine models in Kampala, Entebbe, Jinja, and countrywide.
+          </p>
           
           {/* Top Sliding Section */}
           <div className="w-full overflow-hidden mb-6">
@@ -198,58 +201,120 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
           </div>
         </div>
 
-        {/* SEO Content Section */}
-        <div className="mt-16 text-center text-muted-foreground prose prose-invert mx-auto max-w-4xl pt-8 pb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6">Verified Uganda Escorts - Premium Sexy Girls & Ugandan Escorts</h2>
-          <div className="space-y-6 text-sm sm:text-base leading-relaxed text-gray-400">
+        {/* SEO Guide & Editorial Content Section */}
+        <div className="mt-16 text-left prose prose-invert mx-auto max-w-4xl pt-8 pb-12 border-t border-gray-800">
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6 text-center">
+            Uganda Escorts: The Premier Directory of Verified Ugandan Call Girls
+          </h2>
+          
+          <div className="space-y-8 text-sm sm:text-base leading-relaxed text-gray-300">
             <p>
-              Welcome to <strong>Escorts UG</strong> – the premier <strong>Uganda escorts directory</strong>. Find the best <strong>Escorts in Kampala Uganda</strong>, verified <strong>Kampala call girls</strong>, and verified <strong>Entebbe escorts</strong>. 
-              Whether you are looking for <strong>Ntinda escorts</strong>, <strong>Escorts in Ntinda</strong>, <strong>Call girls Najjera</strong>, <strong>Escorts near Makerere</strong>, or <strong>Kawempe escorts</strong>, we connect you with the most beautiful <strong>girls in uganda to fuck</strong>.
-            </p>
-            <p>
-              Our platform features the best <strong>Verified escorts Kampala</strong> (and verified escortd Kampala listings). 
-              If you need <strong>Affordable escorts in kampala</strong> or affordableescorts in kampala with direct numbers, search our directory. We list independent <strong>girls in uganda to fuck</strong> in all major suburbs.
-            </p>
-            
-            <h3 className="text-xl font-semibold text-white">Find Your Perfect Sexy Escort Today</h3>
-            <p>
-              In a market filled with fake profiles, we stand out by ensuring that every <strong>ugandan escort</strong> listed on our site 
-              undergoes a strict manual verification process. We provide direct contacts for <strong>sexy girls</strong> in every major city. 
-              Browse our listings for <strong>ebony</strong> models, elite <strong>sexy escorts</strong>, and the most reliable <strong>escorts in uganda</strong>.
+              Welcome to <strong>Hex Escorts UG</strong>, the most reliable and trusted <strong>Uganda escorts</strong> directory. 
+              Whether you are an international traveler visiting Uganda for business or leisure, an expatriate residing in Kampala, 
+              or a local resident seeking discreet companionship, our platform brings together top-tier <strong>Ugandan call girls</strong>, 
+              independent escorts, and VIP companions across all major cities and suburbs in Uganda.
             </p>
 
-            <h3 className="text-xl font-semibold text-white">Discreet Hookups with Ugandan Escorts</h3>
-            <p>
-              From <strong>ebony</strong> beauties to curvy <strong>sexy girls</strong>, find the perfect <strong>uganda escorts</strong> for your specific desires. 
-              Our site is the top choice for anyone searching for <strong>escorts in uganda</strong> or <strong>sexy escorts</strong> with genuine contacts. 
-              Book your next <strong>fuck girls</strong> hookup with confidence.
-            </p>
-            <div className="text-[10px] opacity-30 mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[...Array(10)].map((_, i) => (
-                <div key={i} className="flex flex-col">
-                  <span>Escorts in Kampala Uganda</span>
-                  <span>Kampala call girls</span>
-                  <span>Uganda escorts directory</span>
-                  <span>Verified escorts Kampala</span>
-                  <span>Verified escortd Kampala</span>
-                  <span>Entebbe escorts</span>
-                  <span>Ntinda escorts</span>
-                  <span>Escorts in Ntinda</span>
-                  <span>Call girls Najjera</span>
-                  <span>Escorts near Makerere</span>
-                  <span>Kawempe escorts</span>
-                  <span>Affordable escorts in kampala</span>
-                  <span>Affordableescorts in kampala</span>
-                  <span>girls in uganda to fuck</span>
-                  <span>uganda escorts</span>
-                  <span>ugandan escorts</span>
-                  <span>sexy escorts</span>
-                  <span>sexy girls</span>
-                  <span>escorts in uganda</span>
-                  <span>ebony</span>
-                  <span>fuck girls</span>
+            <div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                100% Photo-Verified Ugandan Escorts (No Middlemen)
+              </h3>
+              <p>
+                In an online classifieds market flooded with misleading photos and dishonest intermediaries, 
+                <strong> Hex Escorts UG</strong> enforces a rigorous manual verification process. We ensure that every companion listed 
+                has authentic, unedited photos so the person you see on our website is the exact companion you meet in person. 
+                Best of all, we provide direct WhatsApp contact numbers with <strong>zero agency fees or commission middlemen</strong>. 
+                You chat, negotiate rates, and arrange your date directly with the companion of your choice.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                Top Locations for Escorts in Uganda
+              </h3>
+              <p className="mb-3">
+                Our directory features comprehensive location-based listings so you can find sexy companions right in your neighborhood:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5 text-gray-400">
+                <li>
+                  <Link href="/escorts-in/kampala" className="text-primary hover:underline font-semibold">Kampala Escorts</Link>: 
+                  The center of Ugandan nightlife and luxury dining. Find verified call girls across Kololo, Nakasero, Bugolobi, 
+                  Ntinda, Kiwatule, Najjera, Muyenga, Munyonyo, and Bukoto.
+                </li>
+                <li>
+                  <Link href="/escorts-in/entebbe" className="text-primary hover:underline font-semibold">Entebbe Escorts</Link>: 
+                  Ideal for travelers arriving via Entebbe International Airport or guests staying at lakeside beach resorts along Lake Victoria.
+                </li>
+                <li>
+                  <Link href="/escorts-in/jinja" className="text-primary hover:underline font-semibold">Jinja Escorts</Link>: 
+                  Companions for corporate retreats, weekend getaways, and adventure tours near the source of the River Nile.
+                </li>
+                <li>
+                  <Link href="/escorts-in/mbarara" className="text-primary hover:underline font-semibold">Mbarara Escorts</Link>: 
+                  Charming, sophisticated local companions serving Western Uganda&apos;s fast-growing commercial center.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                Diverse Companionship Options to Match Your Desires
+              </h3>
+              <p>
+                Every client has unique tastes, which is why our Uganda escorts directory categorizes models to match your specific preferences:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                <div className="bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+                  <h4 className="text-white font-bold mb-1">Elite VIP Escorts</h4>
+                  <p className="text-xs text-gray-400">
+                    Stunning, multilingual models and high-class companions suited for diplomatic dinners, hotel stays, and private executive travel.
+                  </p>
                 </div>
-              ))}
+                <div className="bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+                  <h4 className="text-white font-bold mb-1">Ebony &amp; Curvy Beauties</h4>
+                  <p className="text-xs text-gray-400">
+                    Gorgeous, voluptuous Ugandan babes and slender models ready for discreet hookups, private hotel visits, or cozy home incalls.
+                  </p>
+                </div>
+                <div className="bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+                  <h4 className="text-white font-bold mb-1">Erotic Massage &amp; Spas</h4>
+                  <p className="text-xs text-gray-400">
+                    Trained masseuses providing sensual Nuru, Swedish, and full-body relaxation massage services in Kampala and Entebbe.
+                  </p>
+                </div>
+                <div className="bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+                  <h4 className="text-white font-bold mb-1">Girlfriend Experience (GFE)</h4>
+                  <p className="text-xs text-gray-400">
+                    Warm, passionate, and affectionate companionship focusing on emotional connection, relaxed dates, and intimacy.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                How to Book and Contact a Ugandan Escort Safely
+              </h3>
+              <p>
+                Booking a companion on Hex Escorts UG is simple, safe, and discreet:
+              </p>
+              <ol className="list-decimal pl-5 space-y-2 mt-2 text-gray-400">
+                <li><strong>Browse &amp; Select:</strong> Filter by city, suburb, or category to find your preferred companion.</li>
+                <li><strong>Direct WhatsApp:</strong> Click the verified WhatsApp button on their profile to start a direct conversation.</li>
+                <li><strong>State Your Requirements:</strong> Politely introduce yourself, specify whether you desire an incall or outcall, duration (short-time or overnight), and confirm rates upfront.</li>
+                <li><strong>Meet Safely:</strong> Agree on a safe, mutually convenient location such as a verified hotel, private residence, or upscale apartment.</li>
+              </ol>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                100% Client Discretion &amp; Privacy Guaranteed
+              </h3>
+              <p>
+                We understand that privacy is paramount. Hex Escorts UG does not require client account registration, 
+                does not track personal user data, and never sells contact information. You can explore Uganda escorts 
+                with complete confidentiality and peace of mind.
+              </p>
             </div>
           </div>
         </div>

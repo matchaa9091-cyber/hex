@@ -238,6 +238,11 @@ const LocationPage = ({ cityParam, suburbParam, categoryParam, initialProfiles, 
                   </Link>
                 ))}
               </div>
+              <div className="mt-6 pt-4 border-t border-gray-800/60">
+                <Link href="/" className="text-primary hover:underline font-semibold text-xs sm:text-sm flex items-center gap-1.5">
+                  ← Back to Uganda Escorts Directory
+                </Link>
+              </div>
             </div>
           </div>
         </div>

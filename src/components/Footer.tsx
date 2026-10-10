@@ -10,7 +10,9 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
           
           <div className="flex flex-col items-center md:items-start space-y-4">
-            <Logo size={40} textSize="2xl" />
+            <Link href="/" title="Uganda Escorts - Hex Escorts">
+              <Logo size={40} textSize="2xl" />
+            </Link>
             <p className="text-gray-400 text-sm max-w-xs text-center md:text-left">
               Uganda's premier directory for verified, high-quality companions. Browse safely, connect privately.
             </p>

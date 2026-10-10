@@ -80,7 +80,9 @@ export function AppSidebar() {
     <Sidebar className="hidden lg:block h-screen sticky top-0 left-0">
       <SidebarContent>
         <div className="p-4 mb-4">
-          <Logo textSize="2xl" />
+          <Link href="/" title="Uganda Escorts - Hex Escorts">
+            <Logo textSize="2xl" />
+          </Link>
         </div>
         
         <SidebarGroup>
@@ -179,7 +181,9 @@ export function AppSidebar() {
 
   const MobileSidebar = () => (
     <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b flex items-center justify-between p-4">
-      <Logo textSize="xl" />
+      <Link href="/" title="Uganda Escorts - Hex Escorts">
+        <Logo textSize="xl" />
+      </Link>
       <div className="flex items-center">
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>

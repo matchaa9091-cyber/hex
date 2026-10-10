@@ -16,12 +16,20 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": items.map((item, index) => ({
-      "@type": "ListItem",
-      "position": index + 1,
-      "name": item.label,
-      "item": `https://www.hexescortsug.com${item.href}`
-    }))
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Uganda Escorts",
+        "item": "https://www.hexescortsug.com"
+      },
+      ...items.map((item, index) => ({
+        "@type": "ListItem",
+        "position": index + 2,
+        "name": item.label,
+        "item": `https://www.hexescortsug.com${item.href}`
+      }))
+    ]
   };
 
   return (
@@ -32,9 +40,13 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       />
       <ol className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500">
         <li className="flex items-center">
-          <Link href="/" className="hover:text-primary transition-colors flex items-center">
-            <Home className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            <span>Home</span>
+          <Link 
+            href="/" 
+            title="Uganda Escorts - Hex Escorts Directory"
+            className="hover:text-primary transition-colors flex items-center font-medium"
+          >
+            <Home className="w-3 h-3 sm:w-4 sm:h-4 mr-1 shrink-0" />
+            <span>Uganda Escorts</span>
           </Link>
         </li>
         {items.map((item, index) => (
