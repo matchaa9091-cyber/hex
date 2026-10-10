@@ -26,6 +26,8 @@ dist-ssr
 # Next.js
 .next/
 out/
+.open-next/
+.wrangler/
 
 # Environment variables
 .env
