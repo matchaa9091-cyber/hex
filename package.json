@@ -69,7 +69,7 @@
     "vaul": "^0.9.3",
     "zod": "^3.23.8",
     "@aws-sdk/client-s3": "^3.700.0",
-    "@opennextjs/cloudflare": "^0.5.0"
+    "@opennextjs/cloudflare": "^1.14.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
@@ -88,6 +88,6 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
-    "wrangler": "^3.100.0"
+    "wrangler": "^4.49.1"
   }
 }
