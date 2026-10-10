@@ -6,10 +6,15 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
+  "workers_dev": true,
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  "routes": [
+    { "pattern": "www.hexescortsug.com", "custom_domain": true },
+    { "pattern": "hexescortsug.com", "custom_domain": true }
+  ],
   "vars": {
     "CLOUDFLARE_ACCOUNT_ID": "5bd6b605fed307126be13ca359f03fae",
     "CLOUDFLARE_D1_DATABASE_ID": "9914bf44-9661-4a24-903f-d49c73d6b1fe",
