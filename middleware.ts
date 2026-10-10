@@ -41,9 +41,14 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/admin-panel/:path*', 
-    '/hx-ctrl-7k9/:path*',
-    '/:path*' // Match all to enable the rewrite
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     * - public assets with extensions (png, jpg, jpeg, gif, webp, svg, ico, mp4, mov)
+     */
+    '/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|robots\\.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|mp4|mov)$).*)',
   ], 
 };
 

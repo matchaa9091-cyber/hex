@@ -6,10 +6,9 @@ export const revalidate = 3600; // Refresh once per hour
 
 const BASE_URL = 'https://www.hexescortsug.com'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://dkyikirsvpauhbexbhvu.supabase.co";
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const cities = [
   'kampala', 'entebbe', 'jinja', 'mbarara', 'gulu', 'fort-portal', 'mbale', 'tororo', 'mukono', 
