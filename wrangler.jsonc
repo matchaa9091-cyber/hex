@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hex",
+  "account_id": "5bd6b605fed307126be13ca359f03fae",
   "main": ".open-next/worker.js",
   "compatibility_date": "2024-12-30",
   "compatibility_flags": [
@@ -16,7 +17,7 @@
     { "pattern": "hexescortsug.com", "custom_domain": true }
   ],
   "vars": {
-    "CLOUDFLARE_ACCOUNT_ID": "5bd6b605fed307126be13ca359f03fae",
+    "CLOUDFLARE_D1_ACCOUNT_ID": "b07234f65853d0f9f8e6fa1896cf06db",
     "CLOUDFLARE_D1_DATABASE_ID": "9914bf44-9661-4a24-903f-d49c73d6b1fe",
     "CLOUDFLARE_R2_BUCKET": "hexescorts-media",
     "CLOUDFLARE_R2_PUBLIC_URL": "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev",

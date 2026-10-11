@@ -105,7 +105,7 @@ function mapDbProfile(p: any): ProfileType {
   };
 }
 
-const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || "b07234f65853d0f9f8e6fa1896cf06db";
+const ACCOUNT_ID = process.env.CLOUDFLARE_D1_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID || "b07234f65853d0f9f8e6fa1896cf06db";
 const DB_ID = process.env.CLOUDFLARE_D1_DATABASE_ID || "9914bf44-9661-4a24-903f-d49c73d6b1fe";
 const D1_TOKEN = process.env.CLOUDFLARE_D1_TOKEN;
 
