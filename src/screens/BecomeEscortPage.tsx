@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, Loader2, ChevronRight, Crown, Phone, Star, Zap } from "lucide-react";
+import { CheckCircle, Loader2, ChevronRight, Crown, Phone, Star, Zap, X, Sparkles } from "lucide-react";
 import PaymentModal from "@/components/escort-apply/PaymentModal";
 
 type Screen = "plan" | "form" | "success";
@@ -34,11 +34,11 @@ const PLANS: PlanConfig[] = [
     title: "Ordinary Week",
     price: 20000,
     priceLabel: "20,000 shs / week",
-    color: "#F2367B",
-    borderColor: "#3A2A31",
-    btnClass: "bg-[#F2367B] hover:bg-[#d92b6a] text-[#1B0510]",
-    btnTextColor: "text-[#1B0510]",
-    accentColor: "text-[#F2367B]",
+    color: "#22c55e",
+    borderColor: "#22c55e50",
+    btnClass: "bg-[#22c55e] hover:bg-[#16a34a] text-black shadow-md shadow-green-600/20",
+    btnTextColor: "text-black",
+    accentColor: "text-[#22c55e]",
   },
   {
     id: "vip_week",
@@ -73,9 +73,20 @@ const BecomeEscortPage = () => {
   const [selectedPlan, setSelectedPlan] = useState<Plan>("monthly");
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState<{ amount: number; name: string }>({
+    amount: 60000,
+    name: "Full Month",
+  });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+
+  // VIP Boost modal state
+  const [showBoostModal, setShowBoostModal] = useState(false);
+  const [boostName, setBoostName] = useState("");
+  const [boostPhone, setBoostPhone] = useState("");
+  const [boostLoading, setBoostLoading] = useState(false);
+  const [boostError, setBoostError] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
@@ -231,12 +242,62 @@ const BecomeEscortPage = () => {
       const data = await res.json();
       if (!res.ok || !data.id) throw new Error(data.error || "Failed to submit application");
 
+      setPaymentDetails({
+        amount: planConfig.price,
+        name: planConfig.label,
+      });
       setApplicationId(data.id);
       setShowPaymentModal(true);
     } catch (err: any) {
       setError(`Failed to submit: ${err.message || "Please try again."}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVipBoostSubmit = async () => {
+    setBoostError("");
+    if (!boostName.trim() || !boostPhone.trim()) {
+      setBoostError("Please enter both your profile name and phone number.");
+      return;
+    }
+    if (boostPhone.trim().length < 9) {
+      setBoostError("Please enter a valid phone number (at least 9 digits).");
+      return;
+    }
+
+    setBoostLoading(true);
+    try {
+      const payload = {
+        name: boostName.trim(),
+        phone: boostPhone.trim(),
+        whatsapp: boostPhone.trim(),
+        location: "Existing Profile",
+        status: "pending_payment",
+        plan: "vip_boost",
+        amount: 10000,
+      };
+
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.id) throw new Error(data.error || "Failed to submit boost request");
+
+      setPaymentDetails({
+        amount: 10000,
+        name: "VIP Week Renewal Boost",
+      });
+      setApplicationId(data.id);
+      setShowBoostModal(false);
+      setShowPaymentModal(true);
+    } catch (err: any) {
+      setBoostError(`Failed to submit: ${err.message || "Please try again."}`);
+    } finally {
+      setBoostLoading(false);
     }
   };
 
@@ -291,11 +352,91 @@ const BecomeEscortPage = () => {
       {showPaymentModal && applicationId && (
         <PaymentModal
           applicationId={applicationId}
-          planAmount={planConfig.price}
-          planName={planConfig.label}
+          planAmount={paymentDetails.amount}
+          planName={paymentDetails.name}
           onVerified={handlePaymentVerified}
           onClose={() => setShowPaymentModal(false)}
         />
+      )}
+
+      {/* VIP Boost Modal for Existing Listings */}
+      {showBoostModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-gray-900 border-2 border-yellow-400/60 rounded-2xl p-6 shadow-2xl shadow-yellow-500/10">
+            <button
+              onClick={() => setShowBoostModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="text-center mb-5">
+              <div className="w-12 h-12 rounded-full bg-yellow-400/20 border border-yellow-400/50 flex items-center justify-center mx-auto mb-3">
+                <Crown className="h-6 w-6 text-yellow-400" />
+              </div>
+              <h2 className="text-xl font-bold text-white">Add VIP Week Renewal Boost</h2>
+              <p className="text-gray-300 text-xs mt-1 leading-relaxed">
+                For profiles already listed on Escorts UG (Full Month Plan). Enter your profile details below to boost your listing to VIP for 7 days.
+              </p>
+            </div>
+
+            {/* Price Badge */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-yellow-400/10 border border-yellow-400/30 mb-4">
+              <span className="text-xs font-semibold text-yellow-200 flex items-center gap-1.5">
+                <Zap className="h-4 w-4 text-yellow-400" /> 7 Days VIP Placement
+              </span>
+              <span className="text-base font-extrabold text-yellow-400">UGX 10,000</span>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label className="text-gray-200 text-xs font-medium">Your Profile Name *</Label>
+                <Input
+                  value={boostName}
+                  onChange={(e) => setBoostName(e.target.value)}
+                  placeholder="e.g. Sandra"
+                  className="mt-1.5 bg-gray-800/90 border-gray-700 text-white placeholder:text-gray-500 focus:border-yellow-400"
+                />
+              </div>
+
+              <div>
+                <Label className="text-gray-200 text-xs font-medium">Phone Number on That Profile *</Label>
+                <Input
+                  value={boostPhone}
+                  onChange={(e) => setBoostPhone(e.target.value)}
+                  placeholder="e.g. 0771234567"
+                  className="mt-1.5 bg-gray-800/90 border-gray-700 text-white placeholder:text-gray-500 focus:border-yellow-400"
+                />
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-gray-800/60 border border-gray-700/50 text-[11px] text-gray-300 space-y-1">
+                <div className="flex items-center gap-1.5 text-yellow-400 font-semibold">
+                  <Sparkles className="h-3.5 w-3.5" /> What happens next:
+                </div>
+                <p>1. Complete payment (UGX 10,000 via MTN MoMo or Airtel Money).</p>
+                <p>2. Admin will verify and activate your VIP placement within 5-10 minutes.</p>
+              </div>
+
+              {boostError && (
+                <div className="p-2.5 rounded-lg bg-red-900/30 border border-red-500/40 text-red-400 text-xs">
+                  {boostError}
+                </div>
+              )}
+
+              <Button
+                className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-black font-extrabold py-5 text-sm shadow-lg shadow-yellow-500/20"
+                onClick={handleVipBoostSubmit}
+                disabled={boostLoading}
+              >
+                {boostLoading ? (
+                  <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Submitting...</>
+                ) : (
+                  <><Sparkles className="h-4 w-4 mr-2" /> Proceed to Payment (UGX 10,000)</>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="max-w-3xl mx-auto">
@@ -449,11 +590,15 @@ const BecomeEscortPage = () => {
                   Already on the Full Month plan? Boost <strong className="text-white">any ordinary week (2, 3 or 4)</strong> to VIP status — top placement + VIP badge — for just <strong className="text-[#E8B93D]">10,000 shs per week</strong>. Pay only for the weeks you want the extra visibility.
                 </p>
 
-                <a
-                  href="https://wa.me/256727240143?text=Hi%2C%20I%20want%20to%20add%20a%20VIP%20Week%20Renewal%20Boost%20(10%2C000%20shs)%20to%20my%20Full%20Month%20listing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg font-bold text-sm text-black transition-all hover:opacity-90"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBoostError("");
+                    setBoostName("");
+                    setBoostPhone("");
+                    setShowBoostModal(true);
+                  }}
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg font-bold text-sm text-black transition-all hover:opacity-90 cursor-pointer shadow-md"
                   style={{
                     background: "linear-gradient(90deg, #E8B93D 0%, #f5d060 100%)",
                     boxShadow: "0 2px 14px 2px rgba(232,185,61,0.35)",
@@ -461,7 +606,7 @@ const BecomeEscortPage = () => {
                 >
                   <Zap className="h-4 w-4" />
                   Add VIP Boost — 10,000 shs / week
-                </a>
+                </button>
               </div>
             </div>
 
@@ -635,14 +780,21 @@ const BecomeEscortPage = () => {
                   )}
 
                   {/* Plan Summary */}
-                  <div className="p-3 rounded-lg border border-pink-500/30 bg-pink-500/10 text-pink-300 text-sm">
+                  <div
+                    className="p-3 rounded-lg border text-sm"
+                    style={{
+                      borderColor: selectedPlan === "ordinary_week" ? "rgba(34,197,94,0.4)" : selectedPlan === "vip_week" ? "rgba(232,185,61,0.4)" : "rgba(242,54,123,0.4)",
+                      backgroundColor: selectedPlan === "ordinary_week" ? "rgba(34,197,94,0.1)" : selectedPlan === "vip_week" ? "rgba(232,185,61,0.1)" : "rgba(242,54,123,0.1)",
+                      color: selectedPlan === "ordinary_week" ? "#4ade80" : selectedPlan === "vip_week" ? "#facc15" : "#f472b6",
+                    }}
+                  >
                     <strong>{planConfig.label}</strong>
                     {" – UGX "}{planConfig.price.toLocaleString()}
                     {" · "}Goes live in <strong>5-10 minutes</strong>
                   </div>
 
                   <Button
-                    className="w-full bg-[#F2367B] hover:bg-[#d92b6a] text-black font-bold py-6 text-base"
+                    className={`w-full font-bold py-6 text-base ${planConfig.btnClass}`}
                     onClick={handleSubmitForm}
                     disabled={loading || uploading}
                   >
