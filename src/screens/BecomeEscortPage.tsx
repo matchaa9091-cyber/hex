@@ -7,19 +7,72 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, Loader2, ChevronRight, Crown, Phone, X, Sparkles } from "lucide-react";
+import { CheckCircle, Loader2, ChevronRight, Crown, Phone, Star, Zap } from "lucide-react";
 import PaymentModal from "@/components/escort-apply/PaymentModal";
 
 type Screen = "plan" | "form" | "success";
-type Plan = "monthly" | "vip";
+type Plan = "ordinary_week" | "vip_week" | "monthly";
+
+interface PlanConfig {
+  id: Plan;
+  label: string;
+  title: string;
+  price: number;
+  priceLabel: string;
+  color: string;
+  borderColor: string;
+  btnClass: string;
+  btnTextColor: string;
+  accentColor: string;
+  badge?: string;
+}
+
+const PLANS: PlanConfig[] = [
+  {
+    id: "ordinary_week",
+    label: "Ordinary – Weekly",
+    title: "Ordinary Week",
+    price: 20000,
+    priceLabel: "20,000 shs / week",
+    color: "#F2367B",
+    borderColor: "#3A2A31",
+    btnClass: "bg-[#F2367B] hover:bg-[#d92b6a] text-[#1B0510]",
+    btnTextColor: "text-[#1B0510]",
+    accentColor: "text-[#F2367B]",
+  },
+  {
+    id: "vip_week",
+    label: "VIP – Weekly",
+    title: "VIP Week",
+    price: 40000,
+    priceLabel: "40,000 shs / week",
+    color: "#E8B93D",
+    borderColor: "#E8B93D40",
+    btnClass: "bg-[#E8B93D] hover:bg-[#d4a533] text-black",
+    btnTextColor: "text-black",
+    accentColor: "text-[#E8B93D]",
+    badge: "VIP",
+  },
+  {
+    id: "monthly",
+    label: "Full Month – Premium",
+    title: "Full Month",
+    price: 60000,
+    priceLabel: "60,000 shs / month",
+    color: "#F2367B",
+    borderColor: "#F2367B40",
+    btnClass: "bg-gradient-to-r from-[#F2367B] to-[#E8B93D] hover:opacity-90 text-[#1B0510]",
+    btnTextColor: "text-[#1B0510]",
+    accentColor: "text-[#F2367B]",
+    badge: "Best Value",
+  },
+];
 
 const BecomeEscortPage = () => {
   const [screen, setScreen] = useState<Screen>("plan");
   const [selectedPlan, setSelectedPlan] = useState<Plan>("monthly");
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showVipModal, setShowVipModal] = useState(false);
-  const [vipProfileIdentifier, setVipProfileIdentifier] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -66,14 +119,9 @@ const BecomeEscortPage = () => {
   // Save to localStorage whenever form or plan changes
   useEffect(() => {
     if (screen === "success") return;
-    
     const hasContent = form.name || form.phone || form.profileImage || form.images.length > 0;
     if (hasContent) {
-      localStorage.setItem("escort_application_draft", JSON.stringify({ 
-        form, 
-        plan: selectedPlan,
-        showForm
-      }));
+      localStorage.setItem("escort_application_draft", JSON.stringify({ form, plan: selectedPlan, showForm }));
     }
   }, [form, selectedPlan, showForm, screen]);
 
@@ -81,39 +129,24 @@ const BecomeEscortPage = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const uploadFile = async (file: File, bucket: string = "profile-images"): Promise<string> => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", bucket);
-      
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || "Upload to Cloudflare R2 failed");
-      }
-      return data.url;
-    } catch (err: any) {
-      console.error("Cloudflare R2 upload error:", err);
-      throw err;
-    }
-  };
-
-  const uploadImage = async (file: File): Promise<string> => {
-    return uploadFile(file, "profile-images");
+  const uploadFile = async (file: File, folder: string = "profile-images"): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", folder);
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const data = await res.json();
+    if (!res.ok || !data.url) throw new Error(data.error || "Upload failed");
+    return data.url;
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: "profile" | "gallery") => {
     const files = e.target.files;
     if (!files) return;
     setUploading(true);
+    setError("");
     try {
       for (const file of Array.from(files)) {
-        const url = await uploadImage(file);
+        const url = await uploadFile(file, "profile-images");
         setForm((prev) => {
           if (type === "profile") {
             return { ...prev, profileImage: url, images: [url, ...prev.images.filter(i => i !== prev.profileImage)] };
@@ -121,8 +154,8 @@ const BecomeEscortPage = () => {
           return { ...prev, images: [...prev.images, url] };
         });
       }
-    } catch {
-      setError("Upload failed. Try again.");
+    } catch (err: any) {
+      setError(`Upload failed: ${err.message || "Try again."}`);
     }
     setUploading(false);
   };
@@ -131,28 +164,24 @@ const BecomeEscortPage = () => {
     const files = e.target.files;
     if (!files) return;
     setUploading(true);
+    setError("");
     try {
       for (const file of Array.from(files)) {
-        if (file.size > 100 * 1024 * 1024) {
-          setError("Video too large (max 100MB).");
-          continue;
-        }
+        if (file.size > 100 * 1024 * 1024) { setError("Video too large (max 100MB)."); continue; }
         const url = await uploadFile(file, "profile-images");
         setForm((prev) => ({ ...prev, videos: [...prev.videos, url] }));
       }
-    } catch {
-      setError("Video upload failed. Try again.");
+    } catch (err: any) {
+      setError(`Video upload failed: ${err.message || "Try again."}`);
     }
     setUploading(false);
     if (videoInputRef.current) videoInputRef.current.value = "";
   };
 
-  const handleStartFullMonth = () => {
-    setSelectedPlan("monthly");
+  const handleSelectPlan = (plan: Plan) => {
+    setSelectedPlan(plan);
     setShowForm(true);
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+    setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
   };
 
   const handleSubmitForm = async () => {
@@ -169,6 +198,8 @@ const BecomeEscortPage = () => {
       setError("Please enter a valid phone number.");
       return;
     }
+
+    const planConfig = PLANS.find(p => p.id === selectedPlan)!;
     setLoading(true);
     try {
       const payload = {
@@ -184,7 +215,8 @@ const BecomeEscortPage = () => {
         description: form.description.trim() || null,
         services: form.services.split(",").map(s => s.trim()).filter(Boolean),
         status: "pending_payment",
-        plan: "monthly",
+        plan: selectedPlan,
+        amount: planConfig.price,
         profile_image: form.profileImage,
         images: form.images,
         videos: form.videos,
@@ -197,54 +229,12 @@ const BecomeEscortPage = () => {
       });
 
       const data = await res.json();
-      if (!res.ok || !data.id) {
-        throw new Error(data.error || "Failed to submit application");
-      }
+      if (!res.ok || !data.id) throw new Error(data.error || "Failed to submit application");
 
       setApplicationId(data.id);
       setShowPaymentModal(true);
     } catch (err: any) {
-      console.error("Submission error:", err);
       setError(`Failed to submit: ${err.message || "Please try again."}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Direct VIP Boost for existing profiles
-  const handleVipBoostSubmit = async () => {
-    if (!vipProfileIdentifier.trim()) {
-      setError("Please enter your existing profile name or phone number.");
-      return;
-    }
-    setError("");
-    setLoading(true);
-    try {
-      const payload = {
-        name: vipProfileIdentifier.trim(),
-        phone: vipProfileIdentifier.trim(),
-        location: "Existing Profile",
-        status: "pending_payment",
-        plan: "vip_boost",
-      };
-
-      const res = await fetch("/api/applications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.id) {
-        throw new Error(data.error || "Failed to submit boost request");
-      }
-
-      setApplicationId(data.id);
-      setShowVipModal(false);
-      setSelectedPlan("vip");
-      setShowPaymentModal(true);
-    } catch (err: any) {
-      setError("Failed to create boost request. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -256,10 +246,9 @@ const BecomeEscortPage = () => {
     setScreen("success");
   };
 
-  const PRICE = selectedPlan === "monthly" ? 30000 : 10000;
-  const PLAN_TITLE = selectedPlan === "monthly" ? "Full Month Listing" : "VIP Boost";
+  const planConfig = PLANS.find(p => p.id === selectedPlan)!;
 
-  // --- SUCCESS SCREEN ---
+  // ── SUCCESS SCREEN ─────────────────────────────────────────────────────────
   if (screen === "success") {
     return (
       <div className="container mx-auto px-4 py-12 lg:pl-72">
@@ -273,18 +262,15 @@ const BecomeEscortPage = () => {
             Your payment is being verified. Once confirmed, your profile will go live in{" "}
             <strong className="text-pink-400">5-10 minutes</strong>.
           </p>
-          <p className="text-gray-400 text-sm mb-8">
-            You'll receive a WhatsApp message when your profile is updated.
-          </p>
+          <p className="text-gray-400 text-sm mb-8">You'll receive a WhatsApp message when your profile is updated.</p>
           <Button className="bg-pink-600 hover:bg-pink-700 w-full" onClick={() => (window.location.href = "/")}>
             Go Back to Homepage
           </Button>
-
           <div className="mt-8 pt-6 border-t border-gray-800 text-center">
             <p className="text-gray-300 font-medium mb-4">Chat with Support on WhatsApp for help</p>
-            <a 
-              href="https://wa.me/256727240143" 
-              target="_blank" 
+            <a
+              href="https://wa.me/256727240143"
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 w-max mx-auto px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20 transition-all font-bold"
             >
@@ -297,64 +283,19 @@ const BecomeEscortPage = () => {
     );
   }
 
+  // ── MAIN PAGE ──────────────────────────────────────────────────────────────
   return (
     <div className="container mx-auto px-4 py-6 lg:pl-72">
       <div className="lg:hidden h-16" />
 
-      {/* Payment Modal */}
       {showPaymentModal && applicationId && (
         <PaymentModal
           applicationId={applicationId}
-          planAmount={PRICE}
-          planName={PLAN_TITLE}
+          planAmount={planConfig.price}
+          planName={planConfig.label}
           onVerified={handlePaymentVerified}
           onClose={() => setShowPaymentModal(false)}
         />
-      )}
-
-      {/* VIP Boost Modal for Existing Profiles */}
-      {showVipModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-md bg-gray-900 border border-yellow-400/40 rounded-2xl p-6 shadow-2xl">
-            <button
-              onClick={() => setShowVipModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            <div className="text-center mb-6">
-              <Crown className="h-10 w-10 text-yellow-400 mx-auto mb-2" />
-              <h2 className="text-xl font-bold text-white">Add a VIP Week</h2>
-              <p className="text-gray-400 text-xs mt-1">
-                For profiles already listed on Escorts UG. Enter your profile details below to add VIP placement.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <Label className="text-gray-300 text-sm">Your Profile Name or Phone Number *</Label>
-                <Input
-                  value={vipProfileIdentifier}
-                  onChange={(e) => setVipProfileIdentifier(e.target.value)}
-                  placeholder="e.g. Sandra or 0771234567"
-                  className="mt-1.5 bg-gray-800 border-gray-700 text-white"
-                />
-              </div>
-
-              {error && <p className="text-red-400 text-sm">{error}</p>}
-
-              <Button
-                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-6 text-base"
-                onClick={handleVipBoostSubmit}
-                disabled={loading}
-              >
-                {loading ? <Loader2 className="h-5 w-5 animate-spin mr-2" /> : <Sparkles className="h-5 w-5 mr-2" />}
-                Proceed to Payment (UGX 10,000)
-              </Button>
-            </div>
-          </div>
-        </div>
       )}
 
       <div className="max-w-3xl mx-auto">
@@ -362,95 +303,149 @@ const BecomeEscortPage = () => {
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Get your profile seen this week</h1>
           <p className="text-gray-400 text-sm max-w-xl leading-relaxed">
-            List your profile or boost your existing listing. Pick a plan below and your ad goes live shortly after verification.
+            Pick a plan below and your profile goes live shortly after payment verification.
           </p>
         </div>
 
-        {/* Plan Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          {/* Card 1: Monthly Plan */}
-          <div className="bg-[#171215] border border-[#3A2A31] rounded-[18px] p-6 sm:p-7 flex flex-col justify-between relative">
+        {/* ── Plan Cards ── */}
+        <div className="grid md:grid-cols-3 gap-5 mb-8">
+
+          {/* Card 1 — Ordinary Week (20k) */}
+          <div className="bg-[#171215] border border-[#3A2A31] rounded-[18px] p-6 flex flex-col justify-between relative">
             <div>
-              <div className="text-xs font-semibold text-[#F2367B] mb-1.5">Monthly plan</div>
-              <h2 className="text-2xl font-bold text-white mb-3">Full Month</h2>
-
-              <div className="text-4xl font-extrabold text-[#F2367B] mb-4">
-                30,000 <span className="text-base font-normal text-gray-400">shs / month</span>
+              <div className="text-xs font-semibold text-[#F2367B] mb-1.5">Weekly plan</div>
+              <h2 className="text-xl font-bold text-white mb-3">Ordinary Week</h2>
+              <div className="text-3xl font-extrabold text-[#F2367B] mb-4">
+                20,000 <span className="text-sm font-normal text-gray-400">shs / week</span>
               </div>
-
-              {/* 4-Week Indicator */}
-              <div className="flex gap-1.5 mb-5">
-                <div className="flex-1 text-center py-2 px-1 rounded-lg bg-[#E8B93D] text-[#1B0510] font-bold text-xs">
-                  Week 1
-                  <span className="block text-[10px] font-normal">VIP</span>
-                </div>
-                <div className="flex-1 text-center py-2 px-1 rounded-lg bg-[#F2367B]/30 text-white font-semibold text-xs">
-                  Week 2
-                  <span className="block text-[10px] text-gray-300 font-normal">Ordinary</span>
-                </div>
-                <div className="flex-1 text-center py-2 px-1 rounded-lg bg-[#F2367B]/30 text-white font-semibold text-xs">
-                  Week 3
-                  <span className="block text-[10px] text-gray-300 font-normal">Ordinary</span>
-                </div>
-                <div className="flex-1 text-center py-2 px-1 rounded-lg bg-[#F2367B]/30 text-white font-semibold text-xs">
-                  Week 4
-                  <span className="block text-[10px] text-gray-300 font-normal">Ordinary</span>
-                </div>
-              </div>
-
-              <p className="text-[#B8A5AD] text-sm leading-relaxed mb-4">
-                Your first week runs as a VIP listing — top placement and a badge that gets more eyes on your ad. The remaining three weeks continue as a standard ordinary listing, still visible and searchable, just without the VIP boost.
-              </p>
-
-
+              <ul className="space-y-2 mb-5">
+                {[
+                  "Listed for 7 days",
+                  "Searchable by location & category",
+                  "Standard placement",
+                  "Profile photo + gallery",
+                ].map(f => (
+                  <li key={f} className="flex items-start gap-2 text-sm text-[#B8A5AD]">
+                    <CheckCircle className="h-4 w-4 text-[#F2367B] mt-0.5 shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
             </div>
-
             <button
-              onClick={handleStartFullMonth}
+              onClick={() => handleSelectPlan("ordinary_week")}
               className="w-full text-center bg-[#F2367B] hover:bg-[#d92b6a] text-[#1B0510] font-bold text-sm py-3.5 px-4 rounded-xl transition-all"
             >
-              Start with Full Month
+              Get Ordinary Week
             </button>
           </div>
 
-          {/* Card 2: VIP Boost */}
-          <div className="bg-[#171215] border border-[#E8B93D]/30 rounded-[18px] p-6 sm:p-7 flex flex-col justify-between relative">
+          {/* Card 2 — VIP Week (40k) */}
+          <div className="bg-[#171215] border border-[#E8B93D]/40 rounded-[18px] p-6 flex flex-col justify-between relative">
             <div>
-              <div className="text-xs font-semibold text-[#E8B93D] mb-1.5">Weekly add-on</div>
-              <h2 className="text-2xl font-bold text-white mb-3">VIP Boost</h2>
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="text-xs font-semibold text-[#E8B93D]">Weekly plan</div>
+                <span className="text-[10px] font-bold bg-[#E8B93D] text-black px-1.5 py-0.5 rounded-full">VIP</span>
+              </div>
+              <h2 className="text-xl font-bold text-white mb-3">VIP Week</h2>
+              <div className="text-3xl font-extrabold text-[#E8B93D] mb-4">
+                40,000 <span className="text-sm font-normal text-gray-400">shs / week</span>
+              </div>
+              <ul className="space-y-2 mb-5">
+                {[
+                  "Listed for 7 days",
+                  "VIP badge on your profile",
+                  "Top placement in listings",
+                  "More eyes on your ad",
+                  "Profile photo + gallery",
+                ].map(f => (
+                  <li key={f} className="flex items-start gap-2 text-sm text-[#B8A5AD]">
+                    <Crown className="h-4 w-4 text-[#E8B93D] mt-0.5 shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <button
+              onClick={() => handleSelectPlan("vip_week")}
+              className="w-full text-center bg-[#E8B93D] hover:bg-[#d4a533] text-black font-bold text-sm py-3.5 px-4 rounded-xl transition-all"
+            >
+              Get VIP Week
+            </button>
+          </div>
 
-              <div className="text-4xl font-extrabold text-[#E8B93D] mb-4">
-                10,000 <span className="text-base font-normal text-gray-400">shs / week</span>
+          {/* Card 3 — Full Month (60k) — Best Value */}
+          <div className="bg-[#171215] border-2 border-[#F2367B]/60 rounded-[18px] p-6 flex flex-col justify-between relative overflow-hidden">
+            {/* Best Value ribbon */}
+            <div className="absolute top-3 right-3 text-[10px] font-bold bg-gradient-to-r from-[#F2367B] to-[#E8B93D] text-[#1B0510] px-2.5 py-1 rounded-full shadow">
+              Best Value
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-[#F2367B] mb-1.5">Monthly plan</div>
+              <h2 className="text-xl font-bold text-white mb-3">Full Month</h2>
+              <div className="text-3xl font-extrabold text-[#F2367B] mb-4">
+                60,000 <span className="text-sm font-normal text-gray-400">shs / month</span>
               </div>
 
-              <p className="text-[#B8A5AD] text-sm leading-relaxed mb-4">
-                Already on the monthly plan? Add VIP placement to any of the ordinary weeks — weeks 2, 3, or 4 — for 10,000 shs each. Pay only for the weeks you want the extra visibility.
-              </p>
+              {/* 4-week breakdown */}
+              <div className="flex gap-1 mb-4">
+                <div className="flex-1 text-center py-1.5 px-1 rounded-lg bg-[#E8B93D] text-[#1B0510] font-bold text-[10px]">
+                  Week 1<span className="block font-normal">VIP</span>
+                </div>
+                {[2, 3, 4].map(w => (
+                  <div key={w} className="flex-1 text-center py-1.5 px-1 rounded-lg bg-[#F2367B]/25 text-white font-semibold text-[10px]">
+                    Week {w}<span className="block text-gray-300 font-normal">Ordinary</span>
+                  </div>
+                ))}
+              </div>
 
+              <ul className="space-y-2 mb-4">
+                {[
+                  "Listed for full 30 days",
+                  "Week 1 runs as VIP (top placement + badge)",
+                  "Weeks 2–4 as standard ordinary listing",
+                  "Profile photo, gallery & video clips",
+                  "Searchable by location & category",
+                ].map(f => (
+                  <li key={f} className="flex items-start gap-2 text-sm text-[#B8A5AD]">
+                    <Star className="h-4 w-4 text-[#F2367B] mt-0.5 shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
 
+              {/* VIP Week Renewal Boost — part of this package */}
+              <div className="rounded-xl border border-[#E8B93D]/40 bg-[#E8B93D]/8 p-3 mb-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <Zap className="h-4 w-4 text-[#E8B93D] shrink-0" />
+                  <span className="text-xs font-bold text-[#E8B93D]">VIP Week Renewal Boost</span>
+                  <span className="text-[10px] text-gray-400 ml-auto">+10,000 shs/week</span>
+                </div>
+                <p className="text-[11px] text-gray-400 leading-snug">
+                  Already on this plan? Boost weeks 2, 3, or 4 to VIP for 10,000 shs each — pay only for the weeks you want extra visibility.
+                </p>
+              </div>
             </div>
 
             <button
-              onClick={() => {
-                setError("");
-                setVipProfileIdentifier("");
-                setShowVipModal(true);
-              }}
-              className="w-full text-center bg-[#E8B93D] hover:bg-[#d4a533] text-black font-bold text-sm py-3.5 px-4 rounded-xl transition-all shadow-md"
+              onClick={() => handleSelectPlan("monthly")}
+              className="w-full text-center bg-gradient-to-r from-[#F2367B] to-[#E8B93D] hover:opacity-90 text-[#1B0510] font-bold text-sm py-3.5 px-4 rounded-xl transition-all mt-4 shadow-lg"
             >
-              Add a VIP Week
+              Start Full Month
             </button>
           </div>
         </div>
 
-        {/* Profile Creation Form */}
+        {/* ── Profile Creation Form ── */}
         {showForm && (
           <div ref={formRef}>
             <Card className="bg-gray-900/90 border-gray-800 text-white shadow-2xl">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-800">
                   <div>
-                    <h2 className="text-lg font-bold text-white">Create Your Profile (Full Month Plan)</h2>
+                    <h2 className="text-lg font-bold text-white">
+                      Create Your Profile — {planConfig.title}
+                    </h2>
                     <p className="text-xs text-gray-400">Fill in your information to get listed on Escorts UG.</p>
                   </div>
                   <button
@@ -462,7 +457,7 @@ const BecomeEscortPage = () => {
                 </div>
 
                 <div className="space-y-6">
-                  {/* Image Uploads */}
+                  {/* Main Profile Photo */}
                   <div className="space-y-3">
                     <Label className="text-white font-medium">Main Profile Photo *</Label>
                     <div className="flex items-center gap-4">
@@ -494,7 +489,10 @@ const BecomeEscortPage = () => {
                         {form.images.map((img, i) => (
                           <div key={i} className="relative">
                             <img src={img} className="w-16 h-16 rounded-lg object-cover" />
-                            <button onClick={() => setForm(f => ({ ...f, images: f.images.filter((_, idx) => idx !== i)}))} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">x</button>
+                            <button
+                              onClick={() => setForm(f => ({ ...f, images: f.images.filter((_, idx) => idx !== i) }))}
+                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                            >x</button>
                           </div>
                         ))}
                       </div>
@@ -513,7 +511,10 @@ const BecomeEscortPage = () => {
                         {form.videos.map((vid, i) => (
                           <div key={i} className="relative">
                             <video src={vid} className="w-24 h-16 rounded object-cover" />
-                            <button onClick={() => setForm(f => ({ ...f, videos: f.videos.filter((_, idx) => idx !== i)}))} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">x</button>
+                            <button
+                              onClick={() => setForm(f => ({ ...f, videos: f.videos.filter((_, idx) => idx !== i) }))}
+                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                            >x</button>
                           </div>
                         ))}
                       </div>
@@ -526,157 +527,94 @@ const BecomeEscortPage = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Name */}
                     <div className="col-span-2 space-y-2">
                       <Label>Display Name *</Label>
-                      <Input
-                        value={form.name}
-                        onChange={(e) => handleChange("name", e.target.value)}
-                        placeholder="The name clients will see (e.g. Sandra)"
-                      />
+                      <Input value={form.name} onChange={(e) => handleChange("name", e.target.value)} placeholder="The name clients will see (e.g. Sandra)" />
                     </div>
-
-                    {/* Age */}
                     <div className="space-y-2">
                       <Label>Age</Label>
-                      <Input
-                        type="number"
-                        min={18}
-                        max={60}
-                        value={form.age}
-                        onChange={(e) => handleChange("age", e.target.value)}
-                        placeholder="Must be 18+"
-                      />
+                      <Input type="number" min={18} max={60} value={form.age} onChange={(e) => handleChange("age", e.target.value)} placeholder="Must be 18+" />
                     </div>
-
-                    {/* Height */}
                     <div className="space-y-2">
                       <Label>Height</Label>
-                      <Input
-                        value={form.height}
-                        onChange={(e) => handleChange("height", e.target.value)}
-                        placeholder="e.g. 5'6&quot;"
-                      />
+                      <Input value={form.height} onChange={(e) => handleChange("height", e.target.value)} placeholder="e.g. 5'6&quot;" />
                     </div>
-
-                    {/* Location */}
                     <div className="space-y-2">
                       <Label>Location *</Label>
-                      <Input
-                        value={form.location}
-                        onChange={(e) => handleChange("location", e.target.value)}
-                        placeholder="e.g. Kampala, Najjera"
-                      />
+                      <Input value={form.location} onChange={(e) => handleChange("location", e.target.value)} placeholder="e.g. Kampala, Najjera" />
                     </div>
-
-                    {/* Phone */}
                     <div className="space-y-2">
                       <Label>Phone Number *</Label>
-                      <Input
-                        value={form.phone}
-                        onChange={(e) => handleChange("phone", e.target.value)}
-                        placeholder="e.g. 0771234567"
-                      />
+                      <Input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} placeholder="e.g. 0771234567" />
                     </div>
-
-                    {/* WhatsApp */}
                     <div className="space-y-2">
                       <Label>WhatsApp (if different)</Label>
-                      <Input
-                        value={form.whatsapp}
-                        onChange={(e) => handleChange("whatsapp", e.target.value)}
-                        placeholder="Leave blank if same as above"
-                      />
+                      <Input value={form.whatsapp} onChange={(e) => handleChange("whatsapp", e.target.value)} placeholder="Leave blank if same as above" />
                     </div>
-
-                    {/* Body Type */}
                     <div className="space-y-2">
                       <Label>Body Type</Label>
                       <Select value={form.body_type} onValueChange={(v) => handleChange("body_type", v)}>
                         <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
                         <SelectContent>
-                          {["Slim", "Athletic", "Curvy", "Thick", "Plus Size"].map((t) => (
+                          {["Slim", "Athletic", "Curvy", "Thick", "Plus Size"].map(t => (
                             <SelectItem key={t} value={t}>{t}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-
-                    {/* Complexion */}
                     <div className="space-y-2">
                       <Label>Complexion</Label>
                       <Select value={form.complexion} onValueChange={(v) => handleChange("complexion", v)}>
                         <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
                         <SelectContent>
-                          {["Light", "Brown", "Dark", "Chocolate", "Caramel"].map((c) => (
+                          {["Light", "Brown", "Dark", "Chocolate", "Caramel"].map(c => (
                             <SelectItem key={c} value={c}>{c}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
-
-                    {/* Short Bio */}
                     <div className="col-span-2 space-y-2">
                       <Label>Short Bio (shown on profile card)</Label>
-                      <Input
-                        value={form.short_bio}
-                        maxLength={100}
-                        onChange={(e) => handleChange("short_bio", e.target.value)}
-                        placeholder="One sentence about yourself (max 100 chars)"
-                      />
+                      <Input value={form.short_bio} maxLength={100} onChange={(e) => handleChange("short_bio", e.target.value)} placeholder="One sentence about yourself (max 100 chars)" />
                     </div>
-
-                    {/* Description */}
                     <div className="col-span-2 space-y-2">
                       <Label>About You (full description)</Label>
-                      <Textarea
-                        value={form.description}
-                        onChange={(e) => handleChange("description", e.target.value)}
-                        placeholder="Tell clients more about your personality, availability, etc."
-                        rows={4}
-                      />
+                      <Textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} placeholder="Tell clients more about your personality, availability, etc." rows={4} />
                     </div>
-
-                    {/* Services */}
                     <div className="col-span-2 space-y-2">
                       <Label>Services (comma-separated)</Label>
-                      <Input
-                        value={form.services}
-                        onChange={(e) => handleChange("services", e.target.value)}
-                        placeholder="e.g. Dating, Companionship, Massage"
-                      />
+                      <Input value={form.services} onChange={(e) => handleChange("services", e.target.value)} placeholder="e.g. Dating, Companionship, Massage" />
                     </div>
                   </div>
 
                   {error && (
-                    <div className="p-3 rounded-lg bg-red-900/30 border border-red-500/30 text-red-400 text-sm">
-                      {error}
-                    </div>
+                    <div className="p-3 rounded-lg bg-red-900/30 border border-red-500/30 text-red-400 text-sm">{error}</div>
                   )}
 
-                  {/* Selected plan summary */}
+                  {/* Plan Summary */}
                   <div className="p-3 rounded-lg border border-pink-500/30 bg-pink-500/10 text-pink-300 text-sm">
-                    <strong>Full Month Listing</strong> – UGX 30,000
+                    <strong>{planConfig.label}</strong>
+                    {" – UGX "}{planConfig.price.toLocaleString()}
                     {" · "}Goes live in <strong>5-10 minutes</strong>
                   </div>
 
                   <Button
                     className="w-full bg-[#F2367B] hover:bg-[#d92b6a] text-black font-bold py-6 text-base"
                     onClick={handleSubmitForm}
-                    disabled={loading}
+                    disabled={loading || uploading}
                   >
                     {loading ? (
                       <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</>
                     ) : (
-                      <>Continue to Payment (UGX 30,000) <ChevronRight className="ml-2 h-4 w-4" /></>
+                      <>Continue to Payment (UGX {planConfig.price.toLocaleString()}) <ChevronRight className="ml-2 h-4 w-4" /></>
                     )}
                   </Button>
 
                   <div className="mt-8 pt-6 border-t border-gray-700 text-center">
                     <p className="text-gray-300 font-medium mb-4">Chat with Support on WhatsApp for help</p>
-                    <a 
-                      href="https://wa.me/256727240143" 
-                      target="_blank" 
+                    <a
+                      href="https://wa.me/256727240143"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center gap-2 w-max mx-auto px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20 transition-all font-bold"
                     >
