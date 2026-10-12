@@ -310,12 +310,12 @@ const BecomeEscortPage = () => {
         {/* ── Plan Cards ── */}
         <div className="grid md:grid-cols-3 gap-5 mb-8">
 
-          {/* Card 1 — Ordinary Week (20k) */}
-          <div className="bg-[#171215] border border-[#3A2A31] rounded-[18px] p-6 flex flex-col justify-between relative">
+          {/* Card 1 — Ordinary Week (20k) — GREEN */}
+          <div className="bg-[#0f1a13] border border-[#22c55e]/50 rounded-[18px] p-6 flex flex-col justify-between relative">
             <div>
-              <div className="text-xs font-semibold text-[#F2367B] mb-1.5">Weekly plan</div>
+              <div className="text-xs font-semibold text-[#22c55e] mb-1.5">Weekly plan</div>
               <h2 className="text-xl font-bold text-white mb-3">Ordinary Week</h2>
-              <div className="text-3xl font-extrabold text-[#F2367B] mb-4">
+              <div className="text-3xl font-extrabold text-[#22c55e] mb-4">
                 20,000 <span className="text-sm font-normal text-gray-400">shs / week</span>
               </div>
               <ul className="space-y-2 mb-5">
@@ -326,7 +326,7 @@ const BecomeEscortPage = () => {
                   "Profile photo + gallery",
                 ].map(f => (
                   <li key={f} className="flex items-start gap-2 text-sm text-[#B8A5AD]">
-                    <CheckCircle className="h-4 w-4 text-[#F2367B] mt-0.5 shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-[#22c55e] mt-0.5 shrink-0" />
                     {f}
                   </li>
                 ))}
@@ -334,7 +334,7 @@ const BecomeEscortPage = () => {
             </div>
             <button
               onClick={() => handleSelectPlan("ordinary_week")}
-              className="w-full text-center bg-[#F2367B] hover:bg-[#d92b6a] text-[#1B0510] font-bold text-sm py-3.5 px-4 rounded-xl transition-all"
+              className="w-full text-center bg-[#22c55e] hover:bg-[#16a34a] text-black font-bold text-sm py-3.5 px-4 rounded-xl transition-all shadow-md shadow-green-600/20"
             >
               Get Ordinary Week
             </button>
@@ -374,8 +374,15 @@ const BecomeEscortPage = () => {
             </button>
           </div>
 
-          {/* Card 3 — Full Month (60k) — Best Value */}
-          <div className="bg-[#171215] border-2 border-[#F2367B]/60 rounded-[18px] p-6 flex flex-col justify-between relative overflow-hidden">
+          {/* Card 3 — Full Month (60k) — Best Value + GLOW */}
+          <div
+            className="rounded-[18px] p-6 flex flex-col justify-between relative overflow-hidden"
+            style={{
+              background: "linear-gradient(160deg, #1e0d16 0%, #171215 60%)",
+              border: "2px solid rgba(242,54,123,0.7)",
+              boxShadow: "0 0 32px 6px rgba(242,54,123,0.22), 0 0 64px 12px rgba(232,185,61,0.10)",
+            }}
+          >
             {/* Best Value ribbon */}
             <div className="absolute top-3 right-3 text-[10px] font-bold bg-gradient-to-r from-[#F2367B] to-[#E8B93D] text-[#1B0510] px-2.5 py-1 rounded-full shadow">
               Best Value
@@ -414,22 +421,58 @@ const BecomeEscortPage = () => {
                 ))}
               </ul>
 
-              {/* VIP Week Renewal Boost — part of this package */}
-              <div className="rounded-xl border border-[#E8B93D]/40 bg-[#E8B93D]/8 p-3 mb-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <Zap className="h-4 w-4 text-[#E8B93D] shrink-0" />
-                  <span className="text-xs font-bold text-[#E8B93D]">VIP Week Renewal Boost</span>
-                  <span className="text-[10px] text-gray-400 ml-auto">+10,000 shs/week</span>
+              {/* VIP Week Renewal Boost — gold button */}
+              <div
+                className="rounded-xl p-3 mb-1"
+                style={{
+                  background: "linear-gradient(135deg, rgba(232,185,61,0.13) 0%, rgba(232,185,61,0.06) 100%)",
+                  border: "1.5px solid rgba(232,185,61,0.55)",
+                  boxShadow: "0 0 14px 2px rgba(232,185,61,0.13)",
+                }}
+              >
+                {/* Price row */}
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <Zap className="h-4 w-4 text-[#E8B93D] shrink-0" />
+                    <span className="text-sm font-bold text-[#E8B93D]">VIP Week Renewal Boost</span>
+                  </div>
+                  <span
+                    className="text-base font-extrabold text-[#E8B93D] tracking-tight"
+                    style={{ textShadow: "0 0 8px rgba(232,185,61,0.6)" }}
+                  >
+                    10,000 shs
+                  </span>
                 </div>
-                <p className="text-[11px] text-gray-400 leading-snug">
-                  Already on this plan? Boost weeks 2, 3, or 4 to VIP for 10,000 shs each — pay only for the weeks you want extra visibility.
+
+                {/* How it works */}
+                <p className="text-[11px] text-gray-300 leading-snug mb-2.5">
+                  Already on the Full Month plan? Boost <strong className="text-white">any ordinary week (2, 3 or 4)</strong> to VIP status — top placement + VIP badge — for just <strong className="text-[#E8B93D]">10,000 shs per week</strong>. Pay only for the weeks you want the extra visibility.
                 </p>
+
+                <a
+                  href="https://wa.me/256727240143?text=Hi%2C%20I%20want%20to%20add%20a%20VIP%20Week%20Renewal%20Boost%20(10%2C000%20shs)%20to%20my%20Full%20Month%20listing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg font-bold text-sm text-black transition-all hover:opacity-90"
+                  style={{
+                    background: "linear-gradient(90deg, #E8B93D 0%, #f5d060 100%)",
+                    boxShadow: "0 2px 14px 2px rgba(232,185,61,0.35)",
+                  }}
+                >
+                  <Zap className="h-4 w-4" />
+                  Add VIP Boost — 10,000 shs / week
+                </a>
               </div>
             </div>
 
             <button
               onClick={() => handleSelectPlan("monthly")}
-              className="w-full text-center bg-gradient-to-r from-[#F2367B] to-[#E8B93D] hover:opacity-90 text-[#1B0510] font-bold text-sm py-3.5 px-4 rounded-xl transition-all mt-4 shadow-lg"
+              className="w-full text-center font-bold text-sm py-3.5 px-4 rounded-xl transition-all mt-4"
+              style={{
+                background: "linear-gradient(90deg, #F2367B 0%, #E8B93D 100%)",
+                boxShadow: "0 4px 18px 2px rgba(242,54,123,0.35)",
+                color: "#1B0510",
+              }}
             >
               Start Full Month
             </button>
