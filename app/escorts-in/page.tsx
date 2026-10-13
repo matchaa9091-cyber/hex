@@ -6,9 +6,9 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 export const revalidate = 300; // Cache index data for 5 minutes
 
 export const metadata: Metadata = {
-  title: 'Independent Escorts in Uganda - Real & Verified Call Girls | Hex Escorts UG',
-  description: 'Find independent escorts in Uganda with 100% verified photos and direct WhatsApp contacts. Browse elite companions, Call Girls, and hookups across Kampala, Entebbe, Jinja, and countrywide.',
-  keywords: 'escorts in Uganda, Uganda escorts, Kampala escorts, Entebbe escorts, Jinja escorts, verified escorts Uganda',
+  title: 'Escorts in Uganda | #1 Verified Uganda & Kampala Escorts - Hex',
+  description: 'Find top verified escorts in Uganda with 100% genuine photos and direct WhatsApp contacts. Browse elite companions, discreet hookups, and call girls across Kampala, Entebbe, Jinja & countrywide.',
+  keywords: 'escorts in uganda, uganda escorts, kampala escorts, ugandan escorts, ug escorts, verified escorts uganda, call girls uganda',
   alternates: {
     canonical: 'https://www.hexescortsug.com/escorts-in',
   }

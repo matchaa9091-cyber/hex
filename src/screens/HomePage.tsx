@@ -23,6 +23,17 @@ const cities = [
   { name: "Mukono", path: "/escorts-in/mukono" },
 ];
 
+const kampalaHotspots = [
+  { name: "Kololo", path: "/escorts-in/kampala/kololo" },
+  { name: "Ntinda", path: "/escorts-in/kampala/ntinda" },
+  { name: "Najjera", path: "/escorts-in/kampala/najjera" },
+  { name: "Bugolobi", path: "/escorts-in/kampala/bugolobi" },
+  { name: "Muyenga", path: "/escorts-in/kampala/muyenga" },
+  { name: "Munyonyo", path: "/escorts-in/kampala/munyonyo" },
+  { name: "Kisaasi", path: "/escorts-in/kampala/kisaasi" },
+  { name: "Bukoto", path: "/escorts-in/kampala/bukoto" },
+];
+
 interface HomePageProps {
   initialProfiles?: ProfileType[];
   shuffleSeed?: string;
@@ -55,10 +66,10 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
         {/* SEO Header */}
         <div className="mb-6 sm:mb-8 overflow-x-hidden">
           <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-primary mb-3 break-words">
-            Uganda Escorts – #1 Verified Call Girls &amp; Discreet Companions
+            Uganda Escorts &amp; Kampala Escorts – #1 Verified Call Girls &amp; Companions
           </h1>
           <p className="text-xs sm:text-sm text-gray-400 mb-4 max-w-3xl leading-relaxed">
-            Welcome to Hex Escorts UG, Uganda&apos;s leading directory for verified escorts and discreet call girls. Connect directly via WhatsApp with genuine models in Kampala, Entebbe, Jinja, and countrywide.
+            Welcome to Hex Escorts UG, Uganda&apos;s #1 directory for verified <strong>Uganda escorts</strong>, <strong>Kampala escorts</strong>, and discreet call girls. Connect directly via WhatsApp with 100% genuine independent models in Kampala, Entebbe, Jinja, and countrywide.
           </p>
           
           {/* Top Sliding Section */}
@@ -77,6 +88,20 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
               </Link>
             ))}
           </nav>
+
+          {/* Popular Kampala Suburbs / Hotspots Links */}
+          <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Kampala Areas:</span>
+            {kampalaHotspots.map((sub) => (
+              <Link
+                key={sub.name}
+                href={sub.path}
+                className="text-[9px] sm:text-[10px] bg-gray-900/90 border border-gray-800 text-gray-300 hover:text-pink-400 hover:border-pink-500/50 px-2.5 py-1 rounded-full transition-all"
+              >
+                {sub.name} Escorts
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* Profile Grid Section */}

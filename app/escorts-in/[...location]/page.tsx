@@ -3,8 +3,7 @@ import { fetchProfilesByLocation } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300; // Cache location data for 5 minutes
 export const dynamicParams = true;
 
 type Props = {
@@ -32,9 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const hasProfiles = profiles.length > 0;
   
   return {
-    title: `${locationName} Escorts - #1 Verified Sexy Call Girls & Hookups`,
-    description: `Looking for hot escorts in ${locationName}? Browse our exclusive selection of verified Ugandan call girls, VIP companions, and discreet hookups in ${locationName}.`,
-    keywords: `escorts in ${locationName}, ${locationName} call girls, hookups ${locationName}, hot girls ${locationName}`,
+    title: `${locationName} Escorts | #1 Verified Escorts in ${locationName} & Call Girls`,
+    description: `Find top verified ${locationName} escorts & call girls. 100% genuine photos, direct WhatsApp numbers, discreet VIP hookups & independent companions in ${locationName}.`,
+    keywords: `escorts in ${locationName}, ${locationName} escorts, call girls ${locationName}, hookups ${locationName}, ${locationName} escort girls`,
     openGraph: {
       title: `Top Escorts & Call Girls in ${locationName}`,
       description: `Browse verified sexy escorts and hot girls available in ${locationName}, Uganda. 100% Real & Verified profiles.`,

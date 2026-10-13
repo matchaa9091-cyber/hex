@@ -2,8 +2,7 @@ import LocationPageClient from "@/screens/LocationPage";
 import { fetchProfilesByLocation } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300; // Cache category location data for 5 minutes
 export const dynamicParams = true;
 
 type Props = {
