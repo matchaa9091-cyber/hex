@@ -9,15 +9,17 @@ export function middleware(request: NextRequest) {
   // 1. Domain Migration: Force redirect from ANY .xyz variant to .com
   if (host.includes('hexescortsug.xyz')) {
     const newUrl = new URL(pathname, 'https://www.hexescortsug.com');
-    // Keep search params (like ?ref=...)
     request.nextUrl.searchParams.forEach((value, key) => {
       newUrl.searchParams.set(key, value);
     });
     return NextResponse.redirect(newUrl, 301);
   }
 
-  // 2. WWW Enforcement: Redirect hexescortsug.com to www.hexescortsug.com
-  if (host === 'hexescortsug.com') {
+  // 2. HTTPS & WWW Canonical Enforcement
+  const proto = request.headers.get('x-forwarded-proto') || request.nextUrl.protocol.replace(':', '');
+  const isHttp = proto === 'http' && !host.includes('localhost') && !host.includes('127.0.0.1');
+
+  if (isHttp || host === 'hexescortsug.com') {
     const newUrl = new URL(pathname, 'https://www.hexescortsug.com');
     request.nextUrl.searchParams.forEach((value, key) => {
       newUrl.searchParams.set(key, value);

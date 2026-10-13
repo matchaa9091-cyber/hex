@@ -124,7 +124,7 @@ async function fetchProfilesDirectFromD1(): Promise<ProfileType[] | null> {
         sql: "SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_pinned DESC, created_at DESC;",
         params: [],
       }),
-      cache: "no-store",
+      next: { revalidate: 60 },
     });
     const data = await res.json();
     if (data.success && data.result?.[0]?.results) {
@@ -188,7 +188,7 @@ export async function fetchAllProfiles(seed?: string) {
     if (typeof window === "undefined") {
       url = "https://www.hexescortsug.com/api/profiles";
     }
-    const apiRes = await fetch(url, { cache: "no-store" });
+    const apiRes = await fetch(url, { next: { revalidate: 60 } });
     if (apiRes.ok) {
       const d1Profiles = await apiRes.json();
       if (Array.isArray(d1Profiles) && d1Profiles.length > 0) {

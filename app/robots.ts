@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
-        disallow: ['/_next/', '/api/', '/admin/', '/hx-ctrl-7k9/', '/location/'],
+        allow: ['/', '/_next/static/'],
+        disallow: ['/api/', '/admin/', '/hx-ctrl-7k9/', '/location/'],
       }
     ],
     sitemap: [
