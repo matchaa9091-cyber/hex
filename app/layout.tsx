@@ -113,7 +113,7 @@ export const metadata: Metadata = {
     description:
       "Browse 100% verified Ugandan call girls in Kampala, Entebbe, Jinja & Mbarara. Real photos, verified direct WhatsApp contacts & discreet hookups.",
     url: "https://www.hexescortsug.com",
-    siteName: "Hex Escorts UG",
+    siteName: "Hex Escorts Uganda",
     type: "website",
     locale: "en_UG",
     images: [
@@ -169,15 +169,15 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "name": "Hex Escorts UG - Uganda Escorts Directory",
-                "alternateName": ["Uganda Escorts", "Escorts UG", "Uganda Escorts Directory", "Hex Escorts"],
+                "name": "Hex Escorts Uganda",
+                "alternateName": ["Uganda Hex Escorts", "Hex Escorts UG", "Hex Escorts"],
                 "url": "https://www.hexescortsug.com",
                 "image": "https://www.hexescortsug.com/logo.png"
               },
               {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
-                "name": "Hex Escorts UG - Uganda Escorts Directory",
+                "name": "Hex Escorts Uganda",
                 "url": "https://www.hexescortsug.com",
                 "logo": "https://www.hexescortsug.com/logo.png",
                 "image": "https://www.hexescortsug.com/logo.png",

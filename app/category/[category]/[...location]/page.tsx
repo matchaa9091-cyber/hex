@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${categoryName} Escorts & Call Girls in ${locationName}`,
       description: `Browse verified ${categoryName.toLowerCase()} escorts and hot girls available in ${locationName}, Uganda. 100% Real & Verified profiles.`,
       url: `https://www.hexescortsug.com/${params.category}-escorts-in/${params.location.join('/')}`,
-      siteName: 'Hex Escorts UG',
+      siteName: 'Hex Escorts Uganda',
     },
     alternates: {
       canonical: `https://www.hexescortsug.com/${params.category}-escorts-in/${params.location.join('/')}`,

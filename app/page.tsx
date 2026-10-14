@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description:
       "Browse 100% verified Ugandan call girls and escorts in Kampala, Entebbe, Jinja & across Uganda. Real photos, direct WhatsApp & discreet hookups.",
     url: "https://www.hexescortsug.com",
-    siteName: "Hex Escorts UG",
+    siteName: "Hex Escorts Uganda",
     type: "website",
     locale: "en_UG",
     images: [
