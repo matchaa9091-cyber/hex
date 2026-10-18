@@ -167,6 +167,13 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Invalid toggle field" }, { status: 400 });
     }
 
+    if (dbField === "is_pinned" || dbField === "is_vip") {
+      const bit = value ? 1 : 0;
+      const sql = `UPDATE profiles SET is_pinned = ?, is_vip = ?, is_premium = ? WHERE id = ?;`;
+      await executeD1Query(sql, [bit, bit, bit, id]);
+      return NextResponse.json({ success: true });
+    }
+
     const sql = `UPDATE profiles SET ${dbField} = ? WHERE id = ?;`;
     const params = [value ? 1 : 0, id];
 

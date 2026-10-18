@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { usePhoneHandler } from "@/hooks/use-phone-handler";
 import Image from "next/image";
 import { getMediaUrl } from "@/lib/utils";
+import { PhotoModal } from "@/components/photos/PhotoModal";
 
 interface ProfileDetailProps {
   profile: ProfileType;
@@ -19,6 +20,7 @@ interface ProfileDetailProps {
 export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
   const isMobile = useIsMobile();
   const { handlePhoneClick } = usePhoneHandler();
+  const [showMainPhoto, setShowMainPhoto] = useState(false);
   
   // Use the phone number from the profile data
   const phoneNumber = profile.phone || "";
@@ -47,7 +49,11 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-6">
         {/* Profile Images */}
         <div className="lg:col-span-2">
-          <div className="relative rounded-lg lg:rounded-xl overflow-hidden mb-2 lg:mb-4 group aspect-[4/3]">
+          <div 
+            className="relative rounded-lg lg:rounded-xl overflow-hidden mb-2 lg:mb-4 group aspect-[4/3] cursor-pointer"
+            onClick={() => setShowMainPhoto(true)}
+            title="Click to view full image"
+          >
             {isPremium && (
               <div className="absolute top-0 right-0 z-10">
                 <div className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black text-[10px] sm:text-xs font-bold py-0.5 px-2 lg:py-1 lg:px-3 rotate-45 translate-x-[30%] translate-y-[10%] shadow-md">
@@ -166,6 +172,13 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
           </div>
         </div>
       </div>
+
+      <PhotoModal
+        isOpen={showMainPhoto}
+        onClose={() => setShowMainPhoto(false)}
+        photoUrl={getMediaUrl(profile.profileImage)}
+        photoTitle={`${profile.name} - Profile Photo`}
+      />
     </div>
   );
 }

@@ -35,6 +35,7 @@ interface DbProfile {
   images: string[];
   videos: string[];
   is_pinned?: boolean;
+  is_vip?: boolean;
   is_archived?: boolean;
   is_ad?: boolean;
   is_verified?: boolean;
@@ -59,6 +60,9 @@ interface EditProfile {
   profileImage: string;
   images: string[];
   videos: string[];
+  isPinned?: boolean;
+  isVip?: boolean;
+  isArchived?: boolean;
   isAd?: boolean;
   isVerified?: boolean;
   adImages: string[];
@@ -84,6 +88,7 @@ const getInitialDbProfiles = (): DbProfile[] => {
     images: p.images || [],
     videos: p.videos || [],
     is_pinned: p.isPinned || false,
+    is_vip: p.isPinned || false,
     is_archived: p.isArchived || false,
     is_ad: p.isAd || false,
     is_verified: p.isVerified || false,
@@ -192,11 +197,12 @@ const AdminPage = () => {
             profile_image: p.profileImage || "",
             images: p.images || [],
             videos: p.videos || [],
-            is_pinned: p.isPinned || false,
-            is_archived: p.isArchived || false,
-            is_ad: p.isAd || false,
-            is_verified: p.isVerified || false,
-            ad_images: p.adImages || [],
+            is_pinned: Boolean(p.isPinned ?? p.is_pinned),
+            is_vip: Boolean(p.isVip ?? p.is_vip ?? p.isPinned ?? p.is_pinned),
+            is_archived: Boolean(p.isArchived ?? p.is_archived),
+            is_ad: Boolean(p.isAd ?? p.is_ad),
+            is_verified: Boolean(p.isVerified ?? p.is_verified),
+            ad_images: p.adImages || p.ad_images || [],
           }));
           setProfiles(mappedDbProfiles);
           return;
@@ -226,6 +232,7 @@ const AdminPage = () => {
       images: p.images || [],
       videos: p.videos || [],
       is_pinned: p.isPinned || false,
+      is_vip: p.isPinned || false,
       is_archived: p.isArchived || false,
       is_ad: p.isAd || false,
       is_verified: p.isVerified || false,
@@ -300,6 +307,9 @@ const AdminPage = () => {
     profileImage: "",
     images: [],
     videos: [],
+    isPinned: false,
+    isVip: false,
+    isArchived: false,
     isAd: false,
     isVerified: false,
     adImages: [],
@@ -323,6 +333,9 @@ const AdminPage = () => {
     profileImage: p.profile_image || "",
     images: p.images || [],
     videos: p.videos || [],
+    isPinned: Boolean(p.is_pinned),
+    isVip: Boolean(p.is_vip || p.is_pinned),
+    isArchived: Boolean(p.is_archived),
     isAd: p.is_ad || false,
     isVerified: p.is_verified || false,
     adImages: p.ad_images || [],
@@ -438,10 +451,10 @@ const AdminPage = () => {
       profile_image: editingProfile.profileImage,
       images: editingProfile.images,
       videos: editingProfile.videos,
-      is_pinned: (editingProfile as any).isPinned ?? (editingProfile as any).is_pinned ?? false,
-      is_vip: (editingProfile as any).isVip ?? (editingProfile as any).is_vip ?? false,
-      is_archived: (editingProfile as any).isArchived ?? (editingProfile as any).is_archived ?? false,
-      is_premium: (editingProfile as any).isPremium ?? (editingProfile as any).is_premium ?? false,
+      is_pinned: Boolean(editingProfile.isVip || editingProfile.isPinned),
+      is_vip: Boolean(editingProfile.isVip || editingProfile.isPinned),
+      is_archived: Boolean(editingProfile.isArchived),
+      is_premium: Boolean(editingProfile.isVip || editingProfile.isPinned),
       is_ad: editingProfile.isAd ?? false,
       is_verified: editingProfile.isVerified ?? false,
       ad_images: editingProfile.adImages || [],
@@ -474,7 +487,7 @@ const AdminPage = () => {
       const res = await fetch("/api/profiles", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, field: "is_pinned", value: !currentVip }),
+        body: JSON.stringify({ id, field: "is_vip", value: !currentVip }),
       });
       if (res.ok) {
         toast({ title: !currentVip ? "Promoted to VIP!" : "Removed from VIP" });
@@ -774,15 +787,35 @@ const AdminPage = () => {
             <Input value={editingProfile.services.join(", ")} onChange={(e) => setEditingProfile({ ...editingProfile, services: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })} />
           </div>
 
-          <div className="flex items-center gap-2 py-2">
-            <input 
-              type="checkbox" 
-              id="isVerified" 
-              checked={editingProfile.isVerified} 
-              onChange={(e) => setEditingProfile({ ...editingProfile, isVerified: e.target.checked })}
-              className="w-4 h-4 accent-green-500"
-            />
-            <Label htmlFor="isVerified" className="text-green-500 font-bold">Verified Profile</Label>
+          <div className="flex flex-col gap-3 py-2 border-y border-gray-800">
+            <div className="flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="isVip" 
+                checked={Boolean(editingProfile.isVip || editingProfile.isPinned)} 
+                onChange={(e) => setEditingProfile({ 
+                  ...editingProfile, 
+                  isVip: e.target.checked, 
+                  isPinned: e.target.checked 
+                })}
+                className="w-4 h-4 accent-yellow-400 cursor-pointer"
+              />
+              <Label htmlFor="isVip" className="text-yellow-400 font-bold flex items-center gap-1.5 cursor-pointer">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                VIP Profile (Top Pinned & VIP Gold Badge)
+              </Label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="isVerified" 
+                checked={editingProfile.isVerified} 
+                onChange={(e) => setEditingProfile({ ...editingProfile, isVerified: e.target.checked })}
+                className="w-4 h-4 accent-green-500 cursor-pointer"
+              />
+              <Label htmlFor="isVerified" className="text-green-500 font-bold cursor-pointer">Verified Profile</Label>
+            </div>
           </div>
 
           <Button onClick={handleSaveProfile} className="w-full" disabled={saving}>
@@ -872,7 +905,13 @@ const AdminPage = () => {
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-semibold">{p.name}</p>
+                      {(p.is_pinned || p.is_vip) && (
+                        <span className="text-[10px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
+                          <Star className="w-2.5 h-2.5 fill-yellow-400" /> VIP
+                        </span>
+                      )}
                       {p.is_archived && <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">Hidden</span>}
+                      {p.is_verified && <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Verified</span>}
                     </div>
                     <p className="text-sm text-muted-foreground">{p.age} • {p.location}</p>
                   </div>
@@ -882,12 +921,12 @@ const AdminPage = () => {
                   <Button size="sm" variant="outline" className="flex-1" onClick={() => setEditingProfile(dbToEdit(p))}>Edit</Button>
                   <Button 
                     size="sm" 
-                    variant={p.is_pinned ? "default" : "outline"} 
-                    className={p.is_pinned ? "bg-yellow-500 hover:bg-yellow-600 text-black font-bold" : "text-yellow-500 border-yellow-500/50"} 
-                    onClick={() => toggleVip(p.id, !!p.is_pinned)}
-                    title="Pin to top"
+                    variant={(p.is_pinned || p.is_vip) ? "default" : "outline"} 
+                    className={(p.is_pinned || p.is_vip) ? "bg-yellow-500 hover:bg-yellow-600 text-black font-bold" : "text-yellow-500 border-yellow-500/50"} 
+                    onClick={() => toggleVip(p.id, Boolean(p.is_pinned || p.is_vip))}
+                    title="Toggle VIP status"
                   >
-                    <Star className={`w-3 h-3 ${p.is_pinned ? "fill-black" : ""}`} />
+                    <Star className={`w-3 h-3 ${(p.is_pinned || p.is_vip) ? "fill-black" : ""}`} />
                   </Button>
                   <Button 
                     size="sm" 

@@ -35,14 +35,13 @@ export function VideoList({ profileId, profiles = [], refreshTrigger }: VideoLis
       {selectedVideo && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4">
           <div className="relative max-w-4xl w-full">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute -top-12 right-0 text-white hover:text-gray-300"
+            <button
+              type="button"
+              className="absolute -top-12 right-0 flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-pink-600 hover:bg-pink-700 active:scale-95 text-white font-bold text-xs shadow-lg shadow-pink-600/50 border border-pink-400 transition-all cursor-pointer"
               onClick={() => setSelectedVideo(null)}
             >
               ✕ Close
-            </Button>
+            </button>
             <video
               src={selectedVideo}
               controls
