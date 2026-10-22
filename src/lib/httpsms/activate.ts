@@ -57,6 +57,46 @@ async function r2Request(method: "GET" | "PUT", key: string, body?: ArrayBuffer,
   });
 }
 
+export async function getPendingApplications(): Promise<any[]> {
+  const list: any[] = [];
+  try {
+    const res = await r2Request("GET", APPLICATIONS_KEY);
+    if (res.ok) {
+      const allApps = await res.json();
+      if (Array.isArray(allApps)) {
+        for (const a of allApps) {
+          if (a && (a.status === 'pending_payment' || a.status === 'pending_verification' || a.status === 'pending')) {
+            list.push(a);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error("[getPendingApplications] Error reading R2 applications:", err);
+  }
+
+  try {
+    const d1Rows = await executeD1Query(`
+      SELECT id, name, phone, payment_phone, transaction_id, plan, status 
+      FROM escort_applications 
+      WHERE status IN ('pending_payment', 'pending_verification', 'pending')
+      ORDER BY created_at DESC
+      LIMIT 20;
+    `);
+    if (d1Rows && d1Rows.length > 0) {
+      for (const row of d1Rows) {
+        if (!list.some(a => a.id === row.id)) {
+          list.push(row);
+        }
+      }
+    }
+  } catch (err) {
+    // ignore
+  }
+
+  return list;
+}
+
 export async function activateApplication(applicationId: string, paymentDetails: {
   paymentId?: string;
   amount: number;

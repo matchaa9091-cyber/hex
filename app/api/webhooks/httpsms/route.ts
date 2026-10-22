@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import { parseMobileMoneySms } from "@/lib/httpsms/parser";
 import { executeD1Query } from "@/lib/d1";
-import { activateApplication } from "@/lib/httpsms/activate";
+import { activateApplication, getPendingApplications } from "@/lib/httpsms/activate";
 
 export async function GET() {
   return NextResponse.json({
@@ -77,13 +77,7 @@ export async function POST(req: Request) {
     // Try auto-matching against pending escort applications
     let matchedAppId: string | null = null;
     try {
-      const candidates = await executeD1Query(`
-        SELECT id, name, phone, payment_phone, transaction_id, plan, status 
-        FROM escort_applications 
-        WHERE status IN ('pending_payment', 'pending_verification')
-        ORDER BY created_at DESC
-        LIMIT 20;
-      `);
+      const candidates = await getPendingApplications();
 
       for (const app of candidates) {
         let isMatch = false;

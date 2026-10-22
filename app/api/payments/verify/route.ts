@@ -156,13 +156,22 @@ export async function POST(req: Request) {
     // ── STEP 3: Handle Verification Result
     if (matchedPayment) {
       console.log(`[Verify API] Verified payment of UGX ${matchedPayment.amount} for app ${applicationId}! Activating profile...`);
-      await activateApplication(applicationId, {
-        paymentId: matchedPayment.id,
-        amount: matchedPayment.amount,
-        transactionId: matchedPayment.transaction_id,
-        phone: matchedPayment.sender_phone || normPhone,
-        provider: matchedPayment.provider,
-      });
+      try {
+        await activateApplication(applicationId, {
+          paymentId: matchedPayment.id,
+          amount: matchedPayment.amount,
+          transactionId: matchedPayment.transaction_id,
+          phone: matchedPayment.sender_phone || normPhone,
+          provider: matchedPayment.provider,
+        });
+      } catch (actErr: any) {
+        if (actErr?.message?.includes("not found")) {
+          return NextResponse.json({
+            error: `Application "${applicationId}" was not found. Please verify the application ID.`
+          }, { status: 404 });
+        }
+        throw actErr;
+      }
 
       return NextResponse.json({
         success: true,
