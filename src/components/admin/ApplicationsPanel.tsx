@@ -32,14 +32,27 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   rejected:             { label: "Rejected",              color: "bg-red-500/20 text-red-400 border-red-500/30" },
 };
 
-type FilterKey = "pending_verification" | "pending_payment" | "vip_boosts" | "approved" | "rejected" | "all";
+type FilterKey = "pending_verification" | "pending_payment" | "vip_boosts" | "approved" | "rejected" | "all" | "sms_payments";
 
 export default function ApplicationsPanel() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [allApps, setAllApps] = useState<Application[]>([]);
+  const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterKey>("pending_verification");
+
+  const fetchPayments = async () => {
+    try {
+      const res = await fetch("/api/payments");
+      if (res.ok) {
+        const data = await res.json();
+        setPayments(Array.isArray(data) ? data : []);
+      }
+    } catch (e) {
+      console.error("Failed to fetch payments:", e);
+    }
+  };
 
   const fetchApplications = async () => {
     setLoading(true);
@@ -63,16 +76,53 @@ export default function ApplicationsPanel() {
       setApplications(source);
     } else if (f === "vip_boosts") {
       setApplications(source.filter(a => a.plan === "vip_boost" || a.plan === "vip"));
+    } else if (f === "sms_payments") {
+      // Managed by payments view
     } else {
       setApplications(source.filter(a => a.status === f));
     }
   };
 
-  useEffect(() => { fetchApplications(); }, []);
+  useEffect(() => { 
+    fetchApplications();
+    fetchPayments();
+  }, []);
 
   const handleFilterChange = (f: FilterKey) => {
     setFilter(f);
-    applyFilter(f, allApps);
+    if (f === "sms_payments") {
+      fetchPayments();
+    } else {
+      applyFilter(f, allApps);
+    }
+  };
+
+  const handleCheckHttpSms = async (app: Application) => {
+    setActionLoading(`httpsms-${app.id}`);
+    try {
+      const res = await fetch("/api/payments/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          applicationId: app.id,
+          phone: app.payment_phone || app.phone,
+          transactionId: app.transaction_id || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.verified) {
+        alert(data.message || `Payment of UGX ${Number(data.amount || 20000).toLocaleString()} verified! Profile is now live.`);
+        await fetchApplications();
+        await fetchPayments();
+      } else {
+        alert(data.message || "No matching payment of 20,000+ UGX found yet on httpSMS.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Error checking httpSMS: " + (err.message || "Unknown error"));
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   const handleApprove = async (app: Application) => {
@@ -139,6 +189,7 @@ export default function ApplicationsPanel() {
   const countByFilter = (f: FilterKey): number => {
     if (f === "all") return allApps.length;
     if (f === "vip_boosts") return allApps.filter(a => a.plan === "vip_boost" || a.plan === "vip").length;
+    if (f === "sms_payments") return payments.length;
     return allApps.filter(a => a.status === f).length;
   };
 
@@ -146,6 +197,7 @@ export default function ApplicationsPanel() {
     { key: "pending_verification", label: "Needs Verification" },
     { key: "vip_boosts",           label: "VIP Boost Requests", highlight: "yellow" },
     { key: "pending_payment",      label: "No Payment Yet" },
+    { key: "sms_payments",         label: "📱 httpSMS Payments", highlight: "emerald" },
     { key: "approved",             label: "Approved" },
     { key: "rejected",             label: "Rejected" },
     { key: "all",                  label: "All" },
@@ -155,7 +207,7 @@ export default function ApplicationsPanel() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-white">Escort Applications & Payments</h2>
-        <Button variant="ghost" size="sm" onClick={fetchApplications} disabled={loading}>
+        <Button variant="ghost" size="sm" onClick={() => { fetchApplications(); fetchPayments(); }} disabled={loading}>
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
         </Button>
       </div>
@@ -166,6 +218,7 @@ export default function ApplicationsPanel() {
           const count = countByFilter(f.key);
           const isActive = filter === f.key;
           const isYellow = f.highlight === "yellow";
+          const isEmerald = f.highlight === "emerald";
 
           return (
             <button
@@ -174,20 +227,29 @@ export default function ApplicationsPanel() {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                 isActive
                   ? isYellow
-                    ? "bg-yellow-500 text-black border-yellow-500"
-                    : "bg-pink-600 text-white border-pink-600"
+                    ? "bg-yellow-500 text-black border-yellow-500 font-bold"
+                    : isEmerald
+                      ? "bg-emerald-600 text-white border-emerald-600 font-bold"
+                      : "bg-pink-600 text-white border-pink-600 font-bold"
                   : isYellow
                     ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/40 hover:border-yellow-400"
-                    : "bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500"
+                    : isEmerald
+                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/40 hover:border-emerald-400"
+                      : "bg-gray-800 text-gray-400 border-gray-700 hover:border-gray-500"
               }`}
             >
               {isYellow && <Crown className="h-3 w-3" />}
+              {isEmerald && <Zap className="h-3 w-3 fill-emerald-400" />}
               {f.label}
               {count > 0 && (
                 <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold ${
                   isActive
                     ? isYellow ? "bg-black/20 text-black" : "bg-white/20 text-white"
-                    : isYellow ? "bg-yellow-500/30 text-yellow-300" : "bg-gray-700 text-gray-300"
+                    : isYellow 
+                      ? "bg-yellow-500/30 text-yellow-300" 
+                      : isEmerald 
+                        ? "bg-emerald-500/30 text-emerald-300"
+                        : "bg-gray-700 text-gray-300"
                 }`}>
                   {count}
                 </span>
@@ -197,7 +259,72 @@ export default function ApplicationsPanel() {
         })}
       </div>
 
-      {loading ? (
+      {filter === "sms_payments" ? (
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-gray-900/60 border border-gray-800 text-xs text-gray-300">
+            <div>
+              <span className="font-bold text-white">Gateway Number:</span> <span className="text-yellow-400 font-mono">+256765040502</span> (MTN MoMo & Airtel Money)
+            </div>
+            <div className="text-gray-400">
+              Auto-verifies any payment <strong className="text-emerald-400">≥ UGX 20,000</strong>.
+            </div>
+          </div>
+
+          {payments.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              No Mobile Money SMS payments recorded yet.
+            </div>
+          ) : (
+            payments.map((p) => {
+              const isVerified = p.status === 'verified';
+              return (
+                <div
+                  key={p.id}
+                  className={`border rounded-xl p-3 sm:p-4 transition-all ${
+                    isVerified ? "bg-emerald-950/20 border-emerald-500/30" : "bg-[#181a20] border-gray-800"
+                  }`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-bold text-white">
+                        UGX {Number(p.amount).toLocaleString()}
+                      </span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${
+                        isVerified 
+                          ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" 
+                          : "bg-yellow-500/20 text-yellow-400 border-yellow-500/40"
+                      }`}>
+                        {isVerified ? "CLAIMED / VERIFIED" : "UNCLAIMED (READY)"}
+                      </span>
+                      {p.matched_application_id && (
+                        <span className="text-[10px] text-gray-400 font-mono">
+                          App: {p.matched_application_id}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-500">
+                      {new Date(p.created_at).toLocaleString()}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-300 mb-2">
+                    <div>
+                      <span className="text-gray-500">Sender:</span> {p.sender_phone || p.sender_contact || 'Unknown'} {p.sender_name ? `(${p.sender_name})` : ''}
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Transaction ID:</span> <span className="font-mono text-white font-medium">{p.transaction_id || 'N/A'}</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2 bg-black/40 rounded border border-gray-800/80 text-[11px] font-mono text-gray-400 break-words">
+                    {p.raw_content}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      ) : loading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-6 w-6 animate-spin text-pink-400" />
         </div>
@@ -294,6 +421,19 @@ export default function ApplicationsPanel() {
                     <div className="flex gap-1.5 flex-shrink-0 self-center">
                       <Button
                         size="sm"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white h-7 sm:h-8 px-2.5 sm:px-3 text-xs font-semibold rounded-lg shadow-sm"
+                        onClick={() => handleCheckHttpSms(app)}
+                        disabled={actionLoading === `httpsms-${app.id}`}
+                        title="Auto-scan Mobile Money SMS via httpSMS"
+                      >
+                        {actionLoading === `httpsms-${app.id}` ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <><Zap className="h-3.5 w-3.5 mr-1 fill-white" /> Check httpSMS</>
+                        )}
+                      </Button>
+                      <Button
+                        size="sm"
                         className="bg-green-600 hover:bg-green-700 text-white h-7 sm:h-8 px-2.5 sm:px-3 text-xs font-semibold rounded-lg shadow-sm"
                         onClick={() => handleApprove(app)}
                         disabled={actionLoading === app.id}
@@ -301,7 +441,7 @@ export default function ApplicationsPanel() {
                         {actionLoading === app.id ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
                         ) : (
-                          <><CheckCircle className="h-3.5 w-3.5 mr-1" /> Verify & Approve</>
+                          <><CheckCircle className="h-3.5 w-3.5 mr-1" /> Approve</>
                         )}
                       </Button>
                       <Button
@@ -318,6 +458,19 @@ export default function ApplicationsPanel() {
 
                   {app.status === "pending_payment" && (
                     <div className="flex items-center gap-1.5 flex-shrink-0 self-center">
+                      <Button
+                        size="sm"
+                        className="bg-emerald-600/90 hover:bg-emerald-600 text-white h-7 px-2.5 text-xs font-semibold rounded-lg shadow-sm"
+                        onClick={() => handleCheckHttpSms(app)}
+                        disabled={actionLoading === `httpsms-${app.id}`}
+                        title="Check if user paid via Mobile Money"
+                      >
+                        {actionLoading === `httpsms-${app.id}` ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <><Zap className="h-3.5 w-3.5 mr-1 fill-white" /> Check httpSMS</>
+                        )}
+                      </Button>
                       <Button
                         size="sm"
                         variant="ghost"

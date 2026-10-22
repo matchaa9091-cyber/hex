@@ -25,6 +25,7 @@
     "CLOUDFLARE_R2_SECRET_ACCESS_KEY": "2bfa7f87c5ba92ecc1a243b494c10c28d4d61a4f469bce8629fd82247d02341a",
     "CLOUDFLARE_R2_ENDPOINT": "https://b07234f65853d0f9f8e6fa1896cf06db.r2.cloudflarestorage.com",
     "NEXT_PUBLIC_POSTHOG_KEY": "phc_mZ8uHWbdAi4Xb96cwAeJG2HAxv9s6fKzbVf6THbpAmL7",
-    "NEXT_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
+    "NEXT_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+    "HTTPSMS_PHONE_NUMBER": "+256765040502"
   }
 }

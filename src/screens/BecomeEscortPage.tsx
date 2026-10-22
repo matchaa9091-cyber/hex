@@ -318,12 +318,12 @@ const BecomeEscortPage = () => {
           <div className="w-20 h-20 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-10 w-10 text-green-400" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-3">🎉 Application Submitted!</h1>
+          <h1 className="text-2xl font-bold text-white mb-3">🎉 Profile Activated & Live!</h1>
           <p className="text-gray-300 mb-2">
-            Your payment is being verified. Once confirmed, your profile will go live in{" "}
-            <strong className="text-pink-400">5-10 minutes</strong>.
+            Your payment was successfully verified via Mobile Money! Your profile is now{" "}
+            <strong className="text-emerald-400 font-bold">active & live</strong> on Hex Escorts.
           </p>
-          <p className="text-gray-400 text-sm mb-8">You'll receive a WhatsApp message when your profile is updated.</p>
+          <p className="text-gray-400 text-sm mb-8">You can now view your listing on the homepage or search results.</p>
           <Button className="bg-pink-600 hover:bg-pink-700 w-full" onClick={() => (window.location.href = "/")}>
             Go Back to Homepage
           </Button>
