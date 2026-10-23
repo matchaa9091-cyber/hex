@@ -10,6 +10,17 @@ interface AdCarouselProps {
   profiles: ProfileType[];
 }
 
+const R2_PUBLIC = "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
+
+/** Ensure every image src is an absolute URL (never a bare /storage/ path). */
+function resolveImg(src: string | undefined | null): string {
+  if (!src) return "/placeholder.svg";
+  if (src.startsWith("http://") || src.startsWith("https://")) return src;
+  if (src.startsWith("/storage/")) return `${R2_PUBLIC}${src}`;
+  if (src.startsWith("/")) return `${R2_PUBLIC}${src}`;
+  return src;
+}
+
 export const AdCarousel = ({ profiles }: AdCarouselProps) => {
   // Only profiles explicitly marked as ads AND with manually uploaded ad images
   const adProfiles = profiles.filter(p => p.isAd && p.adImages && p.adImages.length > 0);
@@ -30,7 +41,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
       return {
         id: p.id,
         name: p.name,
-        image: img,
+        image: resolveImg(img),
         slug: slugify(p.name),
         location: p.location || "Kampala",
         description: p.description || p.shortBio || "Experience premier relaxation, skilled massage therapies, and royal pampering in a serene private setting.",

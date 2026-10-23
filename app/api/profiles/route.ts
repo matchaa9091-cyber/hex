@@ -7,6 +7,28 @@ const D1_TOKEN = process.env.CLOUDFLARE_D1_TOKEN;
 
 const toBit = (v: any) => (v === true || v === 1 || v === "1" || v === "true" ? 1 : 0);
 
+const R2_PUBLIC_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL || "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
+
+/** Resolve a stored image path to a fully-qualified URL.
+ *  Handles:
+ *  - Already-absolute https:// URLs  → returned as-is
+ *  - /storage/... paths              → rewritten to R2 CDN URL
+ *  - Bare filenames                  → prefixed with R2 base
+ */
+function resolveImageUrl(path: string | null | undefined): string {
+  if (!path) return "/placeholder.svg";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  // /storage/profile-images/xyz.jpg  →  https://r2.dev/.../storage/profile-images/xyz.jpg
+  if (path.startsWith("/storage/")) return `${R2_PUBLIC_URL}${path}`;
+  if (path.startsWith("/")) return `${R2_PUBLIC_URL}${path}`;
+  return `${R2_PUBLIC_URL}/storage/${path}`;
+}
+
+function resolveImageArray(raw: any): string[] {
+  const arr: string[] = typeof raw === "string" ? JSON.parse(raw) : (raw || []);
+  return arr.map(resolveImageUrl).filter(Boolean);
+}
+
 async function executeD1Query(sql: string, params: any[] = []) {
   if (!ACCOUNT_ID || !DB_ID || !D1_TOKEN) {
     throw new Error("Cloudflare D1 credentials missing");
@@ -40,8 +62,8 @@ export async function GET() {
       complexion: p.complexion ?? undefined,
       location: p.location,
       rating: Number(p.rating) || 4.5,
-      profileImage: p.profile_image || "/placeholder.svg",
-      images: typeof p.images === "string" ? JSON.parse(p.images) : (p.images || []),
+      profileImage: resolveImageUrl(p.profile_image),
+      images: resolveImageArray(p.images),
       videos: typeof p.videos === "string" ? JSON.parse(p.videos) : (p.videos || []),
       shortBio: p.short_bio || "",
       description: p.description || "",
@@ -56,7 +78,7 @@ export async function GET() {
       isPremium: Boolean(p.is_premium),
       isAd: Boolean(p.is_ad),
       isVerified: Boolean(p.is_verified),
-      adImages: typeof p.ad_images === "string" ? JSON.parse(p.ad_images) : (p.ad_images || []),
+      adImages: resolveImageArray(p.ad_images),
     }));
     return NextResponse.json(dbProfiles, {
       headers: {
