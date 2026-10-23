@@ -124,6 +124,7 @@ async function fetchProfilesDirectFromD1(): Promise<ProfileType[] | null> {
         sql: "SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_pinned DESC, created_at DESC;",
         params: [],
       }),
+      signal: AbortSignal.timeout(2500),
       next: { revalidate: 60 },
     });
     const data = await res.json();
@@ -183,12 +184,14 @@ export async function fetchAllProfiles(seed?: string) {
     }
   }
 
+  // On the server, NEVER perform a recursive self-fetch over HTTP as it causes worker deadlocks & timeouts.
+  // Instead, immediately fall back to the pre-rendered static profiles.
+  if (typeof window === "undefined") {
+    return seed ? sortAndShuffleProfiles(fallback, seed) : fallback;
+  }
+
   try {
-    let url = "/api/profiles";
-    if (typeof window === "undefined") {
-      url = "https://www.hexescortsug.com/api/profiles";
-    }
-    const apiRes = await fetch(url, { next: { revalidate: 60 } });
+    const apiRes = await fetch("/api/profiles", { signal: AbortSignal.timeout(3000) });
     if (apiRes.ok) {
       const d1Profiles = await apiRes.json();
       if (Array.isArray(d1Profiles) && d1Profiles.length > 0) {
