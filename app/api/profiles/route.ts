@@ -76,7 +76,7 @@ export async function GET() {
       isArchived: Boolean(p.is_archived),
       isVip: Boolean(p.is_vip),
       isPremium: Boolean(p.is_premium),
-      isAd: Boolean(p.is_ad),
+      isAd: Boolean(p.is_ad || (p.ad_images && p.ad_images !== "[]" && p.ad_images !== "" && p.ad_images !== "null")),
       isVerified: Boolean(p.is_verified),
       adImages: resolveImageArray(p.ad_images),
     }));
@@ -152,7 +152,7 @@ export async function POST(req: Request) {
       toBit(body.is_archived ?? body.isArchived),
       toBit(body.is_vip ?? body.isVip),
       toBit(body.is_premium ?? body.isPremium),
-      toBit(body.is_ad ?? body.isAd),
+      toBit(body.is_ad ?? body.isAd ?? ((body.ad_images || body.adImages)?.length > 0)),
       toBit(body.is_verified ?? body.isVerified),
       JSON.stringify(body.ad_images || body.adImages || []),
     ];

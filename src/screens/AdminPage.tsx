@@ -375,7 +375,7 @@ const AdminPage = () => {
             return { ...prev, profileImage: url, images: [url, ...prev.images.filter(i => i !== prev.profileImage)] };
           }
           if (type === "ad_gallery") {
-            return { ...prev, adImages: [...prev.adImages, url] };
+            return { ...prev, adImages: [...prev.adImages, url], isAd: true };
           }
           return { ...prev, images: [...prev.images, url] };
         });
@@ -455,7 +455,7 @@ const AdminPage = () => {
       is_vip: Boolean(editingProfile.isVip || editingProfile.isPinned),
       is_archived: Boolean(editingProfile.isArchived),
       is_premium: Boolean(editingProfile.isVip || editingProfile.isPinned),
-      is_ad: editingProfile.isAd ?? false,
+      is_ad: Boolean(editingProfile.isAd || (editingProfile.adImages && editingProfile.adImages.length > 0)),
       is_verified: editingProfile.isVerified ?? false,
       ad_images: editingProfile.adImages || [],
     };
@@ -815,6 +815,20 @@ const AdminPage = () => {
                 className="w-4 h-4 accent-green-500 cursor-pointer"
               />
               <Label htmlFor="isVerified" className="text-green-500 font-bold cursor-pointer">Verified Profile</Label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="isAd" 
+                checked={Boolean(editingProfile.isAd || (editingProfile.adImages && editingProfile.adImages.length > 0))} 
+                onChange={(e) => setEditingProfile({ ...editingProfile, isAd: e.target.checked })}
+                className="w-4 h-4 accent-pink-500 cursor-pointer"
+              />
+              <Label htmlFor="isAd" className="text-pink-400 font-bold flex items-center gap-1.5 cursor-pointer">
+                <Megaphone className="w-4 h-4 fill-pink-400 text-pink-400" />
+                Featured Ad (Promote to Top Sliding Banner on PC & Top Mobile Section)
+              </Label>
             </div>
           </div>
 

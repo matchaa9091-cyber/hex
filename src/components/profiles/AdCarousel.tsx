@@ -22,8 +22,8 @@ function resolveImg(src: string | undefined | null): string {
 }
 
 export const AdCarousel = ({ profiles }: AdCarouselProps) => {
-  // Only profiles explicitly marked as ads AND with manually uploaded ad images
-  const adProfiles = profiles.filter(p => p.isAd && p.adImages && p.adImages.length > 0);
+  // Only profiles with ad images (or explicitly marked as ads)
+  const adProfiles = profiles.filter(p => (p.isAd || (p.adImages && p.adImages.length > 0)) && p.adImages && p.adImages.length > 0);
 
   // Helper to format phone to WhatsApp international format (Uganda 256)
   const toWhatsAppNumber = (num?: string) => {
