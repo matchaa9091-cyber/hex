@@ -65,22 +65,22 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
     <div className="pt-20 lg:pt-6 min-h-screen max-w-[100vw] overflow-x-hidden">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4">
         {/* SEO Header */}
-        <div className="mb-6 sm:mb-8 overflow-x-hidden">
+        <div className="mb-6 sm:mb-8">
 
           {/* Luxury Multi-Color Headline */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight leading-[1.12] mb-3 break-words">
-            <span className="bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
+          <h1 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black tracking-tight leading-[1.2] mb-3 break-words">
+            <span className="inline-block whitespace-nowrap bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm pb-1">
               Uganda Escorts
             </span>
             <span className="text-gray-400 font-light mx-2">&amp;</span>
-            <span className="text-white drop-shadow-sm">
+            <span className="inline-block whitespace-nowrap text-white drop-shadow-sm">
               Kampala Escorts
             </span>
-            <span className="block text-lg sm:text-2xl lg:text-3xl font-bold mt-2 text-gray-300">
+            <span className="block text-lg sm:text-2xl lg:text-xl xl:text-2xl font-bold mt-2 text-gray-300">
               <span className="text-amber-400 font-extrabold mr-1.5 drop-shadow-sm">#1 Verified</span>
               <span className="text-gray-100">Call Girls</span>
               <span className="text-pink-400 mx-1.5 font-normal">&amp;</span>
-              <span className="bg-gradient-to-r from-rose-300 to-pink-400 bg-clip-text text-transparent">
+              <span className="inline-block bg-gradient-to-r from-rose-300 to-pink-400 bg-clip-text text-transparent pb-0.5">
                 VIP Companions
               </span>
             </span>

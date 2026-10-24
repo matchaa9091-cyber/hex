@@ -81,7 +81,7 @@ export function AppSidebar() {
       <SidebarContent>
         <div className="p-4 mb-4">
           <Link href="/" title="Uganda Escorts - Hex Escorts">
-            <Logo textSize="2xl" />
+            <Logo textSize="sidebar" />
           </Link>
         </div>
         
