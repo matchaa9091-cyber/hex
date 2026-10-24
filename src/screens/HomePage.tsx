@@ -69,12 +69,15 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
 
           {/* Luxury Multi-Color Headline */}
           <h1 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black tracking-tight leading-[1.2] mb-3 break-words">
-            <span className="inline-block whitespace-nowrap bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm pb-1">
-              Uganda Escorts
-            </span>
-            <span className="text-gray-400 font-light mx-2">&amp;</span>
-            <span className="inline-block whitespace-nowrap text-white drop-shadow-sm">
-              Kampala Escorts
+            <span className="flex flex-col sm:inline sm:flex-row sm:items-center">
+              <span className="text-left inline-block bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm pb-1">
+                Uganda Escorts
+              </span>
+              <span className="hidden sm:inline text-gray-400 font-light mx-2">&amp;</span>
+              <span className="text-right sm:text-left inline-block text-white drop-shadow-sm">
+                <span className="sm:hidden text-gray-400 font-light mr-1.5">&amp;</span>
+                Kampala Escorts
+              </span>
             </span>
             <span className="block text-lg sm:text-2xl lg:text-xl xl:text-2xl font-bold mt-2 text-gray-300">
               <span className="text-amber-400 font-extrabold mr-1.5 drop-shadow-sm">#1 Verified</span>
