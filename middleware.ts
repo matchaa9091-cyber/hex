@@ -15,11 +15,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(newUrl, 301);
   }
 
-  // 2. HTTPS & WWW Canonical Enforcement
-  const proto = request.headers.get('x-forwarded-proto') || request.nextUrl.protocol.replace(':', '');
-  const isHttp = proto === 'http' && !host.includes('localhost') && !host.includes('127.0.0.1');
-
-  if (isHttp || host === 'hexescortsug.com') {
+  // 2. WWW Canonical Enforcement (force hexescortsug.com -> www.hexescortsug.com)
+  if (host === 'hexescortsug.com') {
     const newUrl = new URL(pathname, 'https://www.hexescortsug.com');
     request.nextUrl.searchParams.forEach((value, key) => {
       newUrl.searchParams.set(key, value);
