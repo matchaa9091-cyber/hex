@@ -75,13 +75,13 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
           </div>
 
           {/* Luxury Multi-Color Headline */}
-          <h1 className="text-2xl sm:text-3xl lg:text-5xl font-black tracking-tight leading-[1.15] mb-3 break-words">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight leading-[1.12] mb-3 break-words">
             <span className="text-white drop-shadow-sm">Uganda Escorts</span>
             <span className="text-gray-400 font-light mx-2">&amp;</span>
             <span className="bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
               Kampala Escorts
             </span>
-            <span className="block text-base sm:text-xl lg:text-2xl font-bold mt-2 text-gray-300">
+            <span className="block text-lg sm:text-2xl lg:text-3xl font-bold mt-2 text-gray-300">
               <span className="text-amber-400 font-extrabold mr-1.5 drop-shadow-sm">#1 Verified</span>
               <span className="text-gray-100">Call Girls</span>
               <span className="text-pink-400 mx-1.5 font-normal">&amp;</span>
@@ -93,7 +93,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
 
           {/* Subtitle with High-Contrast Highlights */}
           <p className="text-xs sm:text-sm text-gray-300/90 mb-5 max-w-3xl leading-relaxed">
-            Welcome to <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#67e8f9]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#67e8f9]">UG</span></strong>, Uganda&apos;s leading platform for verified <strong className="text-pink-300 font-medium">Uganda escorts</strong>, <strong className="text-pink-300 font-medium">Kampala escorts</strong>, and discreet companions. Chat directly on WhatsApp with authentic independent models in Kampala, Entebbe, Jinja, and across the country.
+            Welcome to <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#fff8f0]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#ffd700]">UG</span></strong>, Uganda&apos;s leading platform for verified <strong className="text-pink-300 font-medium">Uganda escorts</strong>, <strong className="text-pink-300 font-medium">Kampala escorts</strong>, and discreet companions. Chat directly on WhatsApp with authentic independent models in Kampala, Entebbe, Jinja, and across the country.
           </p>
           
           {/* Top Sliding Section */}
