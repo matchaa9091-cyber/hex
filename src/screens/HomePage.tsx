@@ -69,9 +69,11 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
 
           {/* Luxury Multi-Color Headline */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight leading-[1.12] mb-3 break-words">
-            <span className="text-white drop-shadow-sm">Uganda Escorts</span>
-            <span className="text-gray-400 font-light mx-2">&amp;</span>
             <span className="bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
+              Uganda Escorts
+            </span>
+            <span className="text-gray-400 font-light mx-2">&amp;</span>
+            <span className="text-white drop-shadow-sm">
               Kampala Escorts
             </span>
             <span className="block text-lg sm:text-2xl lg:text-3xl font-bold mt-2 text-gray-300">
@@ -94,25 +96,17 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
             <AdCarousel profiles={allProfiles} />
           </div>
 
-          {/* City Navigation with Refined Color Balance */}
+          {/* City Navigation */}
           <nav aria-label="Browse by city" className="flex flex-wrap gap-1.5 sm:gap-2">
-            {cities.map((c, idx) => {
-              const isMainCity = idx === 0; // Kampala
-              return (
-                <Link
-                  key={c.name}
-                  href={c.path}
-                  className={cn(
-                    "text-[10px] sm:text-[11px] px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold transition-all duration-300 active:scale-95 text-center break-words max-w-full",
-                    isMainCity
-                      ? "bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 text-white shadow-[0_2px_12px_rgba(236,72,153,0.35)] hover:shadow-[0_2px_18px_rgba(236,72,153,0.5)] hover:-translate-y-0.5"
-                      : "bg-gray-900/90 hover:bg-pink-950/40 text-gray-200 hover:text-white border border-gray-800 hover:border-pink-500/50 shadow-sm hover:-translate-y-0.5"
-                  )}
-                >
-                  {c.name}
-                </Link>
-              );
-            })}
+            {cities.map((c) => (
+              <Link
+                key={c.name}
+                href={c.path}
+                className="text-[10px] sm:text-[11px] px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold transition-all duration-300 active:scale-95 text-center break-words max-w-full bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 text-white shadow-[0_2px_12px_rgba(236,72,153,0.35)] hover:shadow-[0_2px_18px_rgba(236,72,153,0.5)] hover:-translate-y-0.5"
+              >
+                {c.name}
+              </Link>
+            ))}
           </nav>
 
           {/* Popular Kampala Suburbs / Hotspots Links */}
