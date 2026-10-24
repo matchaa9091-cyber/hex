@@ -173,9 +173,26 @@ const LocationPage = ({ cityParam, suburbParam, categoryParam, initialProfiles, 
           variant="ghost" 
           size="icon" 
           onClick={() => setShowSidebar(!showSidebar)}
-          className="text-white"
+          className="hover:bg-pink-500/10 active:scale-95 transition-transform"
+          aria-label="Toggle navigation menu"
         >
-          <Menu className="h-5 w-5" />
+          <svg 
+            className="h-5 w-5 drop-shadow-[0_0_6px_rgba(255,32,121,0.45)]" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="hamburger-pink-gradient-loc" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#ff2079" />
+                <stop offset="50%" stopColor="#ec4899" />
+                <stop offset="100%" stopColor="#f472b6" />
+              </linearGradient>
+            </defs>
+            <line x1="3.5" y1="6" x2="20.5" y2="6" stroke="url(#hamburger-pink-gradient-loc)" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="3.5" y1="12" x2="20.5" y2="12" stroke="url(#hamburger-pink-gradient-loc)" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="3.5" y1="18" x2="20.5" y2="18" stroke="url(#hamburger-pink-gradient-loc)" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
         </Button>
       </div>
       

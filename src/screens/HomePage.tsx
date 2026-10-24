@@ -93,7 +93,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
 
           {/* Subtitle with High-Contrast Highlights */}
           <p className="text-xs sm:text-sm text-gray-300/90 mb-5 max-w-3xl leading-relaxed">
-            Welcome to <strong className="text-white font-bold">Hex Escorts UG</strong>, Uganda&apos;s leading platform for verified <strong className="text-pink-300 font-medium">Uganda escorts</strong>, <strong className="text-pink-300 font-medium">Kampala escorts</strong>, and discreet companions. Chat directly on WhatsApp with authentic independent models in Kampala, Entebbe, Jinja, and across the country.
+            Welcome to <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#67e8f9]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#67e8f9]">UG</span></strong>, Uganda&apos;s leading platform for verified <strong className="text-pink-300 font-medium">Uganda escorts</strong>, <strong className="text-pink-300 font-medium">Kampala escorts</strong>, and discreet companions. Chat directly on WhatsApp with authentic independent models in Kampala, Entebbe, Jinja, and across the country.
           </p>
           
           {/* Top Sliding Section */}
