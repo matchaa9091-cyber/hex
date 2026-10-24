@@ -66,13 +66,6 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4">
         {/* SEO Header */}
         <div className="mb-6 sm:mb-8 overflow-x-hidden">
-          {/* Subtle Top Trust Pill */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-pink-500/10 border border-pink-500/20 text-xs font-semibold mb-3 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-gray-200">100% Verified Companions</span>
-            <span className="text-gray-500">•</span>
-            <span className="text-amber-400 font-bold">Kampala &amp; Nationwide</span>
-          </div>
 
           {/* Luxury Multi-Color Headline */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.4rem] font-black tracking-tight leading-[1.12] mb-3 break-words">
