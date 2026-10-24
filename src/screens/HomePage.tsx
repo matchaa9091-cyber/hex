@@ -8,7 +8,8 @@ import { ProfileType } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { AdCarousel } from "@/components/profiles/AdCarousel";
-import { Crown, ChevronDown } from "lucide-react";
+import { Crown, ChevronDown, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 24;
 const cities = [
@@ -65,11 +66,34 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4">
         {/* SEO Header */}
         <div className="mb-6 sm:mb-8 overflow-x-hidden">
-          <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-primary mb-3 break-words">
-            Uganda Escorts &amp; Kampala Escorts – #1 Verified Call Girls &amp; Companions
+          {/* Subtle Top Trust Pill */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-pink-500/10 border border-pink-500/20 text-xs font-semibold mb-3 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-gray-200">100% Verified Companions</span>
+            <span className="text-gray-500">•</span>
+            <span className="text-amber-400 font-bold">Kampala &amp; Nationwide</span>
+          </div>
+
+          {/* Luxury Multi-Color Headline */}
+          <h1 className="text-2xl sm:text-3xl lg:text-5xl font-black tracking-tight leading-[1.15] mb-3 break-words">
+            <span className="text-white drop-shadow-sm">Uganda Escorts</span>
+            <span className="text-gray-400 font-light mx-2">&amp;</span>
+            <span className="bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
+              Kampala Escorts
+            </span>
+            <span className="block text-base sm:text-xl lg:text-2xl font-bold mt-2 text-gray-300">
+              <span className="text-amber-400 font-extrabold mr-1.5 drop-shadow-sm">#1 Verified</span>
+              <span className="text-gray-100">Call Girls</span>
+              <span className="text-pink-400 mx-1.5 font-normal">&amp;</span>
+              <span className="bg-gradient-to-r from-rose-300 to-pink-400 bg-clip-text text-transparent">
+                VIP Companions
+              </span>
+            </span>
           </h1>
-          <p className="text-xs sm:text-sm text-gray-400 mb-4 max-w-3xl leading-relaxed">
-            Welcome to Hex Escorts UG, Uganda&apos;s #1 directory for verified <strong>Uganda escorts</strong>, <strong>Kampala escorts</strong>, and discreet call girls. Connect directly via WhatsApp with 100% genuine independent models in Kampala, Entebbe, Jinja, and countrywide.
+
+          {/* Subtitle with High-Contrast Highlights */}
+          <p className="text-xs sm:text-sm text-gray-300/90 mb-5 max-w-3xl leading-relaxed">
+            Welcome to <strong className="text-white font-bold">Hex Escorts UG</strong>, Uganda&apos;s leading platform for verified <strong className="text-pink-300 font-medium">Uganda escorts</strong>, <strong className="text-pink-300 font-medium">Kampala escorts</strong>, and discreet companions. Chat directly on WhatsApp with authentic independent models in Kampala, Entebbe, Jinja, and across the country.
           </p>
           
           {/* Top Sliding Section */}
@@ -77,28 +101,39 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
             <AdCarousel profiles={allProfiles} />
           </div>
 
+          {/* City Navigation with Refined Color Balance */}
           <nav aria-label="Browse by city" className="flex flex-wrap gap-1.5 sm:gap-2">
-            {cities.map((c) => (
-              <Link
-                key={c.name}
-                href={c.path}
-                className="text-[9px] sm:text-[11px] bg-gradient-to-r from-[#db0061] to-[#ff1493] text-white hover:from-[#ff1493] hover:to-[#db0061] px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full font-black transition-all duration-300 shadow-[0_2px_10px_rgba(255,20,147,0.3)] hover:shadow-[0_2px_15px_rgba(255,20,147,0.5)] hover:-translate-y-0.5 active:scale-95 text-center break-words max-w-full"
-              >
-                {c.name}
-              </Link>
-            ))}
+            {cities.map((c, idx) => {
+              const isMainCity = idx === 0; // Kampala
+              return (
+                <Link
+                  key={c.name}
+                  href={c.path}
+                  className={cn(
+                    "text-[10px] sm:text-[11px] px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold transition-all duration-300 active:scale-95 text-center break-words max-w-full",
+                    isMainCity
+                      ? "bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 text-white shadow-[0_2px_12px_rgba(236,72,153,0.35)] hover:shadow-[0_2px_18px_rgba(236,72,153,0.5)] hover:-translate-y-0.5"
+                      : "bg-gray-900/90 hover:bg-pink-950/40 text-gray-200 hover:text-white border border-gray-800 hover:border-pink-500/50 shadow-sm hover:-translate-y-0.5"
+                  )}
+                >
+                  {c.name}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Popular Kampala Suburbs / Hotspots Links */}
           <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
-            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Kampala Areas:</span>
+            <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-pink-400" /> Kampala Areas:
+            </span>
             {kampalaHotspots.map((sub) => (
               <Link
                 key={sub.name}
                 href={sub.path}
-                className="text-[9px] sm:text-[10px] bg-gray-900/90 border border-gray-800 text-gray-300 hover:text-pink-400 hover:border-pink-500/50 px-2.5 py-1 rounded-full transition-all"
+                className="text-[9px] sm:text-[10px] bg-black/60 border border-gray-800/80 text-gray-300 hover:text-pink-300 hover:border-pink-500/40 px-2.5 py-1 rounded-full transition-all"
               >
-                {sub.name} Escorts
+                {sub.name}
               </Link>
             ))}
           </div>

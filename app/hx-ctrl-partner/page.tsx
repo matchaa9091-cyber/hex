@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 // MASTER KILL SWITCH: Change to false whenever you want this route to return a 404 Not Found
-export const IS_PARTNER_DASH_ENABLED = true;
+const IS_PARTNER_DASH_ENABLED = true;
 
 interface DbProfile {
   id: string;

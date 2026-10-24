@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { staticProfiles } from "@/data/staticProfiles";
 
 // MASTER KILL-SWITCH: Set to false to immediately render this API dead
-export const IS_PARTNER_DASH_ENABLED = true;
+const IS_PARTNER_DASH_ENABLED = true;
 
 const PARTNER_PASSWORD = "Kakomando.";
 
