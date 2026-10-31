@@ -7,10 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, Loader2, ChevronRight, Crown, Phone, Star, Zap, X, Sparkles, KeyRound } from "lucide-react";
+import { CheckCircle, Loader2, ChevronRight, Crown, Phone, Star, Zap, X, Sparkles, KeyRound, Clock } from "lucide-react";
 import PaymentModal from "@/components/escort-apply/PaymentModal";
 
-type Screen = "plan" | "form" | "success";
+type Screen = "plan" | "form" | "success" | "pending_review";
 type Plan = "ordinary_week" | "vip_week" | "monthly";
 
 interface PlanConfig {
@@ -307,10 +307,10 @@ const BecomeEscortPage = () => {
     }
   };
 
-  const handlePaymentVerified = () => {
+  const handlePaymentVerified = (wasAutoVerified?: boolean) => {
     localStorage.removeItem("escort_application_draft");
     setShowPaymentModal(false);
-    setScreen("success");
+    setScreen(wasAutoVerified === false ? "pending_review" : "success");
   };
 
   const planConfig = PLANS.find(p => p.id === selectedPlan)!;
@@ -335,6 +335,53 @@ const BecomeEscortPage = () => {
           </Button>
           <div className="mt-8 pt-6 border-t border-gray-800 text-center">
             <p className="text-gray-300 font-medium mb-4">Chat with Support on WhatsApp for help</p>
+            <a
+              href="https://wa.me/256727240143"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-max mx-auto px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20 transition-all font-bold"
+            >
+              <Phone className="h-5 w-5" />
+              Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+  // ── PENDING REVIEW SCREEN ──────────────────────────────────────────────────
+  if (screen === "pending_review") {
+    return (
+      <div className="container mx-auto px-4 py-12 lg:pl-72">
+        <div className="lg:hidden h-16" />
+        <div className="max-w-md mx-auto text-center">
+          <div className="w-20 h-20 rounded-full bg-blue-500/20 border-2 border-blue-500 flex items-center justify-center mx-auto mb-6">
+            <Clock className="h-10 w-10 text-blue-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-3">Application Submitted!</h1>
+          <p className="text-gray-300 mb-2">
+            Your application has been received and is currently <strong className="text-blue-400 font-bold">pending payment confirmation</strong>.
+          </p>
+          <p className="text-gray-400 text-sm mb-6">
+            Our team is reviewing the Mobile Money transaction. Your profile will go live automatically as soon as payment is confirmed.
+          </p>
+          {applicationId && (
+            <div className="mb-6 p-3 rounded-xl bg-gray-800/80 border border-gray-700 text-xs text-gray-400 font-mono">
+              Application ID: <span className="text-white font-bold">{applicationId}</span>
+            </div>
+          )}
+          <div className="flex flex-col gap-3">
+            <Button className="bg-pink-600 hover:bg-pink-700 w-full" onClick={() => (window.location.href = "/")}>
+              Go to Homepage
+            </Button>
+            <Button variant="outline" className="border-gray-700 text-gray-300 hover:text-white w-full" onClick={() => setShowPaymentModal(true)}>
+              Re-open Payment / Check Status
+            </Button>
+          </div>
+          <div className="mt-8 pt-6 border-t border-gray-800 text-center">
+            <p className="text-gray-300 font-medium mb-4">Chat with Support on WhatsApp to expedite approval</p>
             <a
               href="https://wa.me/256727240143"
               target="_blank"

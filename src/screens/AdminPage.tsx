@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone } from "lucide-react";
+import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { mockProfiles } from "@/data/mockProfiles";
@@ -40,6 +40,7 @@ interface DbProfile {
   is_ad?: boolean;
   is_verified?: boolean;
   ad_images?: string[];
+  passcode?: string;
 }
 
 interface EditProfile {
@@ -66,6 +67,7 @@ interface EditProfile {
   isAd?: boolean;
   isVerified?: boolean;
   adImages: string[];
+  passcode?: string;
 }
 
 const getInitialDbProfiles = (): DbProfile[] => {
@@ -175,7 +177,7 @@ const AdminPage = () => {
 
   const fetchProfiles = async () => {
     try {
-      const res = await fetch(`/api/profiles?t=${Date.now()}`, { cache: "no-store" });
+      const res = await fetch(`/api/profiles?admin=true&t=${Date.now()}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -203,6 +205,7 @@ const AdminPage = () => {
             is_ad: Boolean(p.isAd ?? p.is_ad),
             is_verified: Boolean(p.isVerified ?? p.is_verified),
             ad_images: p.adImages || p.ad_images || [],
+            passcode: p.passcode || "",
           }));
           setProfiles(mappedDbProfiles);
           return;
@@ -313,6 +316,7 @@ const AdminPage = () => {
     isAd: false,
     isVerified: false,
     adImages: [],
+    passcode: "",
   });
 
   const dbToEdit = (p: DbProfile): EditProfile => ({
@@ -339,6 +343,7 @@ const AdminPage = () => {
     isAd: p.is_ad || false,
     isVerified: p.is_verified || false,
     adImages: p.ad_images || [],
+    passcode: p.passcode || "",
   });
 
   const uploadFile = async (file: File, bucket: string = "profile-images"): Promise<string> => {
@@ -458,6 +463,7 @@ const AdminPage = () => {
       is_ad: Boolean(editingProfile.isAd || (editingProfile.adImages && editingProfile.adImages.length > 0)),
       is_verified: editingProfile.isVerified ?? false,
       ad_images: editingProfile.adImages || [],
+      passcode: editingProfile.passcode ? String(editingProfile.passcode).trim() : undefined,
     };
 
     try {
@@ -775,6 +781,18 @@ const AdminPage = () => {
           <div className="space-y-2">
             <Label>Short Bio</Label>
             <Input value={editingProfile.shortBio} onChange={(e) => setEditingProfile({ ...editingProfile, shortBio: e.target.value })} />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-yellow-400 flex items-center gap-1"><KeyRound className="w-3 h-3" /> Profile Passcode (for Edit My Profile)</Label>
+            <Input
+              type="text"
+              value={editingProfile.passcode || ""}
+              onChange={(e) => setEditingProfile({ ...editingProfile, passcode: e.target.value })}
+              placeholder="Set or update client's passcode (leave blank to keep existing)"
+              className="font-mono"
+            />
+            <p className="text-[11px] text-gray-500">This passcode allows the client to access 'Edit My Profile'. Changing it here updates the stored value.</p>
           </div>
 
           <div className="space-y-2">

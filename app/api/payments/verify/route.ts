@@ -4,7 +4,7 @@ import { executeD1Query } from "@/lib/d1";
 import { parseMobileMoneySms, normalizeUgandanPhone } from "@/lib/httpsms/parser";
 import { activateApplication } from "@/lib/httpsms/activate";
 
-const HTTPSMS_API_KEY = process.env.HTTPSMS_API_KEY;
+const HTTPSMS_API_KEY = process.env.HTTPSMS_API_KEY || "uk_ZQL-ts3m-G47lIxW3s7hpdu6H3Xt-rmm28o-9_TqFo0dbxOrAW6MHmLASMifE8S6";
 const HTTPSMS_PHONE_NUMBER = process.env.HTTPSMS_PHONE_NUMBER || "+256765040502";
 
 export async function POST(req: Request) {
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    // ── STEP 1: Search in D1 httpsms_payments for an unclaimed payment >= 20,000 UGX
+    // ── STEP 1: Search in D1 httpsms_payments for an unclaimed payment >= 10,000 UGX
     let matchedPayment: any = null;
 
     // Check by Transaction ID first (most accurate)
@@ -33,8 +33,8 @@ export async function POST(req: Request) {
       const txRows = await executeD1Query(`
         SELECT * FROM httpsms_payments 
         WHERE status = 'unclaimed' 
-          AND amount >= 20000 
-          AND UPPER(REPLACE(REPLACE(transaction_id, '-', ''), ' ', '')) = ?
+          AND amount >= 10000 
+          AND UPPER(REPLACE(REPLACE(REPLACE(transaction_id, '-', ''), ' ', ''), '.', '')) = ?
         ORDER BY created_at DESC 
         LIMIT 1;
       `, [normTx]);
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       const phoneRows = await executeD1Query(`
         SELECT * FROM httpsms_payments 
         WHERE status = 'unclaimed' 
-          AND amount >= 20000 
+          AND amount >= 10000 
           AND sender_phone = ?
         ORDER BY created_at DESC 
         LIMIT 1;
@@ -62,24 +62,20 @@ export async function POST(req: Request) {
     if (!matchedPayment && HTTPSMS_API_KEY && HTTPSMS_PHONE_NUMBER) {
       try {
         const ownerParam = encodeURIComponent(HTTPSMS_PHONE_NUMBER);
-        // Look up messages for the sender contact if phone was given
-        const contactsToTry: string[] = [];
+        const contactsToTry: string[] = ["MTNMobMoney", "AirtelMoney"];
+
+        // Also look up messages for the sender contact if phone was given
         if (normPhone) {
           contactsToTry.push(`+256${normPhone}`);
           contactsToTry.push(`0${normPhone}`);
           contactsToTry.push(normPhone);
         }
-
-        // Also query telecom shortcodes (MTNMOBILEMONEY, AirtelMoney) where the SMS came from
         contactsToTry.push("MTNMOBILEMONEY");
-        contactsToTry.push("AirtelMoney");
         contactsToTry.push("MTNMoMo");
-        contactsToTry.push("165");
-        contactsToTry.push("185");
 
         for (const contact of contactsToTry) {
           if (matchedPayment) break;
-          const url = `https://api.httpsms.com/v1/messages?owner=${ownerParam}&contact=${encodeURIComponent(contact)}`;
+          const url = `https://api.httpsms.com/v1/messages?owner=${ownerParam}&contact=${encodeURIComponent(contact)}&limit=25`;
           const res = await fetch(url, {
             headers: {
               'x-api-key': HTTPSMS_API_KEY,
@@ -96,11 +92,14 @@ export async function POST(req: Request) {
               const content = msg.content || "";
               const parsed = parseMobileMoneySms(content);
 
-              if (parsed.isPayment && parsed.amount >= 20000) {
+              if (parsed.isPayment && parsed.amount >= 10000) {
                 // Check if matches this user's phone or transaction ID
                 let matchThis = false;
-                if (normTx && parsed.transactionId === normTx) {
-                  matchThis = true;
+                if (normTx && parsed.transactionId) {
+                  const cleanParsedTx = parsed.transactionId.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+                  if (cleanParsedTx === normTx) {
+                    matchThis = true;
+                  }
                 }
                 if (!matchThis && normPhone && parsed.normalizedPhone === normPhone) {
                   matchThis = true;
@@ -186,7 +185,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: false,
       verified: false,
-      message: "We have not received an SMS for UGX 20,000 or above from this phone number or transaction ID yet. If you just sent the payment, please wait 30–60 seconds for network SMS delivery and tap 'Verify' again, or double-check the phone number.",
+      message: "We have not received an SMS matching this phone number or transaction ID yet. If you just sent the payment, please wait 30–60 seconds for network SMS delivery and tap 'Verify' again, or submit for manual review.",
     });
   } catch (err: any) {
     console.error("[Verify API] Error:", err);

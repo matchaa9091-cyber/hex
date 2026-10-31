@@ -41,6 +41,56 @@ export default function ApplicationsPanel() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterKey>("pending_verification");
+  const [syncingPayments, setSyncingPayments] = useState(false);
+  const [matchingPaymentId, setMatchingPaymentId] = useState<string | null>(null);
+  const [selectedAppId, setSelectedAppId] = useState<string>("");
+
+  const handleSyncHttpSms = async () => {
+    setSyncingPayments(true);
+    try {
+      const res = await fetch("/api/payments/sync", { method: "POST" });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert(data.message || "Synced messages from httpSMS!");
+        await fetchPayments();
+      } else {
+        alert("Sync failed: " + (data.error || "Unknown error"));
+      }
+    } catch (e: any) {
+      alert("Sync failed: " + (e?.message || "Server error"));
+    } finally {
+      setSyncingPayments(false);
+    }
+  };
+
+  const handleManualMatch = async (paymentId: string, appId: string) => {
+    if (!appId) {
+      alert("Please select an application to match.");
+      return;
+    }
+    setActionLoading(`match-${paymentId}`);
+    try {
+      const res = await fetch("/api/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentId, applicationId: appId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert("Payment matched and profile activated successfully!");
+        setMatchingPaymentId(null);
+        await fetchApplications();
+        await fetchPayments();
+      } else {
+        alert(data.error || "Failed to match payment");
+      }
+    } catch (err: any) {
+      alert("Error: " + (err.message || "Server error"));
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
 
   const fetchPayments = async () => {
     try {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { X, Loader2, Upload, Trash2, CheckCircle2, KeyRound } from "lucide-react";
+import { X, Loader2, Upload, Trash2, CheckCircle2, KeyRound, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +19,7 @@ interface ProfileEditModalProps {
 export function ProfileEditModal({ profile, isOpen, onClose, onUpdated }: ProfileEditModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   // Form state initialized from profile
   const [name, setName] = useState(profile.name || "");
@@ -34,6 +35,7 @@ export function ProfileEditModal({ profile, isOpen, onClose, onUpdated }: Profil
   const [services, setServices] = useState((profile.services || []).join(", "));
   const [profileImage, setProfileImage] = useState(profile.profileImage || "");
   const [images, setImages] = useState<string[]>(profile.images || []);
+  const [videos, setVideos] = useState<string[]>(profile.videos || []);
   const [newPasscode, setNewPasscode] = useState("");
 
   const [uploading, setUploading] = useState(false);
@@ -57,10 +59,10 @@ export function ProfileEditModal({ profile, isOpen, onClose, onUpdated }: Profil
     return "";
   };
 
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File, folder = "profile-images"): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("folder", "profile-images");
+    formData.append("folder", folder);
     const res = await fetch("/api/upload", { method: "POST", body: formData });
     const data = await res.json();
     if (!res.ok || !data.url) throw new Error(data.error || "Upload failed");
@@ -98,11 +100,36 @@ export function ProfileEditModal({ profile, isOpen, onClose, onUpdated }: Profil
       setError(`Failed to upload gallery photos: ${err?.message || "Try again"}`);
     } finally {
       setUploading(false);
+      if (galleryInputRef.current) galleryInputRef.current.value = "";
+    }
+  };
+
+  const handleVideoAdd = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    setError("");
+    try {
+      const newUrls: string[] = [];
+      for (const file of Array.from(files)) {
+        const url = await uploadFile(file, "profile-images");
+        newUrls.push(url);
+      }
+      setVideos((prev) => [...prev, ...newUrls]);
+    } catch (err: any) {
+      setError(`Failed to upload video: ${err?.message || "Try again"}`);
+    } finally {
+      setUploading(false);
+      if (videoInputRef.current) videoInputRef.current.value = "";
     }
   };
 
   const handleRemoveGalleryImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveVideo = (index: number) => {
+    setVideos((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -143,6 +170,7 @@ export function ProfileEditModal({ profile, isOpen, onClose, onUpdated }: Profil
             services: services.split(",").map((s) => s.trim()).filter(Boolean),
             profile_image: profileImage,
             images,
+            videos,
             newPasscode: newPasscode.trim() ? newPasscode.trim() : undefined,
           },
         }),
@@ -203,7 +231,7 @@ export function ProfileEditModal({ profile, isOpen, onClose, onUpdated }: Profil
             Edit Your Profile
           </h2>
           <p className="text-xs sm:text-sm text-gray-400 mt-1">
-            Update your photos, phone number, location, and bio. Changes appear immediately.
+            Update your photos, videos, phone number, location, and bio. Changes appear immediately.
           </p>
         </div>
 
@@ -297,6 +325,53 @@ export function ProfileEditModal({ profile, isOpen, onClose, onUpdated }: Profil
                 <span>+Add</span>
               </button>
             </div>
+          </div>
+
+          {/* Videos */}
+          <div className="space-y-2">
+            <Label className="text-white font-medium text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <Video className="h-3.5 w-3.5 text-pink-400" />
+              Videos ({videos.length})
+            </Label>
+            <div className="flex flex-wrap gap-2.5">
+              {videos.map((vid, i) => (
+                <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-700 w-24 h-16">
+                  <video
+                    src={vid}
+                    className="w-full h-full object-cover"
+                    muted
+                    playsInline
+                    preload="metadata"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveVideo(i)}
+                    className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-300"
+                    title="Remove video"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+              <input
+                ref={videoInputRef}
+                type="file"
+                accept="video/*"
+                multiple
+                className="hidden"
+                onChange={handleVideoAdd}
+              />
+              <button
+                type="button"
+                onClick={() => videoInputRef.current?.click()}
+                disabled={uploading}
+                className="w-24 h-16 rounded-xl border-2 border-dashed border-gray-700 hover:border-pink-500/60 flex flex-col items-center justify-center text-gray-400 hover:text-pink-400 transition-colors text-xs gap-1"
+              >
+                <Video className="h-4 w-4" />
+                <span>+Add Video</span>
+              </button>
+            </div>
+            <p className="text-[11px] text-gray-500">Max 100MB per video. MP4, MOV, WebM supported.</p>
           </div>
 
           {/* Core Info Grid */}

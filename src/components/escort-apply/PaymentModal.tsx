@@ -11,7 +11,7 @@ interface PaymentModalProps {
   applicationId: string;
   planAmount: number;
   planName: string;
-  onVerified: () => void;
+  onVerified: (wasAutoVerified?: boolean) => void;
   onClose: () => void;
 }
 
@@ -76,7 +76,7 @@ export default function PaymentModal({
       if (res.ok && data.verified) {
         setVerifiedSuccess(data.message || `Payment of UGX ${Number(data.amount || 20000).toLocaleString()} verified! Your profile is now live.`);
         setTimeout(() => {
-          onVerified();
+          onVerified(true);
         }, 2200);
       } else {
         setError(data.message || "No payment of 20,000 UGX or above found for this number yet. If you just sent it, please wait 30 seconds and try again.");
@@ -115,7 +115,7 @@ export default function PaymentModal({
         throw new Error(data.error || "Failed to update application");
       }
 
-      onVerified();
+      onVerified(false);
     } catch (err: any) {
       console.error("Verification submit error:", err);
       setError("Something went wrong. Please try again.");

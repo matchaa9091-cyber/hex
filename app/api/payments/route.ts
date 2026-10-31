@@ -8,7 +8,7 @@ export async function GET() {
     const rows = await executeD1Query(`
       SELECT * FROM httpsms_payments 
       ORDER BY created_at DESC 
-      LIMIT 50;
+      LIMIT 200;
     `);
     return NextResponse.json(rows);
   } catch (err: any) {

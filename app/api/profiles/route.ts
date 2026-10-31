@@ -44,9 +44,16 @@ async function executeD1Query(sql: string, params: any[] = []) {
   return data.result?.[0]?.results || [];
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const results = await executeD1Query("SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_pinned DESC, created_at DESC;");
+    const { searchParams } = new URL(req.url);
+    const isAdmin = searchParams.get("admin") === "true";
+
+    const sql = isAdmin
+      ? "SELECT * FROM profiles ORDER BY is_pinned DESC, created_at DESC;"
+      : "SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_pinned DESC, created_at DESC;";
+
+    const results = await executeD1Query(sql);
     const dbProfiles = results.map((p: any) => ({
       id: String(p.id),
       name: p.name,
@@ -73,7 +80,7 @@ export async function GET() {
       isAd: Boolean(p.is_ad || (p.ad_images && p.ad_images !== "[]" && p.ad_images !== "" && p.ad_images !== "null")),
       isVerified: Boolean(p.is_verified),
       adImages: resolveImageArray(p.ad_images),
-      // NOTE: p.passcode intentionally excluded from public GET for security
+      ...(isAdmin ? { passcode: p.passcode || "" } : {}),
     }));
     return NextResponse.json(dbProfiles, {
       headers: {

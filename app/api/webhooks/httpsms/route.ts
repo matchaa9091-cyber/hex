@@ -32,32 +32,18 @@ export async function POST(req: Request) {
     // Parse Mobile Money text
     const parsed = parseMobileMoneySms(content);
 
-    // Only process incoming payments of 20,000 UGX and above
-    if (!parsed.isPayment || parsed.amount < 20000) {
-      console.log(`[httpSMS Webhook] Ignored SMS: isPayment=${parsed.isPayment}, amount=${parsed.amount} (min required 20,000 UGX)`);
-      return NextResponse.json({
-        success: true,
-        processed: false,
-        reason: "Message is not an incoming payment of 20,000 UGX or above",
-        parsed: {
-          isPayment: parsed.isPayment,
-          amount: parsed.amount,
-          provider: parsed.provider
-        }
-      });
-    }
-
     // Generate unique payment ID
     const paymentId = `pay-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
     const phoneToStore = parsed.normalizedPhone || contact.replace(/\D/g, '').slice(-9) || null;
+    const initialStatus = parsed.isPayment ? 'unclaimed' : 'info';
 
-    // Insert into D1 httpsms_payments table
+    // Insert into D1 httpsms_payments table regardless of amount so admin sees all messages
     try {
       const insertSql = `
         INSERT OR IGNORE INTO httpsms_payments (
           id, message_id, sender_contact, sender_phone, sender_name,
           amount, currency, transaction_id, raw_content, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'unclaimed');
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       `;
       await executeD1Query(insertSql, [
         paymentId,
@@ -65,13 +51,27 @@ export async function POST(req: Request) {
         contact,
         phoneToStore,
         parsed.senderName,
-        parsed.amount,
-        parsed.currency,
+        parsed.amount || 0,
+        parsed.currency || 'UGX',
         parsed.transactionId,
-        content
+        content,
+        initialStatus
       ]);
     } catch (dbErr) {
       console.error("[httpSMS Webhook] D1 insert payment error:", dbErr);
+    }
+
+    // If not a recognized payment or amount is below 10,000 UGX, keep as recorded
+    if (!parsed.isPayment || parsed.amount < 10000) {
+      return NextResponse.json({
+        success: true,
+        processed: true,
+        savedToAdmin: true,
+        isPayment: parsed.isPayment,
+        amount: parsed.amount,
+        status: initialStatus,
+        message: "SMS recorded in admin panel."
+      });
     }
 
     // Try auto-matching against pending escort applications
@@ -85,7 +85,8 @@ export async function POST(req: Request) {
         // Match by Transaction ID
         if (parsed.transactionId && app.transaction_id) {
           const appTx = app.transaction_id.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-          if (appTx === parsed.transactionId) {
+          const cleanParsedTx = parsed.transactionId.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+          if (appTx === cleanParsedTx) {
             isMatch = true;
           }
         }
