@@ -9,16 +9,10 @@ const toBit = (v: any) => (v === true || v === 1 || v === "1" || v === "true" ? 
 
 const R2_PUBLIC_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL || "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
 
-/** Resolve a stored image path to a fully-qualified URL.
- *  Handles:
- *  - Already-absolute https:// URLs  → returned as-is
- *  - /storage/... paths              → rewritten to R2 CDN URL
- *  - Bare filenames                  → prefixed with R2 base
- */
+/** Resolve a stored image path to a fully-qualified URL. */
 function resolveImageUrl(path: string | null | undefined): string {
   if (!path) return "/placeholder.svg";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  // /storage/profile-images/xyz.jpg  →  https://r2.dev/.../storage/profile-images/xyz.jpg
   if (path.startsWith("/storage/")) return `${R2_PUBLIC_URL}${path}`;
   if (path.startsWith("/")) return `${R2_PUBLIC_URL}${path}`;
   return `${R2_PUBLIC_URL}/storage/${path}`;
@@ -79,6 +73,7 @@ export async function GET() {
       isAd: Boolean(p.is_ad || (p.ad_images && p.ad_images !== "[]" && p.ad_images !== "" && p.ad_images !== "null")),
       isVerified: Boolean(p.is_verified),
       adImages: resolveImageArray(p.ad_images),
+      // NOTE: p.passcode intentionally excluded from public GET for security
     }));
     return NextResponse.json(dbProfiles, {
       headers: {
@@ -100,8 +95,8 @@ export async function POST(req: Request) {
         id, name, age, height, body_type, complexion, location, rating,
         profile_image, images, videos, short_bio, description, phone, whatsapp,
         email, instagram, services, is_pinned, is_archived, is_vip, is_premium,
-        is_ad, is_verified, ad_images, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        is_ad, is_verified, ad_images, passcode, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         age = excluded.age,
@@ -126,7 +121,8 @@ export async function POST(req: Request) {
         is_premium = excluded.is_premium,
         is_ad = excluded.is_ad,
         is_verified = excluded.is_verified,
-        ad_images = excluded.ad_images;
+        ad_images = excluded.ad_images,
+        passcode = COALESCE(excluded.passcode, profiles.passcode);
     `;
 
     const params = [
@@ -155,6 +151,7 @@ export async function POST(req: Request) {
       toBit(body.is_ad ?? body.isAd ?? ((body.ad_images || body.adImages)?.length > 0)),
       toBit(body.is_verified ?? body.isVerified),
       JSON.stringify(body.ad_images || body.adImages || []),
+      body.passcode ? String(body.passcode).trim() : null,
     ];
 
     await executeD1Query(sql, params);

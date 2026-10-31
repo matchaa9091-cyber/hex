@@ -7,7 +7,7 @@ const R2_SECRET_KEY = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || "2bfa7f87c5
 const R2_ENDPOINT = process.env.CLOUDFLARE_R2_ENDPOINT || `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
 const APPLICATIONS_KEY = "data/applications.json";
 
-// SigV4 for R2
+// ── WebCrypto SigV4 helpers ─────────────────────────────────────────────────
 async function hmacSha256(key: ArrayBuffer, data: string): Promise<ArrayBuffer> {
   const cryptoKey = await crypto.subtle.importKey(
     "raw", key, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
@@ -58,63 +58,59 @@ async function r2Request(method: "GET" | "PUT", key: string, body?: ArrayBuffer,
 }
 
 export async function getPendingApplications(): Promise<any[]> {
-  const list: any[] = [];
   try {
     const res = await r2Request("GET", APPLICATIONS_KEY);
     if (res.ok) {
-      const allApps = await res.json();
-      if (Array.isArray(allApps)) {
-        for (const a of allApps) {
-          if (a && (a.status === 'pending_payment' || a.status === 'pending_verification' || a.status === 'pending')) {
-            list.push(a);
-          }
-        }
-      }
+      const text = await res.text();
+      const apps = text ? JSON.parse(text) : [];
+      return apps.filter((a: any) => a.status === "pending_payment" || a.status === "pending_verification" || a.status === "pending");
     }
   } catch (err) {
     console.error("[getPendingApplications] Error reading R2 applications:", err);
   }
 
+  // Fallback to D1
   try {
-    const d1Rows = await executeD1Query(`
-      SELECT id, name, phone, payment_phone, transaction_id, plan, status 
+    const rows = await executeD1Query(`
+      SELECT * 
       FROM escort_applications 
       WHERE status IN ('pending_payment', 'pending_verification', 'pending')
-      ORDER BY created_at DESC
-      LIMIT 20;
+      ORDER BY created_at DESC;
     `);
-    if (d1Rows && d1Rows.length > 0) {
-      for (const row of d1Rows) {
-        if (!list.some(a => a.id === row.id)) {
-          list.push(row);
-        }
-      }
-    }
+    return rows.map((r: any) => ({
+      ...r,
+      images: typeof r.images === "string" ? JSON.parse(r.images || "[]") : (r.images || []),
+      videos: typeof r.videos === "string" ? JSON.parse(r.videos || "[]") : (r.videos || []),
+      services: typeof r.services === "string" ? JSON.parse(r.services || "[]") : (r.services || []),
+    }));
   } catch (err) {
-    // ignore
+    console.error("[getPendingApplications] Error querying D1:", err);
+    return [];
   }
-
-  return list;
 }
 
-export async function activateApplication(applicationId: string, paymentDetails: {
-  paymentId?: string;
-  amount: number;
-  transactionId?: string | null;
-  phone?: string | null;
-  provider?: string | null;
-}) {
-  // 1. Try to fetch application from R2 first (holds richest json data)
+export async function activateApplication(
+  applicationId: string,
+  paymentDetails: {
+    paymentId?: string;
+    amount: number;
+    transactionId?: string | null;
+    phone?: string | null;
+    provider?: string | null;
+  }
+) {
+  // 1. Fetch application details
   let app: any = null;
   let allApps: any[] = [];
   try {
     const res = await r2Request("GET", APPLICATIONS_KEY);
     if (res.ok) {
-      allApps = await res.json();
+      const text = await res.text();
+      allApps = text ? JSON.parse(text) : [];
       app = allApps.find((a: any) => a.id === applicationId);
     }
   } catch (err) {
-    console.error("Error reading application from R2:", err);
+    console.error("Error reading R2 applications during activation:", err);
   }
 
   // Fallback: check D1 escort_applications if not in R2
@@ -147,8 +143,8 @@ export async function activateApplication(applicationId: string, paymentDetails:
       id, name, age, height, body_type, complexion, location, rating,
       profile_image, images, videos, short_bio, description, phone, whatsapp,
       email, instagram, services, is_pinned, is_archived, is_vip, is_premium,
-      is_ad, is_verified, ad_images, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, 0, 1, '[]', datetime('now'))
+      is_ad, is_verified, ad_images, passcode, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, 0, 1, '[]', ?, datetime('now'))
     ON CONFLICT(id) DO UPDATE SET
       name = excluded.name,
       location = excluded.location,
@@ -161,7 +157,8 @@ export async function activateApplication(applicationId: string, paymentDetails:
       is_pinned = excluded.is_pinned,
       is_vip = excluded.is_vip,
       is_premium = excluded.is_premium,
-      is_verified = 1;
+      is_verified = 1,
+      passcode = COALESCE(excluded.passcode, profiles.passcode);
   `;
 
   const profileParams = [
@@ -186,6 +183,7 @@ export async function activateApplication(applicationId: string, paymentDetails:
     isVip ? 1 : 0,
     isVip ? 1 : 0,
     isVip ? 1 : 0,
+    app.passcode || null,
   ];
 
   await executeD1Query(insertProfileSql, profileParams);
@@ -212,16 +210,18 @@ export async function activateApplication(applicationId: string, paymentDetails:
         return {
           ...a,
           status: "approved",
-          payment_method: paymentDetails.provider || a.payment_method || "momo",
+          payment_method: paymentDetails.provider || "momo",
           payment_phone: paymentDetails.phone || a.payment_phone || a.phone,
           transaction_id: paymentDetails.transactionId || a.transaction_id || "VERIFIED-HTTPSMS",
           verified_amount: paymentDetails.amount,
           verified_at: new Date().toISOString(),
           verified_via: "httpsms",
+          activated_at: new Date().toISOString(),
         };
       }
       return a;
     });
+
     try {
       const json = JSON.stringify(updatedApps, null, 2);
       const body = new TextEncoder().encode(json).buffer as ArrayBuffer;
@@ -242,3 +242,5 @@ export async function activateApplication(applicationId: string, paymentDetails:
 
   return { success: true, profileId, applicationId };
 }
+
+export const activateEscortProfile = activateApplication;

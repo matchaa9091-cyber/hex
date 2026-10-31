@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, Loader2, ChevronRight, Crown, Phone, Star, Zap, X, Sparkles } from "lucide-react";
+import { CheckCircle, Loader2, ChevronRight, Crown, Phone, Star, Zap, X, Sparkles, KeyRound } from "lucide-react";
 import PaymentModal from "@/components/escort-apply/PaymentModal";
 
 type Screen = "plan" | "form" | "success";
@@ -108,6 +108,7 @@ const BecomeEscortPage = () => {
     profileImage: "",
     images: [] as string[],
     videos: [] as string[],
+    passcode: "",
   });
 
   const [showForm, setShowForm] = useState(false);
@@ -201,6 +202,10 @@ const BecomeEscortPage = () => {
       setError("Name, phone number, and location are required.");
       return;
     }
+    if (!form.passcode || form.passcode.trim().length < 3) {
+      setError("Please create a passcode (at least 3 characters) so you can edit your profile later.");
+      return;
+    }
     if (!form.profileImage) {
       setError("Profile image is required.");
       return;
@@ -231,6 +236,7 @@ const BecomeEscortPage = () => {
         profile_image: form.profileImage,
         images: form.images,
         videos: form.videos,
+        passcode: form.passcode.trim(),
       };
 
       const res = await fetch("/api/applications", {
@@ -772,6 +778,22 @@ const BecomeEscortPage = () => {
                     <div className="col-span-2 space-y-2">
                       <Label>Services (comma-separated)</Label>
                       <Input value={form.services} onChange={(e) => handleChange("services", e.target.value)} placeholder="e.g. Dating, Companionship, Massage" />
+                    </div>
+
+                    <div className="col-span-2 space-y-2 p-3.5 rounded-xl bg-pink-950/25 border border-pink-500/40">
+                      <Label className="text-pink-300 font-semibold flex items-center gap-1.5 text-sm">
+                        <KeyRound className="h-4 w-4 text-pink-400" /> Create Passcode for Editing Your Profile *
+                      </Label>
+                      <Input
+                        type="text"
+                        value={form.passcode}
+                        onChange={(e) => handleChange("passcode", e.target.value)}
+                        placeholder="e.g. 1234 or a secret word you will remember"
+                        className="bg-gray-800/90 border-gray-700 text-white placeholder:text-gray-500 focus:border-pink-500"
+                      />
+                      <p className="text-xs text-gray-400 leading-relaxed">
+                        Remember this passcode! You will use it to access &ldquo;Edit My Profile&rdquo; on the sidebar whenever you want to update your photos, phone number, or profile details.
+                      </p>
                     </div>
                   </div>
 

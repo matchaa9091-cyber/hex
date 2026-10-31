@@ -1,4 +1,3 @@
-
 export interface ReviewType {
   name: string;
   rating: number;
@@ -32,4 +31,5 @@ export interface ProfileType {
   isAd?: boolean;
   isVerified?: boolean;
   adImages?: string[];
+  passcode?: string;
 }

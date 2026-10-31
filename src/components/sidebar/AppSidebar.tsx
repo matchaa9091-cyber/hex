@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MapPin, Info, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send } from "lucide-react";
+import { Home, MapPin, Info, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send, Edit3 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +18,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
+import { PasscodeModal } from "@/components/profiles/PasscodeModal";
 
 const kampalaAreas = [
   "Banda", "Bugolobi", "Bukesa", "Bukoto", "Bunamwaya", "Bunga", 
@@ -46,13 +47,22 @@ const locations = [
   { name: "Mukono", path: "/escorts-in/mukono" },
 ];
 
-const mainItems = [
+interface MainItem {
+  title: string;
+  path: string;
+  icon: any;
+  children?: typeof locations;
+  isEditAction?: boolean;
+}
+
+const mainItems: MainItem[] = [
   { title: "Home", path: "/", icon: Home },
   { title: "VIP Escorts", path: "/vip", icon: Star },
   { title: "Locations", path: "/escorts-in", icon: MapPin, children: locations },
   { title: "About", path: "/about", icon: Info },
   { title: "FAQ", path: "/faq", icon: HelpCircle },
   { title: "Become an escort", path: "/become-escort", icon: UserPlus },
+  { title: "Edit My Profile", path: "#edit-profile", icon: Edit3, isEditAction: true },
 ];
 
 export function AppSidebar() {
@@ -60,6 +70,7 @@ export function AppSidebar() {
   const [isLocationExpanded, setIsLocationExpanded] = useState(false);
   const [expandedLocation, setExpandedLocation] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
 
   const isPathActive = (path: string) => {
     if (path === "/") {
@@ -94,14 +105,27 @@ export function AppSidebar() {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={isPathActive(item.path)}
-                      onClick={() => {
+                      isActive={!item.isEditAction && isPathActive(item.path)}
+                      onClick={(e) => {
+                        if (item.isEditAction) {
+                          e.preventDefault();
+                          setIsPasscodeModalOpen(true);
+                          return;
+                        }
                         if (item.title === "Locations") {
                           setIsLocationExpanded(!isLocationExpanded);
                         }
                       }}
                     >
-                      {item.title === "Locations" ? (
+                      {item.isEditAction ? (
+                        <button
+                          type="button"
+                          className="flex items-center w-full text-left font-medium text-pink-400 hover:text-pink-300 transition-colors"
+                        >
+                          <item.icon className="mr-2 h-4 w-4 text-pink-400" />
+                          <span>{item.title}</span>
+                        </button>
+                      ) : item.title === "Locations" ? (
                         <div className="flex items-center w-full">
                           <item.icon className="mr-2 h-4 w-4" />
                           <span>{item.title}</span>
@@ -166,7 +190,7 @@ export function AppSidebar() {
         {/* Telegram Button */}
         <div className="p-4 mt-auto border-t border-gray-800">
           <a
-                  href="https://t.me/+yX6mljCz8to2ODE0"
+            href="https://t.me/+yX6mljCz8to2ODE0"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg bg-[#24A1DE] hover:bg-[#24A1DE]/90 text-white shadow-lg shadow-[#24A1DE]/20 transition-all text-sm font-semibold"
@@ -207,7 +231,19 @@ export function AppSidebar() {
               <nav className="space-y-2">
                 {mainItems.map((item) => (
                   <div key={item.title}>
-                    {item.title === "Locations" ? (
+                    {item.isEditAction ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setIsPasscodeModalOpen(true);
+                        }}
+                        className="flex items-center w-full p-2 rounded-md hover:bg-muted text-pink-400 hover:text-pink-300 font-semibold text-left transition-colors"
+                      >
+                        <item.icon className="mr-2 h-5 w-5 text-pink-400" />
+                        <span>{item.title}</span>
+                      </button>
+                    ) : item.title === "Locations" ? (
                       <>
                         <button
                           onClick={() => setIsLocationExpanded(!isLocationExpanded)}
@@ -290,7 +326,7 @@ export function AppSidebar() {
               {/* Telegram Button in mobile menu */}
               <div className="pt-4 mt-4 border-t border-gray-800">
                 <a
-                        href="https://t.me/+yX6mljCz8to2ODE0"
+                  href="https://t.me/+yX6mljCz8to2ODE0"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg bg-[#24A1DE] hover:bg-[#24A1DE]/90 text-white shadow-lg shadow-[#24A1DE]/20 transition-all text-sm font-semibold"
@@ -311,6 +347,10 @@ export function AppSidebar() {
     <>
       <DesktopSidebar />
       <MobileSidebar />
+      <PasscodeModal
+        isOpen={isPasscodeModalOpen}
+        onClose={() => setIsPasscodeModalOpen(false)}
+      />
     </>
   );
 }

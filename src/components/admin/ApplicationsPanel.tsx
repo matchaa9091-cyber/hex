@@ -144,6 +144,7 @@ export default function ApplicationsPanel() {
         is_pinned: app.plan === "monthly" || app.plan === "vip" || app.plan === "vip_boost",
         is_vip: app.plan === "monthly" || app.plan === "vip" || app.plan === "vip_boost",
         rating: 4.5,
+        passcode: (app as any).passcode || null,
       };
 
       // Create live profile in Cloudflare D1

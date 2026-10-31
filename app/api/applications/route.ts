@@ -104,6 +104,7 @@ export async function POST(req: Request) {
       videos: body.videos || [],
       plan: body.plan || "monthly",
       amount: body.amount || 0,
+      passcode: body.passcode || "",
       status: body.status || "pending_payment",
       created_at: new Date().toISOString(),
     };
