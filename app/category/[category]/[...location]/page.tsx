@@ -19,18 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const routePath = `${params.category}/${params.location.join('/')}`;
 
   // Check if there are profiles for this category-location combination
-  const locationProfiles = await fetchProfilesByLocation(city);
-  let profiles = locationProfiles;
-  if (suburb) {
-    const targetSuburb = suburb.toLowerCase().trim();
-    profiles = locationProfiles.filter(p => {
-      const pLoc = (p.location || '').toLowerCase();
-      return pLoc === targetSuburb || pLoc.includes(targetSuburb);
-    });
-  }
+  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
 
   const cat = params.category.toLowerCase().replace(/-/g, ' ');
-  profiles = profiles.filter(profile => {
+  const profiles = locationProfiles.filter(profile => {
     const bodyTypeMatch = profile.bodyType?.toLowerCase() === cat || profile.bodyType?.toLowerCase().includes(cat);
     const serviceMatch = profile.services?.some((s: string) => s.toLowerCase().includes(cat));
     const vipMatch = (cat === 'vip' || cat === 'premium') ? profile.isVip || profile.isPinned : false;
@@ -69,7 +61,7 @@ export default async function CategoryLocationPage({ params }: Props) {
   const categoryName = category.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
   // Fetch only the specific profiles for this location (Cache-protected)
-  const locationProfiles = await fetchProfilesByLocation(city);
+  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
 
   // Fresh seed for client-side shuffling
   const seed = Math.random().toString(36).substring(2, 10);

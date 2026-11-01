@@ -6,10 +6,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { useState, useEffect } from "react";
-import { Menu, ChevronDown, UserPlus } from "lucide-react";
+import { Menu, ChevronDown, UserPlus, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProfileType } from "@/types/profile";
 import { slugify } from "@/lib/utils";
+import { matchProfilesByLocation } from "@/lib/locationMatcher";
 
 const cityMeta: Record<string, { title: string; description: string; heading: string; body: string }> = {
   kampala: {
@@ -74,44 +75,9 @@ const LocationPage = ({ cityParam, suburbParam, categoryParam, initialProfiles, 
   const { data: queryProfiles } = useAllProfiles(initialProfiles, shuffleSeed);
   const allProfiles = queryProfiles || initialProfiles || [];
 
-  const locationProfiles = (() => {
-    let filtered = allProfiles;
-
-    // Filter by Location
-    if (city) {
-      const kampalaSuburbs = [
-        "banda", "bugolobi", "bukesa", "bukoto", "bunamwaya", "bunga", 
-        "busega", "buwate", "buziga", "bwaise", "central", "ggaba", "kabalagala", "kabowa", 
-        "kampala town", "kamwokya", "kansanga", "kanyanya", "kasubi", "katooke", 
-        "kawempe", "kazo", "kibuli", "kireka", "kirinnya", "kisaasi", "kisugu", 
-        "kitintale", "kiwatule", "kololo", "komamboga", "kulambiro", "kyaliwajjala", 
-        "kyambogo", "kyanja", "kyebando", "lubaga", "lugala", "lugogo", "lungujja", 
-        "luzira", "makerere", "makindye", "masajja", "masanafu", "mawanda road", 
-        "mbuya", "mengo", "mpererwe", "mulago", "munyonyo", "mutundwe", "mutungo", 
-        "muyenga", "naalya", "nabulagala", "nabweru", "naguru", "najjanankumbi", 
-        "najjera", "nakasero", "nakawa", "nakulabye", "namasuba", "namirembe", 
-        "namungoona", "namuwongo", "nateete", "nkuba", "nsambya", "ntinda", 
-        "rubaga", "salaama rd", "sir apollo kagwa", "wandegeya"
-      ];
-
-      filtered = filtered.filter(profile => {
-        const profileLoc = profile.location.toLowerCase();
-        const targetCity = city.toLowerCase();
-
-        if (suburb) {
-          const targetSuburb = suburb.toLowerCase().replace(/-/g, ' ');
-          return profileLoc === targetSuburb || profileLoc.includes(targetSuburb);
-        }
-
-        if (targetCity === 'kampala') {
-          const isKampala = profileLoc === 'kampala' || profileLoc.includes('kampala');
-          const isSuburb = kampalaSuburbs.some(sub => profileLoc.includes(sub));
-          return isKampala || isSuburb;
-        }
-
-        return profileLoc === targetCity || profileLoc.includes(targetCity);
-      });
-    }
+  const matchResult = (() => {
+    const res = matchProfilesByLocation(allProfiles, city, suburb);
+    let filtered = res.profiles;
 
     // Filter by Category (Body Type or Services or VIP)
     if (category) {
@@ -123,10 +89,14 @@ const LocationPage = ({ cityParam, suburbParam, categoryParam, initialProfiles, 
         
         return bodyTypeMatch || serviceMatch || vipMatch;
       });
+      return { ...res, profiles: filtered };
     }
 
-    return filtered;
+    return res;
   })();
+
+  const locationProfiles = matchResult.profiles;
+  const isFallbackLocation = matchResult.isFallback;
 
   const getLocationTitle = () => {
     const catName = category ? category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : "Escorts";

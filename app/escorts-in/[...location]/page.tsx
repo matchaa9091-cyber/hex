@@ -19,15 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const routePath = params.location.join('/');
 
   // Check if there are profiles for this location
-  const locationProfiles = await fetchProfilesByLocation(city);
-  let profiles = locationProfiles;
-  if (suburb) {
-    const targetSuburb = suburb.toLowerCase().trim();
-    profiles = locationProfiles.filter(p => {
-      const pLoc = (p.location || '').toLowerCase();
-      return pLoc === targetSuburb || pLoc.includes(targetSuburb);
-    });
-  }
+  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
+  const profiles = locationProfiles;
   const hasProfiles = profiles.length > 0;
   
   return {
@@ -59,7 +52,7 @@ export default async function EscortsInLocationPage({ params }: Props) {
 
   // Fetch only the specific profiles for this location (Cache-protected)
   // If suburb exists, we pass it to the fetcher, else just city
-  const locationProfiles = await fetchProfilesByLocation(city);
+  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
 
   // Deterministic seed per 1-hour block for location pages so Next.js ISR can properly cache
   const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);

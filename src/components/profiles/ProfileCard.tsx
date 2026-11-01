@@ -141,7 +141,7 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
             </Button>
             {waNumber && (
               <a 
-                href={`whatsapp://send?phone=${waNumber}&text=${encodeURIComponent("Hi, i got your contact from https://www.hexescortsug.com")}`}
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Hi, I got your contact from https://www.hexescortsug.com")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-none flex items-center justify-center bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full w-5 h-5 sm:w-7 sm:h-7 shadow-sm overflow-hidden shrink-0"

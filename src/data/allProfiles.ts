@@ -3,6 +3,7 @@ import { mockProfiles } from "@/data/mockProfiles";
 import { staticProfiles } from "@/data/staticProfiles";
 import { slugify } from "@/lib/utils";
 import { unstable_cache } from 'next/cache';
+import { matchProfilesByLocation } from '@/lib/locationMatcher';
 
 // Set this to true ONLY if you want to bypass Supabase entirely and use static data
 const FORCE_STATIC_DATA = false;
@@ -240,19 +241,17 @@ export async function fetchProfileById(id: string) {
 }
 
 // Quota-Safe Fetcher for Location Pages using Cloudflare D1
-export async function fetchProfilesByLocation(location: string) {
-  const fallback = getActiveStaticProfiles().filter(p =>
-    p.location.toLowerCase().includes(location.toLowerCase())
-  );
+// Smart & Fuzzy Fetcher for Location Pages using Cloudflare D1
+export async function fetchProfilesByLocation(city: string, suburb?: string) {
+  const fallbackAll = getActiveStaticProfiles();
+  const fallbackResult = matchProfilesByLocation(fallbackAll, city, suburb);
 
   try {
     const allProfiles = await fetchAllProfiles();
-    const matched = allProfiles.filter((p: ProfileType) =>
-      p.location.toLowerCase().includes(location.toLowerCase())
-    );
-    return matched.length > 0 ? matched : fallback;
+    const result = matchProfilesByLocation(allProfiles, city, suburb);
+    return result.profiles.length > 0 ? result.profiles : fallbackResult.profiles;
   } catch (err) {
-    console.error(`Error fetching profiles for ${location}:`, err);
-    return fallback;
+    console.error(`Error fetching profiles for ${city} ${suburb || ''}:`, err);
+    return fallbackResult.profiles;
   }
 }
