@@ -138,7 +138,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                       className="relative z-10 max-h-48 w-auto max-w-full rounded-xl object-contain shadow-2xl group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
                     <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-pink-600 text-white rounded-full shadow-md flex items-center gap-1">
-                      <Sparkles className="w-2.5 h-2.5" /> FEATURED
+                      <Sparkles className="w-2.5 h-2.5" /> FEATURED SPA
                     </span>
                     <span className="absolute top-2 right-2 z-20 px-2 py-0.5 text-[9px] font-bold text-gray-200 bg-black/60 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-1">
                       <MapPin className="w-2.5 h-2.5 text-pink-400" />
@@ -157,7 +157,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                       </p>
                     </Link>
 
-                    {/* Action Buttons Row: WhatsApp Left, View Profile Right */}
+                    {/* Action Buttons Row: WhatsApp Left, View Spa Right */}
                     <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-gray-900">
                       {/* Left Side: Green WhatsApp Button */}
                       {item.waUrl ? (
@@ -174,12 +174,12 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                         <div className="flex-1" />
                       )}
 
-                      {/* Right Side: Pink View Profile Button */}
+                      {/* Right Side: Pink View Spa Button */}
                       <Link
                         href={`/profile/${item.slug}`}
                         className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 active:scale-95 text-white text-[11px] font-bold rounded-xl shadow-md transition-all"
                       >
-                        View Profile <ArrowRight className="w-3 h-3" />
+                        View Spa <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>
                   </div>
