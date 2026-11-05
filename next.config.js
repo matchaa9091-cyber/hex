@@ -46,6 +46,23 @@ const nextConfig = {
       },
     ]
   },
+  async headers() {
+    return [
+      {
+        source: '/((?!api/|hx-ctrl|admin).*)',
+        headers: [
+          {
+            key: 'CDN-Cache-Control',
+            value: 'public, max-age=300, stale-while-revalidate=86400',
+          },
+          {
+            key: 'Cloudflare-CDN-Cache-Control',
+            value: 'public, max-age=300, stale-while-revalidate=86400',
+          },
+        ],
+      },
+    ];
+  },
   // Force trailing slash for consistency (better for SEO consolidation)
   trailingSlash: false,
 }

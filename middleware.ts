@@ -35,7 +35,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(newPath, request.url), 301);
   }
 
-  return NextResponse.next();
+  const res = NextResponse.next();
+  if (
+    request.method === 'GET' &&
+    !pathname.startsWith('/api/') &&
+    !pathname.startsWith('/hx-ctrl') &&
+    !pathname.startsWith('/admin')
+  ) {
+    res.headers.set('Cloudflare-CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
+    res.headers.set('CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
+  }
+  return res;
 }
 
 export const config = {
