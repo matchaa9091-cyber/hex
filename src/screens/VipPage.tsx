@@ -18,7 +18,7 @@ const VipPage = ({ initialProfiles = [], shuffleSeed }: { initialProfiles?: Prof
   }, []);
 
   const { data: queryProfiles } = useAllProfiles(initialProfiles, shuffleSeed);
-  const allProfiles = queryProfiles || initialProfiles || [];
+  const allProfiles = (queryProfiles && queryProfiles.length > 0) ? queryProfiles : (initialProfiles || []);
   
   // Filter for ONLY VIP (Pinned) profiles
   const vipProfiles = allProfiles.filter(p => p.isPinned);

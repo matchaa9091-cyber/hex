@@ -1,9 +1,11 @@
 import LocationPageClient from "@/screens/LocationPage";
-import { fetchProfilesByLocation } from "@/data/allProfiles";
+import { staticProfiles } from "@/data/staticProfiles";
+import { sortAndShuffleProfiles } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-export const revalidate = 300; // Cache location data for 5 minutes
+// Cache location pages for 60 seconds on Cloudflare edge
+export const revalidate = 60;
 export const dynamicParams = true;
 
 type Props = {
@@ -17,11 +19,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const rawLocation = suburb ? `${suburb}, ${city}` : city;
   const locationName = rawLocation.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   const routePath = params.location.join('/');
-
-  // Check if there are profiles for this location
-  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
-  const profiles = locationProfiles;
-  const hasProfiles = profiles.length > 0;
   
   return {
     title: `${locationName} Escorts | #1 Verified Escorts in ${locationName} & Call Girls`,
@@ -37,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `https://www.hexescortsug.com/escorts-in/${routePath}`,
     },
     robots: {
-      index: hasProfiles,
+      index: true,
       follow: true,
     }
   }
@@ -50,12 +47,10 @@ export default async function EscortsInLocationPage({ params }: Props) {
   const rawLocation = suburb ? `${suburb}, ${city}` : city;
   const locationName = rawLocation.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
-  // Fetch only the specific profiles for this location (Cache-protected)
-  // If suburb exists, we pass it to the fetcher, else just city
-  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
-
-  // Deterministic seed per 1-hour block for location pages so Next.js ISR can properly cache
+  // Seed for deterministic shuffling (1-hour block)
   const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
+  const active = staticProfiles.filter(p => !p.isArchived);
+  const rawProfiles = sortAndShuffleProfiles(active, seed);
 
   // Generate FAQ Schema for Google Rich Snippets
   const faqSchema = {
@@ -106,7 +101,7 @@ export default async function EscortsInLocationPage({ params }: Props) {
         <LocationPageClient 
           cityParam={city} 
           suburbParam={suburb || undefined}
-          initialProfiles={locationProfiles} 
+          initialProfiles={rawProfiles} 
           shuffleSeed={seed} 
         />
       </div>

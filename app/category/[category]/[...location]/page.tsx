@@ -1,8 +1,9 @@
 import LocationPageClient from "@/screens/LocationPage";
-import { fetchProfilesByLocation } from "@/data/allProfiles";
+import { staticProfiles } from "@/data/staticProfiles";
+import { sortAndShuffleProfiles } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 
-export const revalidate = 300; // Cache category location data for 5 minutes
+export const revalidate = 60; // Cache category location data for 60 seconds
 export const dynamicParams = true;
 
 type Props = {
@@ -18,19 +19,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locationName = rawLocation.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   const routePath = `${params.category}/${params.location.join('/')}`;
 
-  // Check if there are profiles for this category-location combination
-  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
-
-  const cat = params.category.toLowerCase().replace(/-/g, ' ');
-  const profiles = locationProfiles.filter(profile => {
-    const bodyTypeMatch = profile.bodyType?.toLowerCase() === cat || profile.bodyType?.toLowerCase().includes(cat);
-    const serviceMatch = profile.services?.some((s: string) => s.toLowerCase().includes(cat));
-    const vipMatch = (cat === 'vip' || cat === 'premium') ? profile.isVip || profile.isPinned : false;
-    
-    return bodyTypeMatch || serviceMatch || vipMatch;
-  });
-  const hasProfiles = profiles.length > 0;
-  
   return {
     title: `${categoryName} Escorts in ${locationName} - Verified Call Girls`,
     description: `Looking for ${categoryName.toLowerCase()} escorts in ${locationName}? Browse our exclusive selection of verified Ugandan call girls, VIP companions, and discreet hookups in ${locationName}.`,
@@ -45,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `https://www.hexescortsug.com/${params.category}-escorts-in/${params.location.join('/')}`,
     },
     robots: {
-      index: hasProfiles,
+      index: true,
       follow: true,
     }
   }
@@ -60,11 +48,9 @@ export default async function CategoryLocationPage({ params }: Props) {
   const locationName = rawLocation.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   const categoryName = category.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
-  // Fetch only the specific profiles for this location (Cache-protected)
-  const locationProfiles = await fetchProfilesByLocation(city, suburb || undefined);
-
-  // Fresh seed for client-side shuffling
-  const seed = Math.random().toString(36).substring(2, 10);
+  const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
+  const active = staticProfiles.filter(p => !p.isArchived);
+  const rawProfiles = sortAndShuffleProfiles(active, seed);
 
   // Generate FAQ Schema for Google Rich Snippets
   const faqSchema = {
@@ -108,7 +94,7 @@ export default async function CategoryLocationPage({ params }: Props) {
         cityParam={city} 
         suburbParam={suburb || undefined}
         categoryParam={category}
-        initialProfiles={locationProfiles} 
+        initialProfiles={rawProfiles} 
         shuffleSeed={seed} 
       />
     </>

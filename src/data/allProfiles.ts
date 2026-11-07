@@ -169,30 +169,15 @@ async function fetchProfilesDirectFromD1(): Promise<ProfileType[] | null> {
 export async function fetchAllProfiles(seed?: string) {
   const fallback = getActiveStaticProfiles();
 
-  if (FORCE_STATIC_DATA) {
-    return seed ? sortAndShuffleProfiles(fallback, seed) : fallback;
-  }
-
-  // Direct Cloudflare D1 query when executing on Server Side (Vercel Server Components)
-  if (typeof window === "undefined") {
-    try {
-      const directD1 = await fetchProfilesDirectFromD1();
-      if (directD1 && directD1.length > 0) {
-        return seed ? sortAndShuffleProfiles(directD1, seed) : directD1;
-      }
-    } catch (e) {
-      console.warn("Direct D1 server fetch failed, trying HTTP fallback:", e);
-    }
-  }
-
-  // On the server, NEVER perform a recursive self-fetch over HTTP as it causes worker deadlocks & timeouts.
-  // Instead, immediately fall back to the pre-rendered static profiles.
+  // On the server, always return the synced static profiles instantly (0ms network, 0ms CPU overhead)
+  // This guarantees pages never exceed Cloudflare Worker CPU limits or trigger 503 timeouts.
   if (typeof window === "undefined") {
     return seed ? sortAndShuffleProfiles(fallback, seed) : fallback;
   }
 
+  // On the client, fetch live profiles from the D1 API endpoint
   try {
-    const apiRes = await fetch("/api/profiles", { signal: AbortSignal.timeout(3000) });
+    const apiRes = await fetch("/api/profiles", { signal: AbortSignal.timeout(4000) });
     if (apiRes.ok) {
       const d1Profiles = await apiRes.json();
       if (Array.isArray(d1Profiles) && d1Profiles.length > 0) {
@@ -208,7 +193,7 @@ export async function fetchAllProfiles(seed?: string) {
       }
     }
   } catch (e) {
-    console.warn("Cloudflare D1 fetch error, using active static fallback:", e);
+    console.warn("Client D1 API fetch failed, using fallback:", e);
   }
 
   return seed ? sortAndShuffleProfiles(fallback, seed) : fallback;

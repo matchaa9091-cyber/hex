@@ -193,7 +193,7 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
           <h2 className="text-xl font-bold mb-6 text-pink-500">More Similar Sexy Girls in {profile.location}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {allProfiles
-              .filter(p => p.id !== profile.id && p.location === profile.location)
+              .filter(p => p.id !== profile.id && (p.location === profile.location || (p.location && profile.location && p.location.toLowerCase().includes(profile.location.toLowerCase()))))
               .slice(0, 4)
               .map(p => (
                 <Link key={p.id} href={`/profile/${slugify(p.name)}`} className="group hover:opacity-90">

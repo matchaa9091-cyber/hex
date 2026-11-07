@@ -1,9 +1,10 @@
 import LocationPageClient from "@/screens/LocationPage";
-import { fetchAllProfiles } from "@/data/allProfiles";
+import { staticProfiles } from "@/data/staticProfiles";
+import { sortAndShuffleProfiles } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-export const revalidate = 300; // Cache index data for 5 minutes
+export const revalidate = 60; // Cache index data for 60 seconds
 
 export const metadata: Metadata = {
   title: 'Escorts in Uganda | #1 Verified Uganda & Kampala Escorts - Hex',
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  // Deterministic seed per 5-minute block so Next.js ISR can properly cache server-side
-  const seed = Math.floor(Date.now() / (1000 * 300)).toString(36);
-  const rawProfiles = await fetchAllProfiles(seed);
+  const seed = Math.floor(Date.now() / (1000 * 60)).toString(36);
+  const active = staticProfiles.filter(p => !p.isArchived);
+  const rawProfiles = sortAndShuffleProfiles(active, seed);
 
   const breadcrumbItems = [
     { label: "Escorts in Uganda", href: "/escorts-in", current: true }

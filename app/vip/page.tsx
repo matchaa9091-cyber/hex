@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   }
 };
 
-export const revalidate = 300; // Cache VIP data for 5 minutes
+export const revalidate = 60; // Cache VIP data for 60 seconds
 
 export default async function Page() {
   // Deterministic seed per 5-minute block so Next.js ISR can properly cache server-side

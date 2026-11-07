@@ -15,24 +15,37 @@ const PAGE_SIZE = 24;
 const cities = [
   { name: "Kampala", path: "/escorts-in/kampala" },
   { name: "Entebbe", path: "/escorts-in/entebbe" },
+  { name: "Mukono", path: "/escorts-in/mukono" },
   { name: "Jinja", path: "/escorts-in/jinja" },
   { name: "Mbarara", path: "/escorts-in/mbarara" },
+  { name: "Fort Portal", path: "/escorts-in/fort-portal" },
+  { name: "Arua", path: "/escorts-in/arua" },
+  { name: "Wakiso", path: "/escorts-in/wakiso" },
   { name: "Gulu", path: "/escorts-in/gulu" },
+  { name: "Masaka", path: "/escorts-in/masaka" },
   { name: "Mbale", path: "/escorts-in/mbale" },
   { name: "Tororo", path: "/escorts-in/tororo" },
-  { name: "Fort Portal", path: "/escorts-in/fort-portal" },
-  { name: "Mukono", path: "/escorts-in/mukono" },
+  { name: "Lira", path: "/escorts-in/lira" },
+  { name: "Hoima", path: "/escorts-in/hoima" },
+  { name: "Kasese", path: "/escorts-in/kasese" },
+  { name: "Soroti", path: "/escorts-in/soroti" },
+  { name: "Kabale", path: "/escorts-in/kabale" },
 ];
 
 const kampalaHotspots = [
+  { name: "Kawempe", path: "/escorts-in/kampala/kawempe" },
+  { name: "Kasubi", path: "/escorts-in/kampala/kasubi" },
+  { name: "Kyanja", path: "/escorts-in/kampala/kyanja" },
+  { name: "Mengo", path: "/escorts-in/kampala/mengo" },
+  { name: "Bukoto", path: "/escorts-in/kampala/bukoto" },
+  { name: "Makindye", path: "/escorts-in/kampala/makindye" },
+  { name: "Munyonyo", path: "/escorts-in/kampala/munyonyo" },
+  { name: "Rubaga", path: "/escorts-in/kampala/rubaga" },
+  { name: "Salaama", path: "/escorts-in/kampala/salaama" },
+  { name: "Kisaasi", path: "/escorts-in/kampala/kisaasi" },
+  { name: "Makerere", path: "/escorts-in/kampala/makerere" },
   { name: "Kololo", path: "/escorts-in/kampala/kololo" },
   { name: "Ntinda", path: "/escorts-in/kampala/ntinda" },
-  { name: "Najjera", path: "/escorts-in/kampala/najjera" },
-  { name: "Bugolobi", path: "/escorts-in/kampala/bugolobi" },
-  { name: "Muyenga", path: "/escorts-in/kampala/muyenga" },
-  { name: "Munyonyo", path: "/escorts-in/kampala/munyonyo" },
-  { name: "Kisaasi", path: "/escorts-in/kampala/kisaasi" },
-  { name: "Bukoto", path: "/escorts-in/kampala/bukoto" },
 ];
 
 interface HomePageProps {
@@ -50,7 +63,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
   }, []);
 
   const { data: queryProfiles } = useAllProfiles(initialProfiles, shuffleSeed);
-  const allProfiles = queryProfiles || initialProfiles || [];
+  const allProfiles = (queryProfiles && queryProfiles.length > 0) ? queryProfiles : (initialProfiles || []);
 
   const isInitialLoading = allProfiles.length === 0;
 

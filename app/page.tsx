@@ -1,9 +1,11 @@
 import HomePage from "@/screens/HomePage";
-import { fetchAllProfiles } from "@/data/allProfiles";
+import { staticProfiles } from "@/data/staticProfiles";
+import { sortAndShuffleProfiles } from "@/data/allProfiles";
 import type { Metadata } from "next";
 import { slugify } from "@/lib/utils";
 
-export const revalidate = 300; // Cache home data for 5 minutes
+// Cache homepage for 60 seconds on Cloudflare edge
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
@@ -34,9 +36,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  // Deterministic seed per 5-minute block so Next.js ISR can properly cache server-side
-  const seed = Math.floor(Date.now() / (1000 * 300)).toString(36);
-  const rawProfiles = await fetchAllProfiles(seed);
+  const seed = Math.floor(Date.now() / (1000 * 60)).toString(36);
+  const active = staticProfiles.filter(p => !p.isArchived);
+  const rawProfiles = sortAndShuffleProfiles(active, seed);
 
   // Generate ItemList schema for Google SERP rich snippet carousel
   const itemListSchema = {

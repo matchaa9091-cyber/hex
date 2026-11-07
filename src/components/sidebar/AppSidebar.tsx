@@ -21,30 +21,41 @@ import { Logo } from "@/components/ui/logo";
 import { PasscodeModal } from "@/components/profiles/PasscodeModal";
 
 const kampalaAreas = [
-  "Banda", "Bugolobi", "Bukesa", "Bukoto", "Bunamwaya", "Bunga", 
-  "Busega", "Buwate", "Buziga", "Bwaise", "Central", "Ggaba", "Kabalagala", "Kabowa", 
-  "Kampala Town", "Kamwokya", "Kansanga", "Kanyanya", "Kasubi", "Katooke", 
-  "Kawempe", "Kazo", "Kibuli", "Kireka", "Kirinnya", "Kisaasi", "Kisugu", 
-  "Kitintale", "Kiwatule", "Kololo", "Komamboga", "Kulambiro", "Kyaliwajjala", 
-  "Kyambogo", "Kyanja", "Kyebando", "Lubaga", "Lugala", "Lugogo", "Lungujja", 
-  "Luzira", "Makerere", "Makindye", "Masajja", "Masanafu", "Mawanda Road", 
-  "Mbuya", "Mengo", "Mpererwe", "Mulago", "Munyonyo", "Mutundwe", "Mutungo", 
-  "Muyenga", "Naalya", "Nabulagala", "Nabweru", "Naguru", "Najjanankumbi", 
-  "Najjera", "Nakasero", "Nakawa", "Nakulabye", "Namasuba", "Namirembe", 
-  "Namungoona", "Namuwongo", "Nateete", "Nkuba", "Nsambya", "Ntinda", 
-  "Rubaga", "Salaama Rd", "Sir Apollo Kagwa", "Wandegeya"
+  // Top Active Hubs (verified resident companions)
+  "Kawempe", "Kasubi", "Kyanja", "Mengo", "Bukoto", "Makindye",
+  "Munyonyo", "Rubaga", "Salaama Rd", "Kisaasi", "Makerere", "Kololo",
+  "Ntinda", "Bwaise", "Kalerwe", "Kansanga", "Masanafu", "Najjanankumbi",
+  "Namasuba", "Nankulabye", "Ndejje", "Nsambya", "Old Kampala", "Kira", "Zana",
+  // Prime Suburbs
+  "Banda", "Bugolobi", "Bukesa", "Bunamwaya", "Bunga", "Busega", "Buwate",
+  "Buziga", "Central", "Ggaba", "Kabalagala", "Kabowa", "Kampala Town",
+  "Kamwokya", "Kanyanya", "Katooke", "Kazo", "Kibuli", "Kireka", "Kirinnya",
+  "Kisugu", "Kitintale", "Kiwatule", "Komamboga", "Kulambiro", "Kyaliwajjala",
+  "Kyambogo", "Kyebando", "Lubaga", "Lugala", "Lugogo", "Lungujja", "Luzira",
+  "Masajja", "Mawanda Road", "Mbuya", "Mpererwe", "Mulago", "Mutundwe",
+  "Mutungo", "Muyenga", "Naalya", "Nabulagala", "Nabweru", "Naguru", "Najjera",
+  "Nakasero", "Nakawa", "Namirembe", "Namungoona", "Namuwongo",
+  "Nateete", "Nkuba", "Sir Apollo Kagwa", "Wandegeya"
 ];
 
 const locations = [
   { name: "Kampala", path: "/escorts-in/kampala", hasSubmenu: true, submenu: kampalaAreas },
   { name: "Entebbe", path: "/escorts-in/entebbe" },
+  { name: "Mukono", path: "/escorts-in/mukono" },
   { name: "Jinja", path: "/escorts-in/jinja" },
   { name: "Mbarara", path: "/escorts-in/mbarara" },
-  { name: "Gulu", path: "/escorts-in/gulu" },
   { name: "Fort Portal", path: "/escorts-in/fort-portal" },
+  { name: "Arua", path: "/escorts-in/arua" },
+  { name: "Wakiso", path: "/escorts-in/wakiso" },
+  { name: "Gulu", path: "/escorts-in/gulu" },
+  { name: "Masaka", path: "/escorts-in/masaka" },
   { name: "Mbale", path: "/escorts-in/mbale" },
   { name: "Tororo", path: "/escorts-in/tororo" },
-  { name: "Mukono", path: "/escorts-in/mukono" },
+  { name: "Lira", path: "/escorts-in/lira" },
+  { name: "Hoima", path: "/escorts-in/hoima" },
+  { name: "Kasese", path: "/escorts-in/kasese" },
+  { name: "Soroti", path: "/escorts-in/soroti" },
+  { name: "Kabale", path: "/escorts-in/kabale" },
 ];
 
 interface MainItem {
