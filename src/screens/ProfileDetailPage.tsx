@@ -27,9 +27,9 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
   const normalizedTarget = decodeURIComponent(id).toLowerCase().trim();
   const targetSlug = slugify(normalizedTarget);
   const profile = (allProfiles.length > 0 ? allProfiles.find(p => 
-    p.id === id || 
+    String(p.id) === id || 
     slugify(p.name) === id || 
-    p.name.toLowerCase().trim() === normalizedTarget ||
+    (p.name || '').toLowerCase().trim() === normalizedTarget ||
     slugify(p.name) === targetSlug
   ) : undefined) ?? initialProfile;
 

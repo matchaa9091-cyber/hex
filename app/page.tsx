@@ -35,8 +35,20 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const seed = Math.floor(Date.now() / (1000 * 60)).toString(36);
-  const rawProfiles = await fetchAllProfiles(seed);
+  const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
+  const allStatic = await fetchAllProfiles(seed);
+
+  // Slim down initial SSR payload to strictly respect Cloudflare Worker CPU limits:
+  // 1. Spas (for featured ad banner carousel)
+  // 2. VIP pinned profiles (for the Elite VIP section)
+  // 3. First batch of ordinary profiles (16 items for instant first view)
+  const spas = allStatic.filter(p => (p.name || '').toLowerCase().includes('spa') || (p.adImages && p.adImages.length > 0));
+  const vipProfiles = allStatic.filter(p => p.isPinned);
+  const ordinaryFirstBatch = allStatic.filter(p => !p.isPinned).slice(0, 16);
+
+  const initialMap = new Map();
+  [...spas, ...vipProfiles, ...ordinaryFirstBatch].forEach(p => initialMap.set(p.id, p));
+  const initialProfiles = Array.from(initialMap.values());
 
   // Generate ItemList schema for Google SERP rich snippet carousel
   const itemListSchema = {
@@ -44,8 +56,8 @@ export default async function Page() {
     "@type": "ItemList",
     "name": "Verified Uganda Escorts & Kampala Call Girls",
     "description": "Directory of verified escorts and discreet call girls in Uganda and Kampala.",
-    "numberOfItems": rawProfiles.length,
-    "itemListElement": rawProfiles.slice(0, 15).map((p, idx) => ({
+    "numberOfItems": allStatic.length,
+    "itemListElement": allStatic.slice(0, 15).map((p, idx) => ({
       "@type": "ListItem",
       "position": idx + 1,
       "name": `${p.name} - Escort in ${p.location}`,
@@ -60,7 +72,7 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
-      <HomePage initialProfiles={rawProfiles} shuffleSeed={seed} />
+      <HomePage initialProfiles={initialProfiles} shuffleSeed={seed} />
     </>
   );
 }

@@ -14,7 +14,7 @@ export const revalidate = 60; // Cache VIP data for 60 seconds
 
 export default async function Page() {
   // Deterministic seed per 5-minute block so Next.js ISR can properly cache server-side
-  const seed = Math.floor(Date.now() / (1000 * 300)).toString(36);
+  const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
   const rawProfiles = await fetchAllProfiles(seed);
   return <VipPage initialProfiles={rawProfiles} shuffleSeed={seed} />;
 }

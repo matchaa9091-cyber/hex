@@ -55,7 +55,9 @@ export default async function Page({ params }: Props) {
   }
 
   const profileSlug = profile ? slugify(profile.name) : slugify(id);
-  const reviewCount = profile ? (parseInt(profile.id.substring(0, 8), 16) % 100) + 45 : 50;
+  const rawId = String(profile?.id || "default");
+  const parsedHex = parseInt(rawId.substring(0, 8), 16);
+  const reviewCount = !isNaN(parsedHex) ? (parsedHex % 100) + 45 : 58;
 
   const jsonLd = profile ? {
     "@context": "https://schema.org",

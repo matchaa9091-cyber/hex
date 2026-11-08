@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const seed = Math.floor(Date.now() / (1000 * 60)).toString(36);
+  const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
   const rawProfiles = await fetchAllProfiles(seed);
 
   const breadcrumbItems = [

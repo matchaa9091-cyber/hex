@@ -9,14 +9,21 @@ export default function PostHogPageview() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (pathname && posthog) {
-      let url = window.origin + pathname;
-      if (searchParams.toString()) {
-        url = url + "?" + searchParams.toString();
+    if (pathname && typeof window !== "undefined") {
+      try {
+        const origin = window.location?.origin || "https://www.hexescortsug.com";
+        let url = origin + pathname;
+        if (searchParams && searchParams.toString()) {
+          url = url + "?" + searchParams.toString();
+        }
+        if (posthog && typeof posthog.capture === "function") {
+          posthog.capture("$pageview", {
+            $current_url: url,
+          });
+        }
+      } catch (err) {
+        // Tracker failure must NEVER throw or block page rendering
       }
-      posthog.capture("$pageview", {
-        $current_url: url,
-      });
     }
   }, [pathname, searchParams]);
 

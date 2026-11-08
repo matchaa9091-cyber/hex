@@ -46,11 +46,11 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
       : (p.images && p.images.length > 0 ? p.images : (p.profileImage ? [p.profileImage] : []));
 
     const waNumber = toWhatsAppNumber(p.whatsapp || p.phone);
-    return rawImages.map(img => ({
-      id: p.id,
-      name: p.name,
+    return rawImages.map((img, imgIdx) => ({
+      id: `${p.id}-${imgIdx}`,
+      name: p.name || "Featured Spa",
       image: resolveImg(img),
-      slug: slugify(p.name),
+      slug: slugify(p.name || String(p.id)),
       location: p.location || "Kampala",
       description: p.description || p.shortBio || "Experience premier relaxation, skilled massage therapies, and royal pampering in a serene private setting.",
       services: p.services && p.services.length > 0 ? p.services : ["Full Body Massage", "Sensual Care", "Private Suites"],

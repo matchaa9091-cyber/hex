@@ -5,19 +5,18 @@ import { useQuery } from "@tanstack/react-query";
 import { sortAndShuffleProfiles } from "@/data/allProfiles";
 
 async function fetchLiveProfiles(seed?: string): Promise<ProfileType[]> {
-  try {
-    const res = await fetch("/api/profiles", {
-      signal: AbortSignal.timeout(6000),
-      cache: "no-store",
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) return [];
-    return seed ? sortAndShuffleProfiles(data, seed) : data;
-  } catch (err) {
-    console.warn("fetchLiveProfiles error:", err);
-    return [];
+  const res = await fetch("/api/profiles", {
+    signal: AbortSignal.timeout(6000),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch profiles: ${res.status}`);
   }
+  const data = await res.json();
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error("No profiles returned from API");
+  }
+  return seed ? sortAndShuffleProfiles(data, seed) : data;
 }
 
 export function useAllProfiles(initialData?: ProfileType[], seed?: string) {

@@ -48,7 +48,7 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
   const waNumber = toWhatsAppNumber(profile.whatsapp || phoneNumber);
 
   // Stable badges based on data or deterministic ID-based logic
-  const isPremium = profile.isPremium ?? (profile.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 3 === 0);
+  const isPremium = profile.isPremium ?? (String(profile.id || "").split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 3 === 0);
 
   const handleContactClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -95,7 +95,7 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
               </div>
             )}
             
-            <Link href={`/profile/${slugify(profile.name)}`} prefetch={false}>
+            <Link href={`/profile/${slugify(profile.name || profile.id || "companion")}`} prefetch={false}>
               <div className="w-full h-full overflow-hidden">
                 <Image 
                   src={imgSrc} 
