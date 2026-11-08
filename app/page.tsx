@@ -1,6 +1,5 @@
 import HomePage from "@/screens/HomePage";
-import { staticProfiles } from "@/data/staticProfiles";
-import { sortAndShuffleProfiles } from "@/data/allProfiles";
+import { fetchAllProfiles } from "@/data/allProfiles";
 import type { Metadata } from "next";
 import { slugify } from "@/lib/utils";
 
@@ -37,8 +36,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const seed = Math.floor(Date.now() / (1000 * 60)).toString(36);
-  const active = staticProfiles.filter(p => !p.isArchived);
-  const rawProfiles = sortAndShuffleProfiles(active, seed);
+  const rawProfiles = await fetchAllProfiles(seed);
 
   // Generate ItemList schema for Google SERP rich snippet carousel
   const itemListSchema = {

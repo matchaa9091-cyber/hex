@@ -1,6 +1,5 @@
 import LocationPageClient from "@/screens/LocationPage";
-import { staticProfiles } from "@/data/staticProfiles";
-import { sortAndShuffleProfiles } from "@/data/allProfiles";
+import { fetchAllProfiles } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -17,8 +16,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const seed = Math.floor(Date.now() / (1000 * 60)).toString(36);
-  const active = staticProfiles.filter(p => !p.isArchived);
-  const rawProfiles = sortAndShuffleProfiles(active, seed);
+  const rawProfiles = await fetchAllProfiles(seed);
 
   const breadcrumbItems = [
     { label: "Escorts in Uganda", href: "/escorts-in", current: true }

@@ -1,6 +1,5 @@
 import LocationPageClient from "@/screens/LocationPage";
-import { staticProfiles } from "@/data/staticProfiles";
-import { sortAndShuffleProfiles } from "@/data/allProfiles";
+import { fetchAllProfiles } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 
 export const revalidate = 60; // Cache category location data for 60 seconds
@@ -49,8 +48,7 @@ export default async function CategoryLocationPage({ params }: Props) {
   const categoryName = category.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
   const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
-  const active = staticProfiles.filter(p => !p.isArchived);
-  const rawProfiles = sortAndShuffleProfiles(active, seed);
+  const rawProfiles = await fetchAllProfiles(seed);
 
   // Generate FAQ Schema for Google Rich Snippets
   const faqSchema = {

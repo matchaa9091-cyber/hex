@@ -2,7 +2,13 @@ import fs from 'fs';
 
 const accountId = 'b07234f65853d0f9f8e6fa1896cf06db';
 const databaseId = '9914bf44-9661-4a24-903f-d49c73d6b1fe';
-const token = process.env.CLOUDFLARE_D1_TOKEN || '';
+
+let token = process.env.CLOUDFLARE_D1_TOKEN || '';
+if (!token && fs.existsSync('.env.local')) {
+  const envContent = fs.readFileSync('.env.local', 'utf8');
+  const match = envContent.match(/CLOUDFLARE_D1_TOKEN=([^\r\n]+)/);
+  if (match) token = match[1].trim();
+}
 
 async function fetchFromD1() {
   const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/d1/database/${databaseId}/query`;
@@ -33,6 +39,7 @@ async function fetchFromD1() {
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
     if (url.startsWith('/storage/profile-images/')) return `${R2_PUBLIC_BASE}${url}`;
     if (url.startsWith('/profile-images/')) return `${R2_PUBLIC_BASE}${url}`;
+    if (url.startsWith('/storage/')) return `${R2_PUBLIC_BASE}${url}`;
     if (url.startsWith('/')) return url;
     const match = url.match(/([a-zA-Z0-9.\-_]+\.(?:jpg|jpeg|png|webp|jfif|avif|mp4|mov))/i);
     if (match && match[1]) {
@@ -68,10 +75,13 @@ async function fetchFromD1() {
 
     let adImages = [];
     if (typeof p.ad_images === 'string') {
-      try { adImages = JSON.parse(p.ad_images); } catch { adImages = []; }
+      try { adImages = JSON.parse(p.ad_images); } catch { adImages = [p.ad_images]; }
     } else if (Array.isArray(p.ad_images)) {
       adImages = p.ad_images;
     }
+
+    const hasAdImages = adImages && adImages.length > 0;
+    const isAd = Boolean(p.is_ad || hasAdImages);
 
     return {
       id: String(p.id),
@@ -83,11 +93,9 @@ async function fetchFromD1() {
       location: p.location,
       rating: Number(p.rating) || 4.5,
       profileImage: transformUrl(p.profile_image || (images.length > 0 ? images[0] : null)),
-      // Only keep first 2 images in static bundle to save size
       images: images.slice(0, 2).map(transformUrl),
-      // Strip heavy text fields - loaded client-side from /api/profiles
-      shortBio: '',
-      description: '',
+      shortBio: p.short_bio || '',
+      description: p.description || '',
       phone: p.phone ?? undefined,
       whatsapp: p.whatsapp ?? undefined,
       email: undefined,
@@ -99,13 +107,13 @@ async function fetchFromD1() {
       isArchived: Boolean(p.is_archived),
       isVip: Boolean(p.is_vip),
       isPremium: Boolean(p.is_premium),
-      isAd: Boolean(p.is_ad),
+      isAd,
       isVerified: Boolean(p.is_verified),
-      adImages: adImages.slice(0, 2).map(transformUrl)
+      adImages: adImages.map(transformUrl)
     };
   });
 
-  const fileContent = `import { ProfileType } from "@/types/profile";\n\n// Lightweight static profile bundle for server-side rendering.\n// Heavy fields (description, shortBio, all images) load client-side from /api/profiles.\nexport const staticProfiles: ProfileType[] = ${JSON.stringify(mapped, null, 2)};\n`;
+  const fileContent = `import { ProfileType } from "@/types/profile";\n\n// Synced static profile bundle from D1 database.\nexport const staticProfiles: ProfileType[] = ${JSON.stringify(mapped, null, 2)};\n`;
   
   const beforeSize = fs.existsSync('src/data/staticProfiles.ts')
     ? fs.statSync('src/data/staticProfiles.ts').size
@@ -114,8 +122,11 @@ async function fetchFromD1() {
   fs.writeFileSync('src/data/staticProfiles.ts', fileContent, 'utf8');
   
   const afterSize = fs.statSync('src/data/staticProfiles.ts').size;
-  console.log(`staticProfiles.ts: ${Math.round(beforeSize/1024)}KB → ${Math.round(afterSize/1024)}KB (${Math.round((1 - afterSize/beforeSize)*100)}% reduction)`);
-  console.log(`Saved ${mapped.length} profiles.`);
+  console.log(`staticProfiles.ts: ${Math.round(beforeSize/1024)}KB → ${Math.round(afterSize/1024)}KB`);
+  console.log(`Saved ${mapped.length} profiles from Cloudflare D1.`);
+  
+  const adCount = mapped.filter(p => p.adImages && p.adImages.length > 0).length;
+  console.log(`Profiles with ad images preserved: ${adCount}`);
 }
 
 fetchFromD1().catch(e => {

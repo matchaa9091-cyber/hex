@@ -8,6 +8,7 @@ async function fetchLiveProfiles(seed?: string): Promise<ProfileType[]> {
   try {
     const res = await fetch("/api/profiles", {
       signal: AbortSignal.timeout(6000),
+      cache: "no-store",
     });
     if (!res.ok) return [];
     const data = await res.json();
@@ -26,8 +27,13 @@ export function useAllProfiles(initialData?: ProfileType[], seed?: string) {
     queryKey: ["all-profiles", seed],
     queryFn: () => fetchLiveProfiles(seed),
     initialData: hasInitial ? initialData : undefined,
-    staleTime: 60000, // 1 minute in-memory cache
-    refetchOnWindowFocus: false,
+    // Setting initialDataUpdatedAt: 0 tells TanStack Query:
+    // Display initialData immediately for 0ms paint, but treat it as needing revalidation,
+    // so immediately fetch fresh data from /api/profiles in the background!
+    initialDataUpdatedAt: 0,
+    staleTime: 30000, // 30s cache once fetched
+    refetchOnMount: true, // Always revalidate on mount
+    refetchOnWindowFocus: true, // Auto-update when returning to tab after admin edits
     retry: 1,
   });
 }

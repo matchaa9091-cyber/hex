@@ -1,6 +1,5 @@
 import LocationPageClient from "@/screens/LocationPage";
-import { staticProfiles } from "@/data/staticProfiles";
-import { sortAndShuffleProfiles } from "@/data/allProfiles";
+import { fetchAllProfiles } from "@/data/allProfiles";
 import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -49,8 +48,7 @@ export default async function EscortsInLocationPage({ params }: Props) {
 
   // Seed for deterministic shuffling (1-hour block)
   const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
-  const active = staticProfiles.filter(p => !p.isArchived);
-  const rawProfiles = sortAndShuffleProfiles(active, seed);
+  const rawProfiles = await fetchAllProfiles(seed);
 
   // Generate FAQ Schema for Google Rich Snippets
   const faqSchema = {

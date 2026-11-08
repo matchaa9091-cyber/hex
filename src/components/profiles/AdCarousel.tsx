@@ -22,8 +22,13 @@ function resolveImg(src: string | undefined | null): string {
 }
 
 export const AdCarousel = ({ profiles }: AdCarouselProps) => {
-  // Only profiles with ad images (or explicitly marked as ads)
-  const adProfiles = profiles.filter(p => (p.isAd || (p.adImages && p.adImages.length > 0)) && p.adImages && p.adImages.length > 0);
+  // Select profiles marked as ads, or having adImages, or identified as a spa
+  const adProfiles = profiles.filter(p => {
+    const hasAdImgs = Array.isArray(p.adImages) && p.adImages.length > 0;
+    const isExplicitAd = Boolean(p.isAd);
+    const isSpa = (p.name || '').toLowerCase().includes('spa');
+    return hasAdImgs || isExplicitAd || isSpa;
+  });
 
   // Helper to format phone to WhatsApp international format (Uganda 256)
   const toWhatsAppNumber = (num?: string) => {
@@ -34,23 +39,25 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
     return "256" + cleaned;
   };
 
-  // Collect ONLY the manually uploaded ad images
-  const adItems = adProfiles.flatMap(p =>
-    (p.adImages || []).map(img => {
-      const waNumber = toWhatsAppNumber(p.whatsapp || p.phone);
-      return {
-        id: p.id,
-        name: p.name,
-        image: resolveImg(img),
-        slug: slugify(p.name),
-        location: p.location || "Kampala",
-        description: p.description || p.shortBio || "Experience premier relaxation, skilled massage therapies, and royal pampering in a serene private setting.",
-        services: p.services && p.services.length > 0 ? p.services : ["Full Body Massage", "Sensual Care", "Private Suites"],
-        phone: p.phone || p.whatsapp,
-        waUrl: waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent("Hi, I got your contact from https://www.hexescortsug.com")}` : null,
-      };
-    })
-  );
+  // Collect ad items: prefer adImages, fallback to images or profileImage
+  const adItems = adProfiles.flatMap(p => {
+    const rawImages = (p.adImages && p.adImages.length > 0)
+      ? p.adImages
+      : (p.images && p.images.length > 0 ? p.images : (p.profileImage ? [p.profileImage] : []));
+
+    const waNumber = toWhatsAppNumber(p.whatsapp || p.phone);
+    return rawImages.map(img => ({
+      id: p.id,
+      name: p.name,
+      image: resolveImg(img),
+      slug: slugify(p.name),
+      location: p.location || "Kampala",
+      description: p.description || p.shortBio || "Experience premier relaxation, skilled massage therapies, and royal pampering in a serene private setting.",
+      services: p.services && p.services.length > 0 ? p.services : ["Full Body Massage", "Sensual Care", "Private Suites"],
+      phone: p.phone || p.whatsapp,
+      waUrl: waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent("Hi, I got your contact from https://www.hexescortsug.com")}` : null,
+    }));
+  });
 
   if (adItems.length === 0) return null;
 
