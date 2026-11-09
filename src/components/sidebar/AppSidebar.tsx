@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MapPin, Info, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send, Edit3 } from "lucide-react";
+import { Home, MapPin, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send, Edit3, Flame } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -70,7 +70,6 @@ const mainItems: MainItem[] = [
   { title: "Home", path: "/", icon: Home },
   { title: "VIP Escorts", path: "/vip", icon: Star },
   { title: "Locations", path: "/escorts-in", icon: MapPin, children: locations },
-  { title: "About", path: "/about", icon: Info },
   { title: "FAQ", path: "/faq", icon: HelpCircle },
   { title: "Become an escort", path: "/become-escort", icon: UserPlus },
   { title: "Edit My Profile", path: "#edit-profile", icon: Edit3, isEditAction: true },
@@ -198,13 +197,41 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Telegram Button */}
-        <div className="p-4 mt-auto border-t border-gray-800">
+        {/* Bottom Actions: Live Cams & Telegram */}
+        <div className="p-4 mt-auto border-t border-gray-800 space-y-2.5">
+          {/* Live Cams Button - Golden Nude Trends Theme */}
+          <a
+            href="https://nudetrends.afrozex.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between w-full px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-black font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.4)] hover:shadow-[0_0_22px_rgba(245,158,11,0.7)] transition-all duration-300 hover:scale-[1.02] border border-amber-300/40"
+          >
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-80"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+              </span>
+              <div className="flex flex-col text-left leading-none">
+                <span className="text-[10px] tracking-widest uppercase text-amber-950 font-black flex items-center gap-1">
+                  <Flame className="w-3 h-3 text-red-700 fill-red-700 inline" />
+                  Nude Trends
+                </span>
+                <span className="text-sm font-black tracking-tight text-black drop-shadow-sm">
+                  Live Cams &amp; Leaks
+                </span>
+              </div>
+            </div>
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-black text-amber-300 uppercase tracking-wider border border-amber-400/50 shadow-sm animate-pulse">
+              LIVE
+            </span>
+          </a>
+
+          {/* Telegram Button */}
           <a
             href="https://t.me/+yX6mljCz8to2ODE0"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg bg-[#24A1DE] hover:bg-[#24A1DE]/90 text-white shadow-lg shadow-[#24A1DE]/20 transition-all text-sm font-semibold"
+            className="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-lg bg-[#24A1DE] hover:bg-[#24A1DE]/90 text-white shadow-lg shadow-[#24A1DE]/20 transition-all text-sm font-semibold"
           >
             <Send className="h-4 w-4" />
             Join Telegram Group
@@ -334,13 +361,42 @@ export function AppSidebar() {
                 ))}
               </nav>
 
-              {/* Telegram Button in mobile menu */}
-              <div className="pt-4 mt-4 border-t border-gray-800">
+              {/* Bottom Actions in mobile menu: Live Cams & Telegram */}
+              <div className="pt-4 mt-4 border-t border-gray-800 space-y-2.5">
+                {/* Live Cams Button - Golden Nude Trends Theme */}
+                <a
+                  href="https://nudetrends.afrozex.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex items-center justify-between w-full px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-black font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.4)] hover:shadow-[0_0_22px_rgba(245,158,11,0.7)] transition-all duration-300 border border-amber-300/40"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-80"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+                    </span>
+                    <div className="flex flex-col text-left leading-none">
+                      <span className="text-[10px] tracking-widest uppercase text-amber-950 font-black flex items-center gap-1">
+                        <Flame className="w-3 h-3 text-red-700 fill-red-700 inline" />
+                        Nude Trends
+                      </span>
+                      <span className="text-sm font-black tracking-tight text-black drop-shadow-sm">
+                        Live Cams &amp; Leaks
+                      </span>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-black text-amber-300 uppercase tracking-wider border border-amber-400/50 shadow-sm animate-pulse">
+                    LIVE
+                  </span>
+                </a>
+
+                {/* Telegram Button */}
                 <a
                   href="https://t.me/+yX6mljCz8to2ODE0"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg bg-[#24A1DE] hover:bg-[#24A1DE]/90 text-white shadow-lg shadow-[#24A1DE]/20 transition-all text-sm font-semibold"
+                  className="flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-lg bg-[#24A1DE] hover:bg-[#24A1DE]/90 text-white shadow-lg shadow-[#24A1DE]/20 transition-all text-sm font-semibold"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Send className="h-5 w-5" />

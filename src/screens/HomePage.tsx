@@ -8,6 +8,7 @@ import { ProfileType } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { AdCarousel } from "@/components/profiles/AdCarousel";
+import { NudeTrendsAdBanner } from "@/components/ads/NudeTrendsAdBanner";
 import { Crown, ChevronDown, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -180,18 +181,23 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
             </div>
 
             {!showOtherEscorts ? (
-              <div className="flex flex-col items-center justify-center py-10 px-4 bg-gradient-to-b from-gray-900/50 via-gray-900/30 to-black/60 rounded-2xl border border-gray-800 text-center space-y-4 shadow-xl">
-                <p className="text-xs sm:text-sm text-gray-400 max-w-md">
-                  Looking for more verified profiles? Tap below to explore standard escort listings.
-                </p>
-                <Button
-                  onClick={() => setShowOtherEscorts(true)}
-                  size="lg"
-                  className="bg-gradient-to-r from-[#db0061] via-[#ff1493] to-[#db0061] hover:from-[#ff1493] hover:to-[#db0061] text-white font-black text-sm sm:text-base px-8 py-6 rounded-full shadow-[0_4px_20px_rgba(255,20,147,0.4)] hover:shadow-[0_4px_30px_rgba(255,20,147,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2.5 cursor-pointer uppercase tracking-wider"
-                >
-                  <span>Other Escorts</span>
-                  <ChevronDown className="w-5 h-5 animate-bounce" />
-                </Button>
+              <div className="space-y-6">
+                <div className="flex flex-col items-center justify-center py-10 px-4 bg-gradient-to-b from-gray-900/50 via-gray-900/30 to-black/60 rounded-2xl border border-gray-800 text-center space-y-4 shadow-xl">
+                  <p className="text-xs sm:text-sm text-gray-400 max-w-md">
+                    Looking for more verified profiles? Tap below to explore standard escort listings.
+                  </p>
+                  <Button
+                    onClick={() => setShowOtherEscorts(true)}
+                    size="lg"
+                    className="bg-gradient-to-r from-[#db0061] via-[#ff1493] to-[#db0061] hover:from-[#ff1493] hover:to-[#db0061] text-white font-black text-sm sm:text-base px-8 py-6 rounded-full shadow-[0_4px_20px_rgba(255,20,147,0.4)] hover:shadow-[0_4px_30px_rgba(255,20,147,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2.5 cursor-pointer uppercase tracking-wider"
+                  >
+                    <span>Other Escorts</span>
+                    <ChevronDown className="w-5 h-5 animate-bounce" />
+                  </Button>
+                </div>
+
+                {/* Nude Trends Live Cams & Leaks Banner */}
+                <NudeTrendsAdBanner />
               </div>
             ) : (
               <>
@@ -199,6 +205,9 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
                   profiles={visibleOrdinary}
                   loading={isInitialLoading}
                 />
+
+                {/* Nude Trends Live Cams & Leaks Banner */}
+                <NudeTrendsAdBanner />
 
                 {!isInitialLoading && hasMore && (
                   <div className="flex justify-center pt-8 pb-4">

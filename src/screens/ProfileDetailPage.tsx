@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { ProfileType } from "@/types/profile";
 import { slugify } from "@/lib/utils";
 import { ProfileEditModal } from "@/components/profiles/ProfileEditModal";
+import { NudeTrendsAdBanner } from "@/components/ads/NudeTrendsAdBanner";
 
 interface ProfileDetailPageProps {
   profileId: string;
@@ -214,6 +215,9 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
               </Link>
             </Button>
           </div>
+
+          {/* Nude Trends Live Cams & Leaks Banner */}
+          <NudeTrendsAdBanner />
         </div>
       </div>
 
