@@ -24,16 +24,20 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
   const [imgSrc, setImgSrc] = useState<string>(() => getMediaUrl(profile.profileImage));
   const isMobile = useIsMobile();
   const { handlePhoneClick } = usePhoneHandler();
-  
+
   useEffect(() => {
     setIsMounted(true);
     setImgSrc(getMediaUrl(profile.profileImage));
   }, [profile.profileImage]);
 
   const handleImageError = () => {
-    // Always fall back to placeholder on any image load error
     setImgSrc("/placeholder.svg");
   };
+
+  // Spa detection
+  const isSpa = (profile.name || '').toLowerCase().includes('spa')
+    || Boolean(profile.isAd)
+    || (Array.isArray(profile.adImages) && profile.adImages.length > 0);
 
   // Use the phone number from the profile data
   const phoneNumber = profile.phone || "";
@@ -75,7 +79,7 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
                 </div>
               </div>
             )}
-            
+
             {/* PREMIUM Badge */}
             {isPremium && (
               <div className="absolute top-0 right-0 z-10">
@@ -94,11 +98,11 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
                 </div>
               </div>
             )}
-            
+
             <Link href={`/profile/${slugify(profile.name || profile.id || "companion")}`} prefetch={false}>
               <div className="w-full h-full overflow-hidden">
-                <Image 
-                  src={imgSrc} 
+                <Image
+                  src={imgSrc}
                   alt={`${profile.name} - verified sexy call girl and erotic companion in ${profile.location} - Hex Escorts UG`}
                   className="w-full h-full object-cover"
                   priority={priority}
@@ -109,7 +113,7 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
                 />
               </div>
             </Link>
-          
+
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-1 pb-1 pt-3 text-white">
               <h3 className="font-bold text-[10px] sm:text-xs text-center truncate leading-tight">{profile.name}</h3>
               <div className="flex flex-col items-center justify-center mt-0.5 space-y-0.5">
@@ -118,18 +122,18 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
                   <span className="truncate">{profile.location}</span>
                 </div>
                 <p className="text-[7px] sm:text-[8px] text-pink-500/80 font-bold uppercase tracking-widest">
-                  {profile.isPinned ? "VIP Call Girl" : "Verified Hookup"}
+                  {isSpa ? "Featured Spa" : profile.isPinned ? "VIP Call Girl" : "Verified Hookup"}
                 </p>
               </div>
             </div>
           </div>
         </Card>
-        
+
         {/* Action buttons */}
         {phoneNumber && (
           <div className="mt-1 w-full flex items-center gap-1">
-            <Button 
-              variant="default" 
+            <Button
+              variant="default"
               className="flex-1 min-w-0 bg-primary hover:bg-primary/90 text-white text-[8px] sm:text-[10px] h-5 sm:h-7 px-1 shadow-[0_0_8px_rgba(235,0,115,0.3)]"
               onMouseEnter={() => setShowContact(true)}
               onMouseLeave={() => setShowContact(false)}
@@ -140,7 +144,7 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
               </span>
             </Button>
             {waNumber && (
-              <a 
+              <a
                 href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Hi, I got your contact from https://www.hexescortsug.com")}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -148,11 +152,11 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
                 onClick={(e) => e.stopPropagation()}
                 aria-label="Contact on WhatsApp"
               >
-                <Image 
-                  src="/assets/whatsapp-icon.jpg" 
-                  alt="WhatsApp" 
-                  width={24} 
-                  height={24} 
+                <Image
+                  src="/assets/whatsapp-icon.jpg"
+                  alt="WhatsApp"
+                  width={24}
+                  height={24}
                   className="w-full h-full object-cover"
                 />
               </a>
