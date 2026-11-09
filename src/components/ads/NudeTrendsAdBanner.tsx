@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Flame, ExternalLink, Radio } from "lucide-react";
+import { Flame, ExternalLink } from "lucide-react";
 
 interface NudeTrendsAdBannerProps {
   className?: string;
@@ -40,8 +40,8 @@ export function NudeTrendsAdBanner({ className = "" }: NudeTrendsAdBannerProps) 
           </div>
         </div>
 
-        {/* Banner Image */}
-        <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] max-h-[360px] overflow-hidden bg-black">
+        {/* Banner Image - Clean and unobstructed */}
+        <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] max-h-[380px] overflow-hidden bg-black">
           <Image
             src="/nudetrends-banner.jpg"
             alt="Nude Trends - Ugandan Sexy Babes, Live Cams & Adult Entertainment"
@@ -50,19 +50,6 @@ export function NudeTrendsAdBanner({ className = "" }: NudeTrendsAdBannerProps) 
             className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-500"
             priority={false}
           />
-          {/* Subtle gradient overlay at bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-          
-          {/* Call-to-action bar pinned at bottom of the banner */}
-          <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none">
-            <div className="flex items-center gap-2 bg-black/75 backdrop-blur-md px-3 py-1.5 rounded-full border border-amber-500/40 text-[10px] sm:text-xs text-amber-300 font-semibold shadow-lg">
-              <Radio className="w-3 h-3 text-red-500 animate-pulse" />
-              <span>Free 24/7 Live Webcams &amp; Leaks</span>
-            </div>
-            <div className="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-black font-extrabold text-[10px] sm:text-xs px-3.5 py-1.5 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.6)] uppercase tracking-wide group-hover:scale-105 transition-transform">
-              Enter Site ➔
-            </div>
-          </div>
         </div>
       </a>
     </div>
