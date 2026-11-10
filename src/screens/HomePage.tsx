@@ -160,7 +160,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
                   <span className="lg:hidden">🔥</span>
                   {/* Show Icon on Desktop, Hide on Mobile */}
                   <Flame className="hidden lg:block w-12 h-12 text-rose-500 fill-rose-500 drop-shadow-[0_0_10px_rgba(255,20,147,0.7)]" />
-                  Top Verified Recommended
+                  TOP VERIFIED RECOMMENDED ESCORTS
                 </motion.h2>
                 <div className="h-1 w-44 bg-gradient-to-r from-red-500 via-pink-500 to-transparent mt-1" />
               </div>
