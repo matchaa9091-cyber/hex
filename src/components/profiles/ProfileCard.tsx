@@ -68,15 +68,8 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
           featured ? "border-pink-500/30" : ""
         )}>
           <div className="relative aspect-[3/4] overflow-hidden">
-            {/* Corner Sash - Boosted or VIP */}
-            {profile.isBoosted ? (
-              <div className="absolute top-0 left-0 z-20 overflow-hidden w-28 h-28 pointer-events-none select-none">
-                <div className="absolute top-0 left-0 bg-gradient-to-br from-red-600 via-pink-500 to-rose-600 text-white w-36 py-1 text-center font-black text-[9px] tracking-[0.15em] transform -rotate-45 -translate-x-11 translate-y-5 shadow-[0_2px_12px_rgba(255,20,147,0.8)] border-b border-pink-200/50 flex items-center justify-center gap-1 uppercase">
-                   <span className="text-xs">🔥</span>
-                   <span className="drop-shadow-sm font-extrabold">TOP PICK</span>
-                </div>
-              </div>
-            ) : profile.isPinned ? (
+            {/* Corner Sash - VIP for both boosted and pinned */}
+            {(profile.isBoosted || profile.isPinned) ? (
               <div className="absolute top-0 left-0 z-20 overflow-hidden w-24 h-24 pointer-events-none select-none">
                 <div className="absolute top-0 left-0 bg-gradient-to-br from-[#ffd700] via-[#fff1a8] to-[#b8860b] text-black w-32 py-1 text-center font-black text-[10px] tracking-[0.2em] transform -rotate-45 -translate-x-10 translate-y-4 shadow-[0_2px_10_rgba(0,0,0,0.5)] border-b border-yellow-200/50 flex items-center justify-center gap-1.5 uppercase">
                    <span className="text-xs">👑</span>
@@ -84,6 +77,16 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
                 </div>
               </div>
             ) : null}
+
+            {/* Bottom-left RECOMMENDED badge for boosted profiles */}
+            {profile.isBoosted && (
+              <div className="absolute bottom-14 left-1.5 z-30 pointer-events-none select-none">
+                <div className="bg-gradient-to-r from-red-600 to-pink-500 text-white text-[7px] sm:text-[8px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full shadow-[0_2px_10px_rgba(255,20,147,0.6)] border border-pink-300/30 flex items-center gap-0.5">
+                  <span>🔥</span>
+                  <span>Recommended</span>
+                </div>
+              </div>
+            )}
 
             {/* PREMIUM Badge */}
             {isPremium && (
@@ -127,7 +130,7 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
                   <span className="truncate">{profile.location}</span>
                 </div>
                 <p className="text-[7px] sm:text-[8px] text-pink-500/80 font-bold uppercase tracking-widest">
-                  {isSpa ? "Featured Spa" : profile.isBoosted ? "Top Pick" : profile.isPinned ? "VIP Call Girl" : "Verified Hookup"}
+                  {isSpa ? "Featured Spa" : profile.isBoosted ? "🔥 Recommended" : profile.isPinned ? "VIP Call Girl" : "Verified Hookup"}
                 </p>
               </div>
             </div>
