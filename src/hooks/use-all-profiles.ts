@@ -26,11 +26,12 @@ export function useAllProfiles(initialData?: ProfileType[], seed?: string) {
     queryKey: ["all-profiles", seed],
     queryFn: () => fetchLiveProfiles(seed),
     initialData: hasInitial ? initialData : undefined,
-    // Treat SSR data as fresh so client doesn't immediately double-render/lag on mount
-    initialDataUpdatedAt: hasInitial ? () => Date.now() : 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes cache
-    refetchOnMount: !hasInitial, // Only fetch on mount if no initial SSR data was provided
-    refetchOnWindowFocus: false, // Prevent UI stuttering when switching tabs
+    // Treat SSR data as stale immediately so client fetches fresh data on mount
+    // (needed so admin boost/unboost changes show up without 5-min cache delay)
+    initialDataUpdatedAt: 0,
+    staleTime: 0, // Always stale — always fetch fresh on mount
+    refetchOnMount: true, // Always fetch on mount (SSR data is just a placeholder)
+    refetchOnWindowFocus: true, // Refetch when switching back from admin panel to homepage
     retry: 1,
   });
 }
