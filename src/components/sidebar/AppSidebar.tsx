@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MapPin, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send, Edit3, Flame } from "lucide-react";
+import { Home, MapPin, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send, Edit3, Flame, Info } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -70,6 +70,7 @@ const mainItems: MainItem[] = [
   { title: "Home", path: "/", icon: Home },
   { title: "VIP Escorts", path: "/vip", icon: Star },
   { title: "Locations", path: "/escorts-in", icon: MapPin, children: locations },
+  { title: "About", path: "/about", icon: Info },
   { title: "FAQ", path: "/faq", icon: HelpCircle },
   { title: "Become an escort", path: "/become-escort", icon: UserPlus },
   { title: "Edit My Profile", path: "#edit-profile", icon: Edit3, isEditAction: true },
@@ -203,7 +204,7 @@ export function AppSidebar() {
           <a
             href="https://nudetrends.afrozex.com"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow sponsored noopener noreferrer"
             className="group relative flex items-center justify-between w-full px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-black font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.4)] hover:shadow-[0_0_22px_rgba(245,158,11,0.7)] transition-all duration-300 hover:scale-[1.02] border border-amber-300/40"
           >
             <div className="flex items-center gap-2">
@@ -367,7 +368,7 @@ export function AppSidebar() {
                 <a
                   href="https://nudetrends.afrozex.com"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="nofollow sponsored noopener noreferrer"
                   className="group relative flex items-center justify-between w-full px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-black font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.4)] hover:shadow-[0_0_22px_rgba(245,158,11,0.7)] transition-all duration-300 border border-amber-300/40"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

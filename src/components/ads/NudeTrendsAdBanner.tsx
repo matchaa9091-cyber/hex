@@ -14,7 +14,7 @@ export function NudeTrendsAdBanner({ className = "" }: NudeTrendsAdBannerProps) 
       <a
         href="https://nudetrends.afrozex.com"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="nofollow sponsored noopener noreferrer"
         aria-label="Visit Nude Trends for Live Cams and Leaks"
         className="group relative block w-full rounded-2xl overflow-hidden border border-amber-500/50 bg-gradient-to-r from-black via-zinc-950 to-black shadow-[0_0_25px_rgba(245,158,11,0.25)] hover:shadow-[0_0_35px_rgba(245,158,11,0.5)] transition-all duration-300 hover:scale-[1.01]"
       >
