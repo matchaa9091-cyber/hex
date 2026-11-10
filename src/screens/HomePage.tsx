@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { AdCarousel } from "@/components/profiles/AdCarousel";
 import { NudeTrendsAdBanner } from "@/components/ads/NudeTrendsAdBanner";
-import { Crown, ChevronDown, MapPin } from "lucide-react";
+import { Crown, ChevronDown, MapPin, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 24;
@@ -68,9 +68,10 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
 
   const isInitialLoading = allProfiles.length === 0;
 
-  // Split profiles into VIP and Ordinary
-  const vipProfiles = allProfiles.filter(p => p.isPinned);
-  const ordinaryProfiles = allProfiles.filter(p => !p.isPinned);
+  // Split profiles into Boosted Top Recommended, VIP, and Ordinary
+  const boostedProfiles = allProfiles.filter(p => p.isBoosted);
+  const vipProfiles = allProfiles.filter(p => p.isPinned && !p.isBoosted);
+  const ordinaryProfiles = allProfiles.filter(p => !p.isPinned && !p.isBoosted);
   
   const visibleOrdinary = ordinaryProfiles.slice(0, visibleCount);
   const hasMore = visibleCount < ordinaryProfiles.length;
@@ -146,6 +147,31 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
         {/* Profile Grid Section */}
         <div className="space-y-16 sm:space-y-24">
           
+          {/* TOP RECOMMENDED BOOSTED SECTION */}
+          {boostedProfiles.length > 0 && (
+            <div className="space-y-6">
+              <div className="flex flex-col items-center sm:items-start">
+                <motion.h2 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  className="text-2xl sm:text-3xl lg:text-5xl font-black italic uppercase tracking-tighter bg-gradient-to-r from-red-500 via-pink-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(255,20,147,0.5)] animate-pulse flex items-center gap-3"
+                >
+                  {/* Show Emoji on Mobile, Hide on Desktop */}
+                  <span className="lg:hidden">🔥</span>
+                  {/* Show Icon on Desktop, Hide on Mobile */}
+                  <Flame className="hidden lg:block w-12 h-12 text-rose-500 fill-rose-500 drop-shadow-[0_0_10px_rgba(255,20,147,0.7)]" />
+                  Top Verified Recommended
+                </motion.h2>
+                <div className="h-1 w-44 bg-gradient-to-r from-red-500 via-pink-500 to-transparent mt-1" />
+              </div>
+              <ProfileGrid
+                profiles={boostedProfiles}
+                featuredIds={boostedProfiles.map(p => p.id)}
+                loading={isInitialLoading}
+              />
+            </div>
+          )}
+
           {/* VIP SECTION */}
           {vipProfiles.length > 0 && (
             <div className="space-y-6">

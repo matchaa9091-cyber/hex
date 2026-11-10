@@ -31,9 +31,10 @@ export function shuffleArray<T>(array: T[], rand?: () => number): T[] {
 export function sortAndShuffleProfiles(profiles: ProfileType[], seed?: string): ProfileType[] {
   if (!seed) return profiles;
   const rand = createSeededRand(seed);
-  const pinned = profiles.filter(p => p.isPinned);
-  const regular = profiles.filter(p => !p.isPinned);
-  return [...shuffleArray(pinned, rand), ...shuffleArray(regular, rand)];
+  const boosted = profiles.filter(p => p.isBoosted);
+  const pinned = profiles.filter(p => p.isPinned && !p.isBoosted);
+  const regular = profiles.filter(p => !p.isPinned && !p.isBoosted);
+  return [...shuffleArray(boosted, rand), ...shuffleArray(pinned, rand), ...shuffleArray(regular, rand)];
 }
 
 const R2_PUBLIC_BASE = "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
@@ -103,6 +104,7 @@ function mapDbProfile(p: any): ProfileType {
     videos: (typeof p.videos === "string" ? JSON.parse(p.videos) : (p.videos || [])).map(transformUrl),
     reviews: [],
     isPinned: Boolean(p.is_pinned),
+    isBoosted: Boolean(p.is_boosted),
     isArchived: Boolean(p.is_archived),
     isVip: Boolean(p.is_vip),
     isPremium: Boolean(p.is_premium),

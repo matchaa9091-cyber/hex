@@ -4,7 +4,7 @@ import { ProfileType } from "@/types/profile";
 import Link from "next/link";
 import { slugify } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Sparkles, MapPin, ArrowRight, MessageCircle } from "lucide-react";
+import { Sparkles, MapPin, ArrowRight, MessageCircle, Flame } from "lucide-react";
 
 interface AdCarouselProps {
   profiles: ProfileType[];
@@ -21,6 +21,15 @@ function resolveImg(src: string | undefined | null): string {
   return src;
 }
 
+function shuffleList<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export const AdCarousel = ({ profiles }: AdCarouselProps) => {
   // Select profiles marked as ads, or having adImages, or identified as a spa
   const adProfiles = profiles.filter(p => {
@@ -29,6 +38,16 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
     const isSpa = (p.name || '').toLowerCase().includes('spa');
     return hasAdImgs || isExplicitAd || isSpa;
   });
+
+  // Separate boosted ads (boosted spas/ads) and regular ads
+  const boostedAdProfiles = adProfiles.filter(p => Boolean(p.isBoosted));
+  const regularAdProfiles = adProfiles.filter(p => !p.isBoosted);
+
+  // If there are multiple boosted flyers, shuffle among top positions; regular shuffle below
+  const orderedProfiles = [
+    ...shuffleList(boostedAdProfiles),
+    ...shuffleList(regularAdProfiles),
+  ];
 
   // Helper to format phone to WhatsApp international format (Uganda 256)
   const toWhatsAppNumber = (num?: string) => {
@@ -40,7 +59,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
   };
 
   // Collect ad items: prefer adImages, fallback to images or profileImage
-  const adItems = adProfiles.flatMap(p => {
+  const adItems = orderedProfiles.flatMap(p => {
     const rawImages = (p.adImages && p.adImages.length > 0)
       ? p.adImages
       : (p.images && p.images.length > 0 ? p.images : (p.profileImage ? [p.profileImage] : []));
@@ -55,6 +74,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
       description: p.description || p.shortBio || "Experience premier relaxation, skilled massage therapies, and royal pampering in a serene private setting.",
       services: p.services && p.services.length > 0 ? p.services : ["Full Body Massage", "Sensual Care", "Private Suites"],
       phone: p.phone || p.whatsapp,
+      isBoosted: Boolean(p.isBoosted),
       waUrl: waNumber ? `https://wa.me/${waNumber}?text=${encodeURIComponent("Hi, I got your contact from https://www.hexescortsug.com")}` : null,
     }));
   });
@@ -87,9 +107,15 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                 className="relative z-10 w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none flex flex-col justify-end p-3 lg:p-4">
-                <span className="text-[10px] font-black uppercase text-pink-400 mb-0.5 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> FEATURED SPA
-                </span>
+                {item.isBoosted ? (
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 mb-0.5 flex items-center gap-1 bg-gradient-to-r from-red-600 to-pink-600 px-2 py-0.5 rounded-full w-max shadow-lg shadow-pink-600/30 border border-amber-300/40">
+                    <Flame className="w-3 h-3 fill-amber-300 text-amber-300 animate-pulse" /> TOP RECOMMENDED SPA
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-black uppercase text-pink-400 mb-0.5 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" /> FEATURED SPA
+                  </span>
+                )}
                 <span className="text-white font-bold text-sm lg:text-base drop-shadow-md group-hover:text-pink-300 transition-colors">
                   {item.name}
                 </span>
@@ -144,9 +170,15 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                       alt={item.name}
                       className="relative z-10 max-h-48 w-auto max-w-full rounded-xl object-contain shadow-2xl group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
-                    <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-pink-600 text-white rounded-full shadow-md flex items-center gap-1">
-                      <Sparkles className="w-2.5 h-2.5" /> FEATURED SPA
-                    </span>
+                    {item.isBoosted ? (
+                      <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-full shadow-lg flex items-center gap-1 border border-pink-300/40">
+                        <Flame className="w-2.5 h-2.5 fill-amber-300 text-amber-300 animate-pulse" /> TOP RECOMMENDED
+                      </span>
+                    ) : (
+                      <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-pink-600 text-white rounded-full shadow-md flex items-center gap-1">
+                        <Sparkles className="w-2.5 h-2.5" /> FEATURED SPA
+                      </span>
+                    )}
                     <span className="absolute top-2 right-2 z-20 px-2 py-0.5 text-[9px] font-bold text-gray-200 bg-black/60 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-1">
                       <MapPin className="w-2.5 h-2.5 text-pink-400" />
                       {item.location}

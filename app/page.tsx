@@ -43,11 +43,12 @@ export default async function Page() {
   // 2. VIP pinned profiles (for the Elite VIP section)
   // 3. First batch of ordinary profiles (16 items for instant first view)
   const spas = allStatic.filter(p => (p.name || '').toLowerCase().includes('spa') || (p.adImages && p.adImages.length > 0));
-  const vipProfiles = allStatic.filter(p => p.isPinned);
-  const ordinaryFirstBatch = allStatic.filter(p => !p.isPinned).slice(0, 16);
+  const boostedProfiles = allStatic.filter(p => p.isBoosted);
+  const vipProfiles = allStatic.filter(p => p.isPinned && !p.isBoosted);
+  const ordinaryFirstBatch = allStatic.filter(p => !p.isPinned && !p.isBoosted).slice(0, 16);
 
   const initialMap = new Map();
-  [...spas, ...vipProfiles, ...ordinaryFirstBatch].forEach(p => initialMap.set(p.id, p));
+  [...spas, ...boostedProfiles, ...vipProfiles, ...ordinaryFirstBatch].forEach(p => initialMap.set(p.id, p));
   const initialProfiles = Array.from(initialMap.values());
 
   // Generate ItemList schema for Google SERP rich snippet carousel

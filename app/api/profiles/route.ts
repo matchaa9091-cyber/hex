@@ -50,8 +50,8 @@ export async function GET(req: Request) {
     const isAdmin = searchParams.get("admin") === "true";
 
     const sql = isAdmin
-      ? "SELECT * FROM profiles ORDER BY is_pinned DESC, created_at DESC;"
-      : "SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_pinned DESC, created_at DESC;";
+      ? "SELECT * FROM profiles ORDER BY is_boosted DESC, is_pinned DESC, created_at DESC;"
+      : "SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_boosted DESC, is_pinned DESC, created_at DESC;";
 
     const results = await executeD1Query(sql);
     const dbProfiles = results.map((p: any) => ({
@@ -74,6 +74,7 @@ export async function GET(req: Request) {
       instagram: p.instagram ?? undefined,
       services: typeof p.services === "string" ? JSON.parse(p.services) : (p.services || []),
       isPinned: Boolean(p.is_pinned),
+      isBoosted: Boolean(p.is_boosted),
       isArchived: Boolean(p.is_archived),
       isVip: Boolean(p.is_vip),
       isPremium: Boolean(p.is_premium),
@@ -102,8 +103,8 @@ export async function POST(req: Request) {
         id, name, age, height, body_type, complexion, location, rating,
         profile_image, images, videos, short_bio, description, phone, whatsapp,
         email, instagram, services, is_pinned, is_archived, is_vip, is_premium,
-        is_ad, is_verified, ad_images, passcode, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        is_ad, is_verified, ad_images, is_boosted, passcode, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         age = excluded.age,
@@ -129,6 +130,7 @@ export async function POST(req: Request) {
         is_ad = excluded.is_ad,
         is_verified = excluded.is_verified,
         ad_images = excluded.ad_images,
+        is_boosted = excluded.is_boosted,
         passcode = COALESCE(excluded.passcode, profiles.passcode);
     `;
 
@@ -158,6 +160,7 @@ export async function POST(req: Request) {
       toBit(body.is_ad ?? body.isAd ?? ((body.ad_images || body.adImages)?.length > 0)),
       toBit(body.is_verified ?? body.isVerified),
       JSON.stringify(body.ad_images || body.adImages || []),
+      toBit(body.is_boosted ?? body.isBoosted),
       body.passcode ? String(body.passcode).trim() : null,
     ];
 
@@ -186,6 +189,8 @@ export async function PUT(req: Request) {
       isVerified: "is_verified",
       is_ad: "is_ad",
       isAd: "is_ad",
+      is_boosted: "is_boosted",
+      isBoosted: "is_boosted",
     };
 
     const dbField = validFields[field];

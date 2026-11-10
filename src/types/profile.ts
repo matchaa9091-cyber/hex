@@ -27,6 +27,7 @@ export interface ProfileType {
   isVip?: boolean;
   isPremium?: boolean;
   isPinned?: boolean;
+  isBoosted?: boolean;
   isArchived?: boolean;
   isAd?: boolean;
   isVerified?: boolean;

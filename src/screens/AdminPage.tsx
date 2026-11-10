@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone, KeyRound } from "lucide-react";
+import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone, KeyRound, Flame } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { mockProfiles } from "@/data/mockProfiles";
@@ -39,6 +39,7 @@ interface DbProfile {
   is_archived?: boolean;
   is_ad?: boolean;
   is_verified?: boolean;
+  is_boosted?: boolean;
   ad_images?: string[];
   passcode?: string;
 }
@@ -66,6 +67,7 @@ interface EditProfile {
   isArchived?: boolean;
   isAd?: boolean;
   isVerified?: boolean;
+  isBoosted?: boolean;
   adImages: string[];
   passcode?: string;
 }
@@ -315,6 +317,7 @@ const AdminPage = () => {
     isArchived: false,
     isAd: false,
     isVerified: false,
+    isBoosted: false,
     adImages: [],
     passcode: "",
   });
@@ -342,6 +345,7 @@ const AdminPage = () => {
     isArchived: Boolean(p.is_archived),
     isAd: p.is_ad || false,
     isVerified: p.is_verified || false,
+    isBoosted: p.is_boosted || false,
     adImages: p.ad_images || [],
     passcode: p.passcode || "",
   });
@@ -554,6 +558,25 @@ const AdminPage = () => {
       });
       if (res.ok) {
         toast({ title: !currentAd ? "Promoted to Ads!" : "Removed from Ads" });
+        await fetchProfiles();
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      } else {
+        toast({ title: "Update failed", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Update failed", variant: "destructive" });
+    }
+  };
+
+  const toggleBoost = async (id: string, currentBoosted: boolean) => {
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, field: "is_boosted", value: !currentBoosted }),
+      });
+      if (res.ok) {
+        toast({ title: !currentBoosted ? "🔥 Boosted to Top Recommended!" : "Removed from Top Recommended" });
         await fetchProfiles();
         queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
       } else {
@@ -944,6 +967,11 @@ const AdminPage = () => {
                       )}
                       {p.is_archived && <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">Hidden</span>}
                       {p.is_verified && <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Verified</span>}
+                      {p.is_boosted && (
+                        <span className="text-[10px] bg-red-500/20 text-red-400 border border-red-500/40 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
+                          <Flame className="w-2.5 h-2.5 fill-red-400" /> TOP
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-muted-foreground">{p.age} • {p.location}</p>
                   </div>
@@ -959,6 +987,15 @@ const AdminPage = () => {
                     title="Toggle VIP status"
                   >
                     <Star className={`w-3 h-3 ${(p.is_pinned || p.is_vip) ? "fill-black" : ""}`} />
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant={p.is_boosted ? "default" : "outline"} 
+                    className={p.is_boosted ? "bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold" : "text-red-400 border-red-400/50"} 
+                    onClick={() => toggleBoost(p.id, Boolean(p.is_boosted))}
+                    title="Boost to Top Recommended section"
+                  >
+                    <Flame className={`w-3 h-3 ${p.is_boosted ? "fill-white" : ""}`} />
                   </Button>
                   <Button 
                     size="sm" 
