@@ -75,9 +75,9 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
               href={`/profile/${item.slug}`}
               className="relative shrink-0 w-[420px] h-72 lg:w-[540px] lg:h-[350px] rounded-2xl overflow-hidden border border-pink-500/30 hover:border-pink-500 transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)] group bg-black flex items-center justify-center"
             >
-              {/* Blurred background glow */}
+              {/* Subtle background glow without expensive real-time blur */}
               <div
-                className="absolute inset-0 bg-cover bg-center opacity-30 blur-md scale-110"
+                className="absolute inset-0 bg-cover bg-center opacity-15"
                 style={{ backgroundImage: `url('${item.image}')` }}
               />
               {/* Full flyer content displayed uncropped */}
@@ -126,10 +126,10 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
             return (
               <motion.div
                 key={`mobile-${item.id}-${idx}`}
-                initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: idx === 0 ? 0.05 : 0 }}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
                 className="w-full"
               >
                 <div className="group block relative w-full rounded-2xl overflow-hidden border border-pink-500/25 bg-gradient-to-br from-gray-950 via-gray-900 to-black hover:border-pink-500/60 shadow-[0_0_15px_-3px_rgba(236,72,153,0.15)] transition-all">

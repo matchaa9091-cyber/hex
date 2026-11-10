@@ -26,13 +26,11 @@ export function useAllProfiles(initialData?: ProfileType[], seed?: string) {
     queryKey: ["all-profiles", seed],
     queryFn: () => fetchLiveProfiles(seed),
     initialData: hasInitial ? initialData : undefined,
-    // Setting initialDataUpdatedAt: 0 tells TanStack Query:
-    // Display initialData immediately for 0ms paint, but treat it as needing revalidation,
-    // so immediately fetch fresh data from /api/profiles in the background!
-    initialDataUpdatedAt: 0,
-    staleTime: 30000, // 30s cache once fetched
-    refetchOnMount: true, // Always revalidate on mount
-    refetchOnWindowFocus: true, // Auto-update when returning to tab after admin edits
+    // Treat SSR data as fresh so client doesn't immediately double-render/lag on mount
+    initialDataUpdatedAt: hasInitial ? () => Date.now() : 0,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    refetchOnMount: !hasInitial, // Only fetch on mount if no initial SSR data was provided
+    refetchOnWindowFocus: false, // Prevent UI stuttering when switching tabs
     retry: 1,
   });
 }

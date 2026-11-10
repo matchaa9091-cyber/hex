@@ -57,8 +57,8 @@ const PLANS: PlanConfig[] = [
     id: "monthly",
     label: "Full Month – Premium",
     title: "Full Month",
-    price: 60000,
-    priceLabel: "60,000 shs / month",
+    price: 80000,
+    priceLabel: "80,000 shs / month",
     color: "#F2367B",
     borderColor: "#F2367B40",
     btnClass: "bg-gradient-to-r from-[#F2367B] to-[#E8B93D] hover:opacity-90 text-[#1B0510]",
@@ -74,7 +74,7 @@ const BecomeEscortPage = () => {
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<{ amount: number; name: string }>({
-    amount: 60000,
+    amount: 80000,
     name: "Full Month",
   });
   const [loading, setLoading] = useState(false);
@@ -585,7 +585,7 @@ const BecomeEscortPage = () => {
               <div className="text-xs font-semibold text-[#F2367B] mb-1.5">Monthly plan</div>
               <h2 className="text-xl font-bold text-white mb-3">Full Month</h2>
               <div className="text-3xl font-extrabold text-[#F2367B] mb-4">
-                60,000 <span className="text-sm font-normal text-gray-400">shs / month</span>
+                80,000 <span className="text-sm font-normal text-gray-400">shs / month</span>
               </div>
 
               {/* 4-week breakdown */}
@@ -593,7 +593,10 @@ const BecomeEscortPage = () => {
                 <div className="flex-1 text-center py-1.5 px-1 rounded-lg bg-[#E8B93D] text-[#1B0510] font-bold text-[10px]">
                   Week 1<span className="block font-normal">VIP</span>
                 </div>
-                {[2, 3, 4].map(w => (
+                <div className="flex-1 text-center py-1.5 px-1 rounded-lg bg-[#E8B93D] text-[#1B0510] font-bold text-[10px]">
+                  Week 2<span className="block font-normal">VIP</span>
+                </div>
+                {[3, 4].map(w => (
                   <div key={w} className="flex-1 text-center py-1.5 px-1 rounded-lg bg-[#F2367B]/25 text-white font-semibold text-[10px]">
                     Week {w}<span className="block text-gray-300 font-normal">Ordinary</span>
                   </div>
@@ -603,8 +606,8 @@ const BecomeEscortPage = () => {
               <ul className="space-y-2 mb-4">
                 {[
                   "Listed for full 30 days",
-                  "Week 1 runs as VIP (top placement + badge)",
-                  "Weeks 2–4 as standard ordinary listing",
+                  "Weeks 1–2 run as VIP (top placement + badge)",
+                  "Weeks 3–4 as standard ordinary listing",
                   "Profile photo, gallery & video clips",
                   "Searchable by location & category",
                 ].map(f => (

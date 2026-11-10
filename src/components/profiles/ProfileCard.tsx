@@ -1,13 +1,12 @@
 "use client";
+import React, { useState, useEffect, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn, getMediaUrl, slugify } from "@/lib/utils";
 import { ProfileType } from "@/types/profile";
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { usePhoneHandler } from "@/hooks/use-phone-handler";
 
 interface ProfileCardProps {
@@ -18,11 +17,19 @@ interface ProfileCardProps {
   index?: number;
 }
 
-export function ProfileCard({ profile, featured = false, priority = false, animate = true, index = 0 }: ProfileCardProps) {
+// Convert to international format for WhatsApp: 07XXXXXXXX -> 256XXXXXXXX
+function toWhatsAppNumber(num: string) {
+  if (!num) return "";
+  const cleaned = num.replace(/[\s\(\)\-+]/g, "");
+  if (cleaned.startsWith("256")) return cleaned;
+  if (cleaned.startsWith("0")) return "256" + cleaned.slice(1);
+  return "256" + cleaned;
+}
+
+function ProfileCardComponent({ profile, featured = false, priority = false }: ProfileCardProps) {
   const [showContact, setShowContact] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [imgSrc, setImgSrc] = useState<string>(() => getMediaUrl(profile.profileImage));
-  const isMobile = useIsMobile();
   const { handlePhoneClick } = usePhoneHandler();
 
   useEffect(() => {
@@ -39,16 +46,7 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
     || Boolean(profile.isAd)
     || (Array.isArray(profile.adImages) && profile.adImages.length > 0);
 
-  // Use the phone number from the profile data
   const phoneNumber = profile.phone || "";
-  // Convert to international format for WhatsApp: 07XXXXXXXX -> 256XXXXXXXX
-  const toWhatsAppNumber = (num: string) => {
-    if (!num) return "";
-    const cleaned = num.replace(/[\s\(\)\-+]/g, "");
-    if (cleaned.startsWith("256")) return cleaned;
-    if (cleaned.startsWith("0")) return "256" + cleaned.slice(1);
-    return "256" + cleaned;
-  };
   const waNumber = toWhatsAppNumber(profile.whatsapp || phoneNumber);
 
   // Stable badges based on data or deterministic ID-based logic
@@ -167,3 +165,5 @@ export function ProfileCard({ profile, featured = false, priority = false, anima
     </div>
   );
 }
+
+export const ProfileCard = memo(ProfileCardComponent);

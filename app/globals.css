@@ -236,7 +236,7 @@
   height: 2px;
   background: #FF1493;
   transition: all 0.3s ease;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0);
 }
 
 .nav-item:hover:after {
@@ -313,14 +313,16 @@
 /* Endless marquee for ad carousel */
 @keyframes marquee-scroll {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 .marquee-track {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: marquee-scroll 30s linear infinite;
 }
 
