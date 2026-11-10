@@ -20,12 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const routePath = params.location.join('/');
   
   return {
-    title: `${locationName} Escorts | #1 Verified Escorts in ${locationName} & Call Girls`,
-    description: `Find top verified ${locationName} escorts & call girls. 100% genuine photos, direct WhatsApp numbers, discreet VIP hookups & independent companions in ${locationName}.`,
-    keywords: `escorts in ${locationName}, ${locationName} escorts, call girls ${locationName}, hookups ${locationName}, ${locationName} escort girls`,
+    title: `${locationName} Escorts & Call Girls | #1 Verified Escorts in ${locationName} - Hex`,
+    description: `${locationName} Escorts & Call Girls: Browse 100% verified independent escorts and call girls in ${locationName}. Authentic photos, direct WhatsApp numbers & discreet hookups.`,
+    keywords: `${locationName.toLowerCase()} escorts, escorts in ${locationName.toLowerCase()}, ${locationName.toLowerCase()} call girls, call girls in ${locationName.toLowerCase()}, hookups in ${locationName.toLowerCase()}, ${locationName.toLowerCase()} escort girls, uganda escorts`,
     openGraph: {
-      title: `Top Escorts & Call Girls in ${locationName}`,
-      description: `Browse verified sexy escorts and hot girls available in ${locationName}, Uganda. 100% Real & Verified profiles.`,
+      title: `${locationName} Escorts & Call Girls | #1 Verified in ${locationName}`,
+      description: `Browse 100% verified escorts and independent call girls available in ${locationName}, Uganda. Genuine photos and direct WhatsApp contacts.`,
       url: `https://www.hexescortsug.com/escorts-in/${routePath}`,
       siteName: 'Hex Escorts Uganda',
     },

@@ -493,11 +493,30 @@ const BecomeEscortPage = () => {
       )}
 
       <div className="max-w-3xl mx-auto">
-        {/* Header */}
+        {/* Search-Intent SEO Header */}
         <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Get your profile seen this week</h1>
-          <p className="text-gray-400 text-sm max-w-xl leading-relaxed">
-            Pick a plan below and your profile goes live shortly after payment verification.
+          <h1 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black tracking-tight leading-[1.2] mb-3 break-words">
+            <span className="flex flex-col sm:inline sm:flex-row sm:items-center">
+              <span className="text-left inline-block bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm pb-1">
+                Become an Escort
+              </span>
+              <span className="hidden sm:inline text-gray-400 font-light mx-2">&amp;</span>
+              <span className="text-left inline-block text-white drop-shadow-sm">
+                <span className="sm:hidden text-gray-400 font-light mr-1.5">&amp;</span>
+                List Your Profile
+              </span>
+            </span>
+            <span className="block text-lg sm:text-2xl lg:text-xl xl:text-2xl font-bold mt-2 text-gray-300">
+              <span className="text-amber-400 font-extrabold mr-1.5 drop-shadow-sm">#1 Verified Directory</span>
+              <span className="text-gray-100">in Kampala</span>
+              <span className="text-pink-400 mx-1.5 font-normal">&amp;</span>
+              <span className="inline-block bg-gradient-to-r from-rose-300 to-pink-400 bg-clip-text text-transparent pb-0.5">
+                Across Uganda
+              </span>
+            </span>
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-300/90 max-w-2xl leading-relaxed">
+            Join <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#fff8f0]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#ffd700]">UG</span></strong>, Uganda&apos;s fastest growing verified platform. Whether you want to <strong className="text-pink-300 font-medium">become an escort in Kampala</strong> or advertise your profile across Uganda, choose your listing plan below to start receiving direct client inquiries on WhatsApp.
           </p>
         </div>
 
