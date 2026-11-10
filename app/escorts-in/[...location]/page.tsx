@@ -20,15 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const routePath = params.location.join('/');
   
   return {
-    title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
-    description:
-      "Uganda Escorts & Kampala Escorts: Browse 100% verified Ugandan call girls in Kampala & countrywide. Genuine photos, verified direct WhatsApp & discreet hookups.",
-    keywords:
-      "uganda escorts, kampala escorts, escorts, ugandan escorts, escorts uganda, ug escorts, escorts in kampala, escorts in uganda, escort, escorts kampala",
+    title: `${locationName} Escorts | #1 Verified Escorts in ${locationName} & Call Girls`,
+    description: `Find top verified ${locationName} escorts & call girls. 100% genuine photos, direct WhatsApp numbers, discreet VIP hookups & independent companions in ${locationName}.`,
+    keywords: `escorts in ${locationName}, ${locationName} escorts, call girls ${locationName}, hookups ${locationName}, ${locationName} escort girls`,
     openGraph: {
-      title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
-      description:
-        "Browse 100% verified Ugandan call girls and escorts in Kampala, Entebbe, Jinja & across Uganda. Real photos, direct WhatsApp & discreet hookups.",
+      title: `Top Escorts & Call Girls in ${locationName}`,
+      description: `Browse verified sexy escorts and hot girls available in ${locationName}, Uganda. 100% Real & Verified profiles.`,
       url: `https://www.hexescortsug.com/escorts-in/${routePath}`,
       siteName: 'Hex Escorts Uganda',
     },

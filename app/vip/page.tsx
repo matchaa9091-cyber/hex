@@ -3,21 +3,11 @@ import VipPage from "@/screens/VipPage";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
-  description:
-    "Uganda Escorts & Kampala Escorts: Browse 100% verified Ugandan call girls in Kampala & countrywide. Genuine photos, verified direct WhatsApp & discreet hookups.",
-  keywords:
-    "uganda escorts, kampala escorts, escorts, ugandan escorts, escorts uganda, ug escorts, escorts in kampala, escorts in uganda, escort, escorts kampala",
+  title: 'Elite VIP Escorts in Uganda | Premium Companions - Hex Escorts UG',
+  description: 'Experience true luxury with our hand-picked elite VIP escorts in Kampala and across Uganda. The most premium companions for the most discerning clients.',
   alternates: {
     canonical: 'https://www.hexescortsug.com/vip',
-  },
-  openGraph: {
-    title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
-    description:
-      "Browse 100% verified Ugandan call girls and escorts in Kampala, Entebbe, Jinja & across Uganda. Real photos, direct WhatsApp & discreet hookups.",
-    url: 'https://www.hexescortsug.com/vip',
-    siteName: 'Hex Escorts Uganda',
-  },
+  }
 };
 
 export const revalidate = 60; // Cache VIP data for 60 seconds
