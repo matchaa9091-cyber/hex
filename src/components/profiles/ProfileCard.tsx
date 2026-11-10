@@ -78,13 +78,12 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
               </div>
             ) : null}
 
-            {/* Right-side RECOMMENDED badge for boosted profiles */}
+            {/* Right-side horizontal RECOMMENDED badge for boosted profiles */}
             {profile.isBoosted && (
-              <div className="absolute top-1/2 -translate-y-1/2 right-0 z-30 pointer-events-none select-none">
-                <div className="bg-gradient-to-b from-red-600 to-pink-500 text-white font-black tracking-widest uppercase shadow-[0_2px_10px_rgba(255,20,147,0.6)] border-l border-t border-b border-pink-300/30 flex flex-col items-center gap-0.5 py-2 px-[3px] rounded-l-md">
-                  {"🔥Recommended".split("").map((char, i) => (
-                    <span key={i} className="text-[6px] sm:text-[7px] leading-tight">{char}</span>
-                  ))}
+              <div className="absolute bottom-14 right-1.5 z-30 pointer-events-none select-none">
+                <div className="bg-gradient-to-r from-red-600 to-pink-500 text-white text-[7px] sm:text-[8px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full shadow-[0_2px_10px_rgba(255,20,147,0.6)] border border-pink-300/30 flex items-center gap-0.5">
+                  <span>🔥</span>
+                  <span>Recommended</span>
                 </div>
               </div>
             )}
