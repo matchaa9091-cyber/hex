@@ -96,6 +96,7 @@ const getInitialDbProfiles = (): DbProfile[] => {
     is_archived: p.isArchived || false,
     is_ad: p.isAd || false,
     is_verified: p.isVerified || false,
+    is_boosted: p.isBoosted || false,
     ad_images: p.adImages || [],
   }));
 };
@@ -206,6 +207,7 @@ const AdminPage = () => {
             is_archived: Boolean(p.isArchived ?? p.is_archived),
             is_ad: Boolean(p.isAd ?? p.is_ad),
             is_verified: Boolean(p.isVerified ?? p.is_verified),
+            is_boosted: Boolean(p.isBoosted ?? p.is_boosted),
             ad_images: p.adImages || p.ad_images || [],
             passcode: p.passcode || "",
           }));
@@ -241,6 +243,7 @@ const AdminPage = () => {
       is_archived: p.isArchived || false,
       is_ad: p.isAd || false,
       is_verified: p.isVerified || false,
+      is_boosted: Boolean(p.isBoosted || false),
       ad_images: p.adImages || [],
     }));
 
@@ -466,6 +469,7 @@ const AdminPage = () => {
       is_premium: Boolean(editingProfile.isVip || editingProfile.isPinned),
       is_ad: Boolean(editingProfile.isAd || (editingProfile.adImages && editingProfile.adImages.length > 0)),
       is_verified: editingProfile.isVerified ?? false,
+      is_boosted: Boolean(editingProfile.isBoosted),
       ad_images: editingProfile.adImages || [],
       passcode: editingProfile.passcode ? String(editingProfile.passcode).trim() : undefined,
     };
@@ -569,20 +573,34 @@ const AdminPage = () => {
   };
 
   const toggleBoost = async (id: string, currentBoosted: boolean) => {
+    const nextVal = !currentBoosted;
+    // Optimistic UI update so the button flips state immediately
+    setProfiles((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, is_boosted: nextVal } : p))
+    );
+
     try {
       const res = await fetch("/api/profiles", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, field: "is_boosted", value: !currentBoosted }),
+        body: JSON.stringify({ id, field: "is_boosted", value: nextVal }),
       });
       if (res.ok) {
-        toast({ title: !currentBoosted ? "🔥 Boosted to Top Recommended!" : "Removed from Top Recommended" });
+        toast({ title: nextVal ? "🔥 Boosted to Top Recommended!" : "Removed from Top Recommended" });
         await fetchProfiles();
         queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
       } else {
+        // Revert on failure
+        setProfiles((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, is_boosted: currentBoosted } : p))
+        );
         toast({ title: "Update failed", variant: "destructive" });
       }
     } catch {
+      // Revert on failure
+      setProfiles((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, is_boosted: currentBoosted } : p))
+      );
       toast({ title: "Update failed", variant: "destructive" });
     }
   };
@@ -968,8 +986,8 @@ const AdminPage = () => {
                       {p.is_archived && <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded">Hidden</span>}
                       {p.is_verified && <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Verified</span>}
                       {p.is_boosted && (
-                        <span className="text-[10px] bg-red-500/20 text-red-400 border border-red-500/40 px-1.5 py-0.5 rounded font-bold flex items-center gap-1">
-                          <Flame className="w-2.5 h-2.5 fill-red-400" /> TOP
+                        <span className="text-[10px] bg-gradient-to-r from-red-600 to-pink-600 text-white font-extrabold px-2 py-0.5 rounded flex items-center gap-1 shadow-sm border border-red-400/50">
+                          <Flame className="w-2.5 h-2.5 fill-white text-white" /> BOOSTED
                         </span>
                       )}
                     </div>
@@ -991,11 +1009,15 @@ const AdminPage = () => {
                   <Button 
                     size="sm" 
                     variant={p.is_boosted ? "default" : "outline"} 
-                    className={p.is_boosted ? "bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold" : "text-red-400 border-red-400/50"} 
-                    onClick={() => toggleBoost(p.id, Boolean(p.is_boosted))}
-                    title="Boost to Top Recommended section"
-                  >
-                    <Flame className={`w-3 h-3 ${p.is_boosted ? "fill-white" : ""}`} />
+                    className={
+                      p.is_boosted 
+                        ? "bg-gradient-to-r from-red-600 via-rose-500 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-black shadow-[0_0_12px_rgba(239,68,68,0.7)] border border-red-300" 
+                        : "text-muted-foreground border-gray-700 hover:text-red-400 hover:border-red-500/50"
+                    } 
+                    onClick={() => toggleBoost(p.id, Boolean(p.is_boosted))} 
+                    title={p.is_boosted ? "Deactivate Boost (Remove from Top Recommended)" : "Activate Boost (Put in Top Recommended)"} 
+                  > 
+                    <Flame className={`w-3.5 h-3.5 ${p.is_boosted ? "fill-white text-white animate-pulse" : ""}`} /> 
                   </Button>
                   <Button 
                     size="sm" 
