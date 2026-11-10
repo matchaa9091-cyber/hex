@@ -6,12 +6,21 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 export const revalidate = 60; // Cache index data for 60 seconds
 
 export const metadata: Metadata = {
-  title: 'Escorts in Uganda | #1 Verified Uganda & Kampala Escorts - Hex',
-  description: 'Find top verified escorts in Uganda with 100% genuine photos and direct WhatsApp contacts. Browse elite companions, discreet hookups, and call girls across Kampala, Entebbe, Jinja & countrywide.',
-  keywords: 'escorts in uganda, uganda escorts, kampala escorts, ugandan escorts, ug escorts, verified escorts uganda, call girls uganda',
+  title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
+  description:
+    "Uganda Escorts & Kampala Escorts: Browse 100% verified Ugandan call girls in Kampala & countrywide. Genuine photos, verified direct WhatsApp & discreet hookups.",
+  keywords:
+    "uganda escorts, kampala escorts, escorts, ugandan escorts, escorts uganda, ug escorts, escorts in kampala, escorts in uganda, escort, escorts kampala",
   alternates: {
     canonical: 'https://www.hexescortsug.com/escorts-in',
-  }
+  },
+  openGraph: {
+    title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
+    description:
+      "Browse 100% verified Ugandan call girls and escorts in Kampala, Entebbe, Jinja & across Uganda. Real photos, direct WhatsApp & discreet hookups.",
+    url: 'https://www.hexescortsug.com/escorts-in',
+    siteName: 'Hex Escorts Uganda',
+  },
 };
 
 export default async function Page() {

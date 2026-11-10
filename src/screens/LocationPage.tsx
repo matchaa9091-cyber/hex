@@ -330,36 +330,26 @@ const LocationPage = ({ cityParam, suburbParam, categoryParam, initialProfiles, 
               <h1 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black tracking-tight leading-[1.2] mb-3 break-words">
                 <span className="flex flex-col sm:inline sm:flex-row sm:items-center">
                   <span className="text-left inline-block bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm pb-1">
-                    {currentDisplayName === "All Locations" ? "Uganda Escorts" : `${currentDisplayName} Escorts`}
+                    Uganda Escorts
                   </span>
                   <span className="hidden sm:inline text-gray-400 font-light mx-2">&amp;</span>
                   <span className="text-right sm:text-left inline-block text-white drop-shadow-sm">
                     <span className="sm:hidden text-gray-400 font-light mr-1.5">&amp;</span>
-                    {currentDisplayName === "All Locations" ? "Kampala Escorts" : "Call Girls"}
+                    Kampala Escorts
                   </span>
                 </span>
                 <span className="block text-lg sm:text-2xl lg:text-xl xl:text-2xl font-bold mt-2 text-gray-300">
                   <span className="text-amber-400 font-extrabold mr-1.5 drop-shadow-sm">#1 Verified</span>
-                  <span className="text-gray-100">
-                    {currentDisplayName === "All Locations" ? "Call Girls" : `${currentDisplayName} Hookups`}
-                  </span>
+                  <span className="text-gray-100">Call Girls</span>
                   <span className="text-pink-400 mx-1.5 font-normal">&amp;</span>
                   <span className="inline-block bg-gradient-to-r from-rose-300 to-pink-400 bg-clip-text text-transparent pb-0.5">
-                    Discreet Companions
+                    VIP Companions
                   </span>
                 </span>
               </h1>
               
               <p className="text-xs sm:text-sm text-gray-300/90 mb-5 max-w-3xl leading-relaxed">
-                {!isFallbackLocation ? (
-                  <span>
-                    Explore verified <strong className="text-pink-300 font-medium">{currentDisplayName} escorts</strong> and discreet <strong className="text-pink-300 font-medium">{currentDisplayName} call girls</strong> on <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#fff8f0]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#ffd700]">UG</span></strong>. Currently showing <strong className="text-amber-400 font-bold">{matchResult.directProfiles.length} verified resident companions</strong> with 100% genuine photos and direct WhatsApp contacts available for in-call and outcall hotel visits in <strong className="text-pink-300 font-medium">{currentDisplayName}</strong>.
-                  </span>
-                ) : (
-                  <span>
-                    Find independent <strong className="text-pink-300 font-medium">{currentDisplayName} escorts</strong> and top <strong className="text-pink-300 font-medium">call girls</strong> on <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#fff8f0]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#ffd700]">UG</span></strong>. Verified models and high-class companions available for hotel visits, outcalls, and travel bookings in <strong className="text-pink-300 font-medium">{currentDisplayName}</strong> with instant WhatsApp booking.
-                  </span>
-                )}
+                Welcome to <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#fff8f0]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#ffd700]">UG</span></strong>, Uganda&apos;s leading platform for verified <strong className="text-pink-300 font-medium">Uganda escorts</strong>, <strong className="text-pink-300 font-medium">Kampala escorts</strong>, and discreet companions. Showing verified models and call girls available in <strong className="text-pink-300 font-medium">{currentDisplayName}</strong> with authentic photos and direct WhatsApp contacts.
               </p>
             </div>
 
