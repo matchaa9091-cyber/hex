@@ -101,7 +101,7 @@ export function AppSidebar() {
   const DesktopSidebar = () => (
     <Sidebar className="hidden lg:block h-screen sticky top-0 left-0">
       <SidebarContent>
-        <div className="p-4 mb-4">
+        <div className="px-4 pt-8 pb-4 mb-4" style={{overflow: "visible"}}>
           <Link href="/" title="Uganda Escorts - Hex Escorts">
             <Logo textSize="xl" />
           </Link>
@@ -243,7 +243,7 @@ export function AppSidebar() {
   );
 
   const MobileSidebar = () => (
-    <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b flex items-center justify-between p-4">
+    <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b flex items-center justify-between px-4 pt-7 pb-3" style={{overflow: "visible"}}>
       <Link href="/" title="Uganda Escorts - Hex Escorts">
         <Logo textSize="xl" />
       </Link>
