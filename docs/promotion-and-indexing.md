@@ -1,4 +1,4 @@
-# Off-site promotion & indexing queue (18 Nov 2026)
+# Off-site promotion & indexing queue (17 Nov 2026)
 
 Social accounts already exist — do **not** create new ones:
 
