@@ -67,6 +67,16 @@ const LocationHub = () => {
         <Link prefetch={false} href="/vip-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">VIP Escorts Kampala</Link>
         <Link prefetch={false} href="/massage-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Massage Kampala</Link>
       </div>
+      <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 border-t border-gray-900/30 pt-4">
+        <Link prefetch={false} href="/guides" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Travel &amp; booking guides</Link>
+        <Link prefetch={false} href="/guides/kampala-by-neighbourhood" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Kampala neighbourhoods</Link>
+        <Link prefetch={false} href="/guides/entebbe-airport-stopover" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Entebbe stopover</Link>
+        <Link prefetch={false} href="/guides/jinja-weekend" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Jinja weekend</Link>
+        <Link prefetch={false} href="/guides/safe-booking-checklist" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Safe booking checklist</Link>
+        <Link prefetch={false} href="/price-guide" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Rates &amp; booking guide</Link>
+        <Link prefetch={false} href="/reviews" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Reviews &amp; trust</Link>
+        <Link prefetch={false} href="/faq" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">FAQ</Link>
+      </div>
     </div>
   );
 };

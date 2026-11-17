@@ -33,6 +33,18 @@ const ALL_UGANDA_CITIES = [
   { slug: "kabale", name: "Kabale" },
 ];
 
+const DEFAULT_GUIDE_LINKS = [
+  { label: "Safe booking checklist", href: "/guides/safe-booking-checklist" },
+  { label: "Rates & booking guide", href: "/price-guide" },
+  { label: "Reviews & trust", href: "/reviews" },
+];
+
+const CITY_GUIDE_LINKS: Record<string, { label: string; href: string }[]> = {
+  kampala: [{ label: "Kampala by neighbourhood", href: "/guides/kampala-by-neighbourhood" }, ...DEFAULT_GUIDE_LINKS],
+  entebbe: [{ label: "Entebbe airport stopover", href: "/guides/entebbe-airport-stopover" }, ...DEFAULT_GUIDE_LINKS],
+  jinja: [{ label: "Jinja weekend guide", href: "/guides/jinja-weekend" }, ...DEFAULT_GUIDE_LINKS],
+};
+
 interface LocationPageProps {
   cityParam?: string;
   suburbParam?: string;
@@ -324,6 +336,21 @@ const LocationPage = ({ cityParam, suburbParam, categoryParam, initialProfiles, 
                     </div>
                   </div>
                 )}
+                <div className="mt-6 pt-5 border-t border-gray-800">
+                  <h3 className="text-sm font-bold text-white mb-3">Planning your visit</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {(CITY_GUIDE_LINKS[meta.slug] || DEFAULT_GUIDE_LINKS).map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        prefetch={false}
+                        className="px-3 py-1.5 rounded-full bg-pink-950/30 border border-pink-500/20 text-xs text-pink-200 hover:bg-pink-600 hover:text-white transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
             {meta && !suburb && !category && meta.faqs.length > 0 && (
@@ -383,6 +410,19 @@ const LocationPage = ({ cityParam, suburbParam, categoryParam, initialProfiles, 
                         </Link>
                       );
                     })}
+                  </div>
+                  <h3 className="text-sm font-bold text-white mt-5 mb-3">Planning your booking</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {DEFAULT_GUIDE_LINKS.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        prefetch={false}
+                        className="px-3 py-1.5 rounded-full bg-pink-950/30 border border-pink-500/20 text-xs text-pink-200 hover:bg-pink-600 hover:text-white transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>

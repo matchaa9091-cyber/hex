@@ -23,6 +23,9 @@ const PRIORITY_PATHS = [
   "/category/slim",
   "/category/curvy",
   "/category/thick",
+  "/guides",
+  "/price-guide",
+  "/reviews",
 ];
 
 async function fetchText(path) {
@@ -53,7 +56,8 @@ function buildTargets(pathsFromSitemap) {
     .filter((path) => path.startsWith("/category/") || /^\/(vip|massage|slim|curvy|thick)-escorts-in\//.test(path))
     .slice(0, 30);
   const profiles = pathsFromSitemap.filter((path) => path.startsWith("/profile/")).slice(0, PROFILE_LIMIT);
-  return [...new Set([...PRIORITY_PATHS, ...locations, ...categories, ...profiles, "/sitemap.xml"])];
+  const guides = pathsFromSitemap.filter((path) => path.startsWith("/guides/"));
+  return [...new Set([...PRIORITY_PATHS, ...locations, ...categories, ...guides, ...profiles, "/sitemap.xml"])];
 }
 
 const failures = [];

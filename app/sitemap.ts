@@ -22,6 +22,9 @@ const STATIC_LASTMOD = {
   vip: '2026-11-17T00:00:00.000Z',
   escortsIn: '2026-11-17T00:00:00.000Z',
   categories: '2026-11-17T00:00:00.000Z',
+  guides: '2026-11-17T00:00:00.000Z',
+  priceGuide: '2026-11-17T00:00:00.000Z',
+  reviews: '2026-11-17T00:00:00.000Z',
 } as const;
 
 // Keep sitemap city/suburb URLs aligned with the matcher and UI links. This
@@ -92,6 +95,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/become-escort`, lastModified: new Date(STATIC_LASTMOD.becomeEscort), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/vip`, lastModified: profileDrivenLastMod(STATIC_LASTMOD.vip), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE_URL}/escorts-in`, lastModified: profileDrivenLastMod(STATIC_LASTMOD.escortsIn), changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${BASE_URL}/guides`, lastModified: new Date(STATIC_LASTMOD.guides), changeFrequency: 'monthly', priority: 0.8 },
+    ...['kampala-by-neighbourhood', 'entebbe-airport-stopover', 'jinja-weekend', 'safe-booking-checklist'].map((slug) => ({
+      url: `${BASE_URL}/guides/${slug}`,
+      lastModified: new Date(STATIC_LASTMOD.guides),
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    })),
+    { url: `${BASE_URL}/price-guide`, lastModified: new Date(STATIC_LASTMOD.priceGuide), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/reviews`, lastModified: new Date(STATIC_LASTMOD.reviews), changeFrequency: 'monthly', priority: 0.7 },
     ...['massage', 'slim', 'curvy', 'thick'].map((category) => ({
       url: `${BASE_URL}/category/${category}`,
       lastModified: profileDrivenLastMod(STATIC_LASTMOD.categories),
