@@ -3,6 +3,7 @@ import { staticProfiles } from '@/data/staticProfiles';
 import { fetchAllProfiles } from '@/data/allProfiles';
 import { CITY_AREAS, KAMPALA_AREAS } from '@/lib/locationMatcher';
 import { CITY_SEO } from '@/data/locationSeo';
+import { CATEGORY_SLUGS, categoryPath } from '@/data/categorySeo';
 
 // Render on every request so profile edits/new profiles are reflected in
 // lastmod immediately. The worker edge cache (keyed by DO generation) still
@@ -95,6 +96,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/become-escort`, lastModified: new Date(STATIC_LASTMOD.becomeEscort), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/vip`, lastModified: profileDrivenLastMod(STATIC_LASTMOD.vip), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE_URL}/escorts-in`, lastModified: profileDrivenLastMod(STATIC_LASTMOD.escortsIn), changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${BASE_URL}/directory`, lastModified: new Date(STATIC_LASTMOD.guides), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE_URL}/guides`, lastModified: new Date(STATIC_LASTMOD.guides), changeFrequency: 'monthly', priority: 0.8 },
     ...['kampala-by-neighbourhood', 'entebbe-airport-stopover', 'jinja-weekend', 'safe-booking-checklist'].map((slug) => ({
       url: `${BASE_URL}/guides/${slug}`,
@@ -225,5 +227,63 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const profileUrls = Array.from(profileUrlMap.values());
-  return [...staticPages, ...locationUrls, ...suburbUrls, ...categoryUrls, ...profileUrls];
+
+  // Expose the full directory structure. These are real, indexable pages with
+  // unique titles, local copy and live listings; the directory page links to
+  // all of them so crawlers can discover them from a single place.
+  const allCitySlugs = Array.from(new Set(Object.keys(CITY_AREAS).map(slugify)));
+  const allSuburbSlugs = Array.from(new Set(kampalaSuburbs.map(slugify))).filter(Boolean);
+  const focusSuburbs = [
+    'kololo', 'nakasero', 'ntinda', 'bugolobi', 'kisaasi', 'muyenga', 'munyonyo',
+    'makindye', 'kasubi', 'kawempe', 'kyanja', 'namasuba', 'mengo', 'rubaga',
+    'old-kampala', 'namugongo', 'kiwatule', 'makerere', 'bukoto', 'kitende',
+  ].filter((slug) => allSuburbSlugs.includes(slug));
+
+  const directoryCityUrls: MetadataRoute.Sitemap = allCitySlugs.map((city) => ({
+    url: `${BASE_URL}/escorts-in/${city}`,
+    lastModified: new Date(STATIC_LASTMOD.escortsIn),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+  const directorySuburbUrls: MetadataRoute.Sitemap = allSuburbSlugs.map((suburb) => ({
+    url: `${BASE_URL}/escorts-in/kampala/${suburb}`,
+    lastModified: new Date(STATIC_LASTMOD.escortsIn),
+    changeFrequency: 'weekly',
+    priority: 0.75,
+  }));
+  const directoryCategoryUrls: MetadataRoute.Sitemap = [
+    ...CATEGORY_SLUGS.flatMap((category) =>
+      allCitySlugs.map((city) => ({
+        url: `${BASE_URL}${categoryPath(category, city)}`,
+        lastModified: new Date(STATIC_LASTMOD.categories),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }))
+    ),
+    ...CATEGORY_SLUGS.flatMap((category) =>
+      focusSuburbs.map((suburb) => ({
+        url: `${BASE_URL}${categoryPath(category, `kampala/${suburb}`)}`,
+        lastModified: new Date(STATIC_LASTMOD.categories),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }))
+    ),
+  ];
+
+  const all = [
+    ...staticPages,
+    ...locationUrls,
+    ...suburbUrls,
+    ...categoryUrls,
+    ...profileUrls,
+    ...directoryCityUrls,
+    ...directorySuburbUrls,
+    ...directoryCategoryUrls,
+  ];
+  const seenUrls = new Set<string>();
+  return all.filter((item) => {
+    if (seenUrls.has(item.url)) return false;
+    seenUrls.add(item.url);
+    return true;
+  });
 }
