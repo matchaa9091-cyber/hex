@@ -4,7 +4,6 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get('host') || '';
-  const url = request.nextUrl.clone();
 
   // 1. Domain Migration: Force redirect from ANY .xyz variant to .com
   if (host.includes('hexescortsug.xyz')) {
@@ -42,6 +41,7 @@ export function middleware(request: NextRequest) {
     !pathname.startsWith('/hx-ctrl') &&
     !pathname.startsWith('/admin')
   ) {
+    res.headers.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400');
     res.headers.set('Cloudflare-CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
     res.headers.set('CDN-Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
   }

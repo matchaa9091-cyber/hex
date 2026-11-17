@@ -18,6 +18,8 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
+import { ChristmasLogo } from "@/components/ChristmasLogo";
+import { ChristmasHeaderBanner } from "@/components/ChristmasHeaderBanner";
 import { PasscodeModal } from "@/components/profiles/PasscodeModal";
 
 const kampalaAreas = [
@@ -101,9 +103,10 @@ export function AppSidebar() {
   const DesktopSidebar = () => (
     <Sidebar className="hidden lg:block h-screen sticky top-0 left-0">
       <SidebarContent>
-        <div className="px-4 pt-8 pb-4 mb-4" style={{overflow: "visible"}}>
-          <Link href="/" title="Uganda Escorts - Hex Escorts">
-            <Logo textSize="xl" />
+        <div className="p-3 mb-4 bg-[#1a1a1a] rounded-xl flex items-center justify-center">
+          <Link href="/" aria-label="Hex Escorts Uganda - home" title="Uganda Escorts - Hex Escorts Uganda" className="flex items-center w-full">
+            <span className="sr-only">HEX Escorts UG</span>
+            <ChristmasLogo className="w-full h-auto max-w-[260px]" />
           </Link>
         </div>
         
@@ -243,17 +246,30 @@ export function AppSidebar() {
   );
 
   const MobileSidebar = () => (
-    <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b flex items-center justify-between px-4 pt-7 pb-3" style={{overflow: "visible"}}>
-      <Link href="/" title="Uganda Escorts - Hex Escorts">
-        <Logo textSize="xl" />
+    <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-[84px] sm:h-[92px] bg-[#1a1a1a] border-b border-gray-800/80 overflow-hidden">
+      {/* Festive Christmas Banner running 100% across the header */}
+      <div className="absolute inset-0 w-full h-full">
+        <ChristmasHeaderBanner className="w-full h-full object-cover" />
+      </div>
+
+      {/* Accessible Home Link covering the logo & site name on the left */}
+      <Link
+        href="/"
+        aria-label="Hex Escorts Uganda - home"
+        title="Uganda Escorts - Hex Escorts Uganda"
+        className="absolute inset-y-0 left-0 w-[72%] z-10"
+      >
+        <span className="sr-only">HEX Escorts UG</span>
       </Link>
-      <div className="flex items-center">
+
+      {/* Hamburger menu button on the right */}
+      <div className="absolute inset-y-0 right-3.5 sm:right-4 flex items-center z-20">
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={() => setIsMobileMenuOpen(true)}
-            className="h-10 w-10 flex items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/40 hover:bg-pink-500/25 active:scale-95 transition-all shadow-[0_0_12px_rgba(255,32,121,0.25)] ml-2 flex-shrink-0"
+            className="h-10 w-10 flex items-center justify-center rounded-xl bg-pink-500/20 border border-pink-500/50 hover:bg-pink-500/30 active:scale-95 transition-all shadow-[0_0_14px_rgba(255,32,121,0.35)] flex-shrink-0"
             aria-label="Open menu"
           >
             <div className="w-5 h-4 flex flex-col justify-between items-center pointer-events-none">

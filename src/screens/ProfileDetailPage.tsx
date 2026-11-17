@@ -24,7 +24,7 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
   const id = profileId;
   const searchParams = useSearchParams();
   
-  const { data: allProfiles = [], isLoading } = useAllProfiles();
+  const { data: allProfiles = [], isLoading } = useAllProfiles(initialProfile ? [initialProfile] : undefined);
   const normalizedTarget = decodeURIComponent(id).toLowerCase().trim();
   const targetSlug = slugify(normalizedTarget);
   const profile = (allProfiles.length > 0 ? allProfiles.find(p => 

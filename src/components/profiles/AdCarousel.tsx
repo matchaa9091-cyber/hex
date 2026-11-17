@@ -3,7 +3,6 @@
 import { ProfileType } from "@/types/profile";
 import Link from "next/link";
 import { slugify } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { Sparkles, MapPin, ArrowRight, MessageCircle, Flame } from "lucide-react";
 
 interface AdCarouselProps {
@@ -40,13 +39,14 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
   });
 
   // Separate boosted ads (boosted spas/ads) and regular ads
+  // Boosted/recommended spas are ALWAYS placed first with zero layout shift or swapping
   const boostedAdProfiles = adProfiles.filter(p => Boolean(p.isBoosted));
   const regularAdProfiles = adProfiles.filter(p => !p.isBoosted);
 
-  // If there are multiple boosted flyers, shuffle among top positions; regular shuffle below
+  // Deterministic order: Recommended spas ALWAYS lead first, followed by featured spas
   const orderedProfiles = [
-    ...shuffleList(boostedAdProfiles),
-    ...shuffleList(regularAdProfiles),
+    ...boostedAdProfiles,
+    ...regularAdProfiles,
   ];
 
   // Helper to format phone to WhatsApp international format (Uganda 256)
@@ -150,13 +150,10 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
             const isEven = idx % 2 === 0;
 
             return (
-              <motion.div
+              <div
                 key={`mobile-${item.id}-${idx}`}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="w-full"
+                className="w-full ad-card-fadein"
+                style={{ animationDelay: `${idx * 60}ms` }}
               >
                 <div className="group block relative w-full rounded-2xl overflow-hidden border border-pink-500/25 bg-gradient-to-br from-gray-950 via-gray-900 to-black hover:border-pink-500/60 shadow-[0_0_15px_-3px_rgba(236,72,153,0.15)] transition-all">
                   {/* Poster Banner - Original Uncropped Size */}
@@ -168,6 +165,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                     <img
                       src={item.image}
                       alt={item.name}
+                      loading={idx === 0 ? "eager" : "lazy"}
                       className="relative z-10 max-h-48 w-auto max-w-full rounded-xl object-contain shadow-2xl group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
                     {item.isBoosted ? (
@@ -223,7 +221,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

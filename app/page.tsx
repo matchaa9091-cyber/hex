@@ -1,7 +1,7 @@
 import HomePage from "@/screens/HomePage";
-import { fetchAllProfiles } from "@/data/allProfiles";
+import { fetchAllProfiles, getGlobalShuffleSeed } from "@/data/allProfiles";
+import { HOME_FAQS } from "@/data/homeFaqs";
 import type { Metadata } from "next";
-import { slugify } from "@/lib/utils";
 
 // Cache homepage for 60 seconds on Cloudflare edge
 export const revalidate = 60;
@@ -11,15 +11,15 @@ export const metadata: Metadata = {
   description:
     "Uganda Escorts & Kampala Escorts: Browse 100% verified Ugandan call girls in Kampala & countrywide. Genuine photos, verified direct WhatsApp & discreet hookups.",
   keywords:
-    "uganda escorts, kampala escorts, escorts, ugandan escorts, escorts uganda, ug escorts, escorts in kampala, escorts in uganda, escort, escorts kampala",
+    "uganda escorts, kampala escorts, escorts, ugandan escorts, escorts uganda, ug escorts, escorts in uganda, escorts in kampala, escort, escorts kampala",
   alternates: {
-    canonical: "https://www.hexescortsug.com",
+    canonical: "https://www.hexescortsug.com/",
   },
   openGraph: {
     title: "Uganda Escorts & Kampala Escorts | #1 Verified UG Call Girls",
     description:
       "Browse 100% verified Ugandan call girls and escorts in Kampala, Entebbe, Jinja & across Uganda. Real photos, direct WhatsApp & discreet hookups.",
-    url: "https://www.hexescortsug.com",
+    url: "https://www.hexescortsug.com/",
     siteName: "Hex Escorts Uganda",
     type: "website",
     locale: "en_UG",
@@ -35,35 +35,20 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
+  const seed = getGlobalShuffleSeed();
   const allStatic = await fetchAllProfiles(seed);
 
-  // Slim down initial SSR payload to strictly respect Cloudflare Worker CPU limits:
-  // 1. Spas (for featured ad banner carousel)
-  // 2. VIP pinned profiles (for the Elite VIP section)
-  // 3. First batch of ordinary profiles (16 items for instant first view)
-  const spas = allStatic.filter(p => (p.name || '').toLowerCase().includes('spa') || (p.adImages && p.adImages.length > 0));
-  const boostedProfiles = allStatic.filter(p => p.isBoosted);
-  const vipProfiles = allStatic.filter(p => p.isPinned && !p.isBoosted);
-  const ordinaryFirstBatch = allStatic.filter(p => !p.isPinned && !p.isBoosted).slice(0, 16);
-
-  const initialMap = new Map();
-  [...spas, ...boostedProfiles, ...vipProfiles, ...ordinaryFirstBatch].forEach(p => initialMap.set(p.id, p));
-  const initialProfiles = Array.from(initialMap.values());
-
-  // Generate ItemList schema for Google SERP rich snippet carousel
-  const itemListSchema = {
+  // Matches the visible homepage FAQ rendered from HOME_FAQS.
+  const faqSchema = {
     "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "Verified Uganda Escorts & Kampala Call Girls",
-    "description": "Directory of verified escorts and discreet call girls in Uganda and Kampala.",
-    "numberOfItems": allStatic.length,
-    "itemListElement": allStatic.slice(0, 15).map((p, idx) => ({
-      "@type": "ListItem",
-      "position": idx + 1,
-      "name": `${p.name} - Escort in ${p.location}`,
-      "url": `https://www.hexescortsug.com/profile/${slugify(p.name)}`,
-      "image": p.profileImage,
+    "@type": "FAQPage",
+    "mainEntity": HOME_FAQS.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
+      },
     })),
   };
 
@@ -71,9 +56,9 @@ export default async function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <HomePage initialProfiles={initialProfiles} shuffleSeed={seed} />
+      <HomePage initialProfiles={allStatic} shuffleSeed={seed} />
     </>
   );
 }

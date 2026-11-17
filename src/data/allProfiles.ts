@@ -3,6 +3,7 @@ import { mockProfiles } from "@/data/mockProfiles";
 import { staticProfiles } from "@/data/staticProfiles";
 import { slugify } from "@/lib/utils";
 import { matchProfilesByLocation } from '@/lib/locationMatcher';
+import { cache } from 'react';
 
 // Set this to true ONLY if you want to bypass Supabase entirely and use static data
 const FORCE_STATIC_DATA = false;
@@ -35,6 +36,15 @@ export function sortAndShuffleProfiles(profiles: ProfileType[], seed?: string): 
   const pinned = profiles.filter(p => p.isPinned && !p.isBoosted);
   const regular = profiles.filter(p => !p.isPinned && !p.isBoosted);
   return [...shuffleArray(boosted, rand), ...shuffleArray(pinned, rand), ...shuffleArray(regular, rand)];
+}
+
+/**
+ * Global 12-hour deterministic shuffle seed.
+ * Changes synchronously worldwide every 12 hours (1000 * 60 * 60 * 12 ms) so all visitors
+ * see fair rotation without SSR layout shift.
+ */
+export function getGlobalShuffleSeed(): string {
+  return Math.floor(Date.now() / (1000 * 60 * 60 * 12)).toString(36);
 }
 
 const R2_PUBLIC_BASE = "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
@@ -72,10 +82,12 @@ function transformUrl(url: string | null | undefined): string {
 }
 
 /**
- * Get active (non-archived) static profiles to use as offline fallback.
+ * Pre-filtered active (non-archived) static profiles for instant zero-CPU access.
  */
+const ACTIVE_STATIC_PROFILES = staticProfiles.filter(p => !p.isArchived);
+
 function getActiveStaticProfiles() {
-  return staticProfiles.filter(p => !p.isArchived);
+  return ACTIVE_STATIC_PROFILES;
 }
 
 function mapDbProfile(p: any): ProfileType {
@@ -111,6 +123,8 @@ function mapDbProfile(p: any): ProfileType {
     isAd: Boolean(p.is_ad || hasAdImgs),
     isVerified: Boolean(p.is_verified),
     adImages,
+    createdAt: p.created_at ?? undefined,
+    updatedAt: p.updated_at ?? undefined,
   };
 }
 
@@ -118,7 +132,7 @@ const ACCOUNT_ID = process.env.CLOUDFLARE_D1_ACCOUNT_ID || process.env.CLOUDFLAR
 const DB_ID = process.env.CLOUDFLARE_D1_DATABASE_ID || "9914bf44-9661-4a24-903f-d49c73d6b1fe";
 const D1_TOKEN = process.env.CLOUDFLARE_D1_TOKEN;
 
-async function fetchProfilesDirectFromD1(): Promise<ProfileType[] | null> {
+async function fetchProfilesDirectFromD1(fresh = false): Promise<ProfileType[] | null> {
   if (!D1_TOKEN) return null;
 
   try {
@@ -134,7 +148,11 @@ async function fetchProfilesDirectFromD1(): Promise<ProfileType[] | null> {
         params: [],
       }),
       signal: AbortSignal.timeout(2500),
-      next: { revalidate: 60 },
+      // The sitemap needs truly fresh data (it drives lastmod). Other server
+      // renders keep the tagged 1-hour cache, invalidated via revalidateTag.
+      ...(fresh
+        ? { cache: "no-store" as const }
+        : { next: { tags: ["profiles"], revalidate: 3600 } }),
     });
     const data = await res.json();
     if (data.success && data.result?.[0]?.results) {
@@ -174,13 +192,19 @@ async function fetchSingleProfileDirectFromD1(idOrSlug: string): Promise<Profile
   return null;
 }
 
-export async function fetchAllProfiles(seed?: string): Promise<ProfileType[]> {
+export async function fetchAllProfiles(seed?: string, fresh = false): Promise<ProfileType[]> {
   const fallback = getActiveStaticProfiles();
 
-  // On the server, SSR is 100% synchronous and instant (0ms external network latency).
-  // This guarantees sub-50ms TTFB, prevents Cloudflare Worker CPU timeouts, and eliminates
-  // all hanging/freezing issues when visitors click search results from Google.
+  // On the server, load from D1 with Next.js tagged cache (revalidated instantly on DB writes)
   if (typeof window === "undefined") {
+    try {
+      const d1Profiles = await fetchProfilesDirectFromD1(fresh);
+      if (d1Profiles && d1Profiles.length > 0) {
+        return seed ? sortAndShuffleProfiles(d1Profiles, seed) : d1Profiles;
+      }
+    } catch (e) {
+      console.warn("Server D1 fetch fallback to static:", e);
+    }
     return seed ? sortAndShuffleProfiles(fallback, seed) : fallback;
   }
 
@@ -211,35 +235,52 @@ export async function fetchAllProfiles(seed?: string): Promise<ProfileType[]> {
   return seed ? sortAndShuffleProfiles(fallback, seed) : fallback;
 }
 
-export async function fetchProfileById(id: string): Promise<ProfileType | null> {
+export const fetchProfileById = cache(async (id: string): Promise<ProfileType | null> => {
   const fallbackProfiles = getActiveStaticProfiles();
   const normalizedTarget = decodeURIComponent(id).toLowerCase().trim();
   const targetSlug = slugify(normalizedTarget);
 
-  // 1. Check in-memory static profiles FIRST (instant 0ms resolution for 99.9% of visits!)
-  const staticMatch = fallbackProfiles.find(p => 
-    String(p.id) === id || 
-    slugify(p.name) === id || 
-    (p.name || '').toLowerCase().trim() === normalizedTarget ||
-    slugify(p.name) === targetSlug
-  );
-  if (staticMatch) return staticMatch;
+  // 1. Check in-memory static profiles FIRST with early-exit comparisons (0.001ms)
+  for (let i = 0; i < fallbackProfiles.length; i++) {
+    const p = fallbackProfiles[i];
+    if (String(p.id) === id) return p;
+    const nameLower = (p.name || '').toLowerCase().trim();
+    if (nameLower === normalizedTarget || nameLower === id) return p;
+    if (slugify(nameLower) === targetSlug) return p;
+  }
 
   // 2. Only if NOT found in staticProfiles (e.g. brand-new profile created in D1),
-  // query D1 directly with a strict 2-second timeout so newly registered profiles work immediately
+  // query D1 directly — single query covering both id and slug to avoid double round-trips
+  if (!D1_TOKEN) return null;
   try {
-    const directMatch = await fetchSingleProfileDirectFromD1(id);
-    if (directMatch) return directMatch;
-    if (targetSlug !== id) {
-      const slugMatch = await fetchSingleProfileDirectFromD1(targetSlug);
-      if (slugMatch) return slugMatch;
+    const slugVariant = targetSlug !== id ? targetSlug : null;
+    const D1_URI = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/d1/database/${DB_ID}/query`;
+    const res = await fetch(D1_URI, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${D1_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sql: slugVariant
+          ? "SELECT * FROM profiles WHERE id = ? OR lower(name) = ? OR lower(replace(name,' ','-')) = ? OR lower(replace(name,' ','-')) = ? LIMIT 1;"
+          : "SELECT * FROM profiles WHERE id = ? OR lower(name) = ? OR lower(replace(name,' ','-')) = ? LIMIT 1;",
+        params: slugVariant
+          ? [id, normalizedTarget, id, slugVariant]
+          : [id, normalizedTarget, id],
+      }),
+      signal: AbortSignal.timeout(2000),
+    });
+    const data = await res.json();
+    if (data.success && data.result?.[0]?.results?.[0]) {
+      return mapDbProfile(data.result[0].results[0]);
     }
   } catch (err) {
     console.error("Direct D1 query in fetchProfileById failed:", err);
   }
 
   return null;
-}
+});
 
 // Smart & Fuzzy Fetcher for Location Pages using Cloudflare D1
 export async function fetchProfilesByLocation(city: string, suburb?: string) {

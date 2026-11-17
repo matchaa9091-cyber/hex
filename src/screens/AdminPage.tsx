@@ -488,7 +488,7 @@ const AdminPage = () => {
         toast({ title: "Profile saved to Cloudflare D1!" });
         setEditingProfile(null);
         await fetchProfiles();
-        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles-raw"] });
       }
     } catch (err: any) {
       toast({ title: "Save failed", description: err?.message || "Server error", variant: "destructive" });
@@ -506,7 +506,7 @@ const AdminPage = () => {
       if (res.ok) {
         toast({ title: !currentVip ? "Promoted to VIP!" : "Removed from VIP" });
         await fetchProfiles();
-        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles-raw"] });
       } else {
         toast({ title: "Update failed", variant: "destructive" });
       }
@@ -525,7 +525,7 @@ const AdminPage = () => {
       if (res.ok) {
         toast({ title: !currentArchived ? "Profile hidden from public" : "Profile restored to public" });
         await fetchProfiles();
-        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles-raw"] });
       } else {
         toast({ title: "Update failed", variant: "destructive" });
       }
@@ -544,7 +544,7 @@ const AdminPage = () => {
       if (res.ok) {
         toast({ title: !currentVerified ? "Profile Verified!" : "Verification Removed" });
         await fetchProfiles();
-        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles-raw"] });
       } else {
         toast({ title: "Update failed", variant: "destructive" });
       }
@@ -563,7 +563,7 @@ const AdminPage = () => {
       if (res.ok) {
         toast({ title: !currentAd ? "Promoted to Ads!" : "Removed from Ads" });
         await fetchProfiles();
-        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles-raw"] });
       } else {
         toast({ title: "Update failed", variant: "destructive" });
       }
@@ -588,7 +588,7 @@ const AdminPage = () => {
       if (res.ok) {
         toast({ title: nextVal ? "🔥 Boosted to Top Recommended!" : "Removed from Top Recommended" });
         await fetchProfiles();
-        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles-raw"] });
       } else {
         // Revert on failure
         setProfiles((prev) =>
@@ -615,7 +615,7 @@ const AdminPage = () => {
       if (res.ok) {
         toast({ title: "Profile deleted from Cloudflare D1" });
         await fetchProfiles();
-        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles-raw"] });
       } else {
         toast({ title: "Delete failed", variant: "destructive" });
       }

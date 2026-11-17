@@ -8,9 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cloudflare-build": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion",
-    "deploy": "npm run cloudflare-build && wrangler deploy .open-next/worker.js --no-autoconfig",
-    "preview": "npm run cloudflare-build && wrangler dev"
+    "cloudflare-build": "node scripts/generate-build-id.mjs && opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion && node scripts/strip-build-secrets.mjs",
+    "prewarm": "node scripts/prewarm.mjs",
+    "deploy": "npm run cloudflare-build && wrangler deploy worker-entry.js --no-autoconfig && node scripts/prewarm.mjs",
+    "preview": "npm run cloudflare-build && wrangler dev worker-entry.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

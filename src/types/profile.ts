@@ -33,4 +33,6 @@ export interface ProfileType {
   isVerified?: boolean;
   adImages?: string[];
   passcode?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

@@ -4,7 +4,7 @@ import { executeD1Query } from "@/lib/d1";
 import { parseMobileMoneySms, normalizeUgandanPhone } from "@/lib/httpsms/parser";
 import { activateApplication } from "@/lib/httpsms/activate";
 
-const HTTPSMS_API_KEY = process.env.HTTPSMS_API_KEY || "uk_ZQL-ts3m-G47lIxW3s7hpdu6H3Xt-rmm28o-9_TqFo0dbxOrAW6MHmLASMifE8S6";
+const HTTPSMS_API_KEY = process.env.HTTPSMS_API_KEY || "";
 const HTTPSMS_PHONE_NUMBER = process.env.HTTPSMS_PHONE_NUMBER || "+256765040502";
 
 export async function POST(req: Request) {

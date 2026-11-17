@@ -1,5 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { slugify } from "@/lib/utils";
 
 const ACCOUNT_ID = process.env.CLOUDFLARE_D1_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID || "b07234f65853d0f9f8e6fa1896cf06db";
 const DB_ID = process.env.CLOUDFLARE_D1_DATABASE_ID || "9914bf44-9661-4a24-903f-d49c73d6b1fe";
@@ -81,11 +83,21 @@ export async function GET(req: Request) {
       isAd: Boolean(p.is_ad || (p.ad_images && p.ad_images !== "[]" && p.ad_images !== "" && p.ad_images !== "null")),
       isVerified: Boolean(p.is_verified),
       adImages: resolveImageArray(p.ad_images),
+      createdAt: p.created_at ?? undefined,
+      updatedAt: p.updated_at ?? undefined,
       ...(isAdmin ? { passcode: p.passcode || "" } : {}),
     }));
     return NextResponse.json(dbProfiles, {
       headers: {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Cache-Control": isAdmin
+          ? "no-store, no-cache, must-revalidate, proxy-revalidate"
+          : "public, max-age=60, s-maxage=180, stale-while-revalidate=86400",
+        "Cloudflare-CDN-Cache-Control": isAdmin
+          ? "no-store"
+          : "public, max-age=180, stale-while-revalidate=86400",
+        "CDN-Cache-Control": isAdmin
+          ? "no-store"
+          : "public, max-age=180, stale-while-revalidate=86400",
       }
     });
   } catch (err: any) {
@@ -103,8 +115,8 @@ export async function POST(req: Request) {
         id, name, age, height, body_type, complexion, location, rating,
         profile_image, images, videos, short_bio, description, phone, whatsapp,
         email, instagram, services, is_pinned, is_archived, is_vip, is_premium,
-        is_ad, is_verified, ad_images, is_boosted, passcode, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        is_ad, is_verified, ad_images, is_boosted, passcode, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         age = excluded.age,
@@ -131,7 +143,8 @@ export async function POST(req: Request) {
         is_verified = excluded.is_verified,
         ad_images = excluded.ad_images,
         is_boosted = excluded.is_boosted,
-        passcode = COALESCE(excluded.passcode, profiles.passcode);
+        passcode = COALESCE(excluded.passcode, profiles.passcode),
+        updated_at = datetime('now');
     `;
 
     const params = [
@@ -165,7 +178,27 @@ export async function POST(req: Request) {
     ];
 
     await executeD1Query(sql, params);
-    return NextResponse.json({ success: true, id });
+
+    // Instantly purge Next.js internal server data cache & page routes
+    try {
+      revalidateTag("profiles");
+      revalidatePath("/", "layout");
+      revalidatePath("/api/profiles");
+      revalidatePath("/vip");
+      revalidatePath("/sitemap.xml");
+      const profileSlug = slugify(body.name);
+      if (profileSlug) revalidatePath(`/profile/${profileSlug}`);
+    } catch (revalErr) {
+      console.warn("Next.js cache revalidation warning:", revalErr);
+    }
+
+    return NextResponse.json({
+      success: true,
+      id,
+      name: body.name || null,
+      location: body.location || body.location_name || null,
+      isVip: Boolean(body.is_vip ?? body.isVip),
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err?.message || "Failed to save profile to D1" }, { status: 500 });
   }
@@ -198,18 +231,54 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Invalid toggle field" }, { status: 400 });
     }
 
+    // Needed so Next.js and the edge worker can purge the real slug/pages,
+    // not just the opaque profile id.
+    let profileName = "";
+    let profileLocation = "";
+    try {
+      const rows = await executeD1Query(
+        "SELECT name, location FROM profiles WHERE id = ? LIMIT 1;",
+        [id]
+      );
+      profileName = rows?.[0]?.name || "";
+      profileLocation = rows?.[0]?.location || "";
+    } catch {}
+
+    const revalidateProfilePages = () => {
+      try {
+        revalidateTag("profiles");
+        revalidatePath("/", "layout");
+        revalidatePath("/api/profiles");
+        revalidatePath("/vip");
+        revalidatePath("/sitemap.xml");
+        const profileSlug = slugify(profileName);
+        if (profileSlug) revalidatePath(`/profile/${profileSlug}`);
+        const locationSlug = slugify(profileLocation);
+        if (locationSlug) revalidatePath(`/escorts-in/${locationSlug}`);
+      } catch {}
+    };
+
+    const responseBody = {
+      success: true,
+      name: profileName || null,
+      location: profileLocation || null,
+      isVip: dbField === "is_vip" || dbField === "is_pinned" ? Boolean(value) : undefined,
+    };
+
     if (dbField === "is_pinned" || dbField === "is_vip") {
       const bit = value ? 1 : 0;
-      const sql = `UPDATE profiles SET is_pinned = ?, is_vip = ?, is_premium = ? WHERE id = ?;`;
+      const sql = `UPDATE profiles SET is_pinned = ?, is_vip = ?, is_premium = ?, updated_at = datetime('now') WHERE id = ?;`;
       await executeD1Query(sql, [bit, bit, bit, id]);
-      return NextResponse.json({ success: true });
+      revalidateProfilePages();
+      return NextResponse.json(responseBody);
     }
 
-    const sql = `UPDATE profiles SET ${dbField} = ? WHERE id = ?;`;
+    const sql = `UPDATE profiles SET ${dbField} = ?, updated_at = datetime('now') WHERE id = ?;`;
     const params = [value ? 1 : 0, id];
 
     await executeD1Query(sql, params);
-    return NextResponse.json({ success: true });
+    revalidateProfilePages();
+    return NextResponse.json(responseBody);
   } catch (err: any) {
     return NextResponse.json({ error: err?.message || "Failed to update profile" }, { status: 500 });
   }
@@ -222,9 +291,35 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Missing profile ID" }, { status: 400 });
     }
 
+    let profileName = "";
+    let profileLocation = "";
+    try {
+      const rows = await executeD1Query(
+        "SELECT name, location FROM profiles WHERE id = ? LIMIT 1;",
+        [id]
+      );
+      profileName = rows?.[0]?.name || "";
+      profileLocation = rows?.[0]?.location || "";
+    } catch {}
+
     const sql = `DELETE FROM profiles WHERE id = ?;`;
     await executeD1Query(sql, [id]);
-    return NextResponse.json({ success: true });
+    try {
+      revalidateTag("profiles");
+      revalidatePath("/", "layout");
+      revalidatePath("/api/profiles");
+      revalidatePath("/vip");
+      revalidatePath("/sitemap.xml");
+      const profileSlug = slugify(profileName);
+      if (profileSlug) revalidatePath(`/profile/${profileSlug}`);
+      const locationSlug = slugify(profileLocation);
+      if (locationSlug) revalidatePath(`/escorts-in/${locationSlug}`);
+    } catch {}
+    return NextResponse.json({
+      success: true,
+      name: profileName || null,
+      location: profileLocation || null,
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err?.message || "Failed to delete profile" }, { status: 500 });
   }

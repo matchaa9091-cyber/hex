@@ -21,13 +21,15 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
         "@type": "ListItem",
         "position": 1,
         "name": "Uganda Escorts",
-        "item": "https://www.hexescortsug.com"
+        "item": "https://www.hexescortsug.com/"
       },
       ...items.map((item, index) => ({
         "@type": "ListItem",
         "position": index + 2,
         "name": item.label,
-        "item": `https://www.hexescortsug.com${item.href}`
+        ...(item.current || item.href === "#"
+          ? {}
+          : { item: `https://www.hexescortsug.com${item.href.startsWith("/") ? item.href : `/${item.href}`}` }),
       }))
     ]
   };

@@ -25,7 +25,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${profile.name} - Verified Sexy Escort in ${profile.location} | Hex Escorts UG`,
+    title: `${profile.name} | Verified Escort in ${profile.location}`,
     description: `Book ${profile.name}, a verified companion in ${profile.location}, Uganda. View pictures and services on Hex Escorts UG.`,
     keywords: `${profile.name}, escorts ${profile.location}, sexy girls ${profile.location}, hot girls Uganda, hex escorts, companions Uganda`,
     openGraph: {
@@ -55,37 +55,27 @@ export default async function Page({ params }: Props) {
   }
 
   const profileSlug = profile ? slugify(profile.name) : slugify(id);
-  const rawId = String(profile?.id || "default");
-  const parsedHex = parseInt(rawId.substring(0, 8), 16);
-  const reviewCount = !isNaN(parsedHex) ? (parsedHex % 100) + 45 : 58;
-
+  const canonicalUrl = `https://www.hexescortsug.com/profile/${profileSlug}`;
   const jsonLd = profile ? {
     "@context": "https://schema.org",
-    "@type": "Product",
-    "name": `${profile.name} - Elite Escort in ${profile.location}`,
-    "image": profile.profileImage,
-    "description": profile.description || profile.shortBio || `Book ${profile.name}, a verified sexy companion in ${profile.location}.`,
-    "brand": {
-      "@type": "Brand",
-      "name": "Hex Escorts UG"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": profile.rating?.toString() || "4.8",
-      "reviewCount": reviewCount.toString(),
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "offers": {
-      "@type": "Offer",
-      "url": `https://www.hexescortsug.com/profile/${profileSlug}`,
-      "priceCurrency": "UGX",
-      "price": "100000",
-      "availability": "https://schema.org/InStock",
-      "seller": {
-        "@type": "Organization",
-        "name": "Hex Escorts UG"
+    "@type": "ProfilePage",
+    "url": canonicalUrl,
+    "dateModified": profile.updatedAt || profile.createdAt || undefined,
+    "mainEntity": {
+      "@type": "Person",
+      "name": profile.name,
+      "url": canonicalUrl,
+      "image": profile.profileImage,
+      "description": profile.description || profile.shortBio || `${profile.name} - verified companion in ${profile.location}, Uganda.`,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": profile.location,
+        "addressCountry": "UG"
       }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": canonicalUrl
     }
   } : null;
 

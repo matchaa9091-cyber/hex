@@ -33,6 +33,7 @@ const LocationHub = () => {
           <Link 
             key={suburb} 
             href={`/escorts-in/kampala/${suburb}`}
+            prefetch={false}
             className="text-gray-400 hover:text-pink-400 transition-colors text-[11px] capitalize"
           >
             {suburb.replace(/-/g, ' ')} Escorts
@@ -44,6 +45,7 @@ const LocationHub = () => {
           <Link 
             key={city} 
             href={`/escorts-in/${city}`}
+            prefetch={false}
             className="text-gray-400 hover:text-pink-400 transition-colors text-[11px] capitalize font-medium"
           >
             {city.replace(/-/g, ' ')} Escorts
@@ -52,11 +54,18 @@ const LocationHub = () => {
       </div>
       
       <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 border-t border-gray-900/30 pt-6">
-        <Link href="/thick-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Thick Escorts Kampala</Link>
-        <Link href="/slim-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Slim Escorts Kampala</Link>
-        <Link href="/curvy-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Curvy Escorts Kampala</Link>
-        <Link href="/vip-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">VIP Escorts Kampala</Link>
-        <Link href="/massage-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Massage Kampala</Link>
+        <Link prefetch={false} href="/vip" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">VIP Escorts Uganda</Link>
+        <Link prefetch={false} href="/category/thick" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Thick Escorts Uganda</Link>
+        <Link prefetch={false} href="/category/slim" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Slim Escorts Uganda</Link>
+        <Link prefetch={false} href="/category/curvy" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Curvy Escorts Uganda</Link>
+        <Link prefetch={false} href="/category/massage" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Massage Escorts Uganda</Link>
+      </div>
+      <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 border-t border-gray-900/30 pt-4">
+        <Link prefetch={false} href="/thick-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Thick Escorts Kampala</Link>
+        <Link prefetch={false} href="/slim-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Slim Escorts Kampala</Link>
+        <Link prefetch={false} href="/curvy-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Curvy Escorts Kampala</Link>
+        <Link prefetch={false} href="/vip-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">VIP Escorts Kampala</Link>
+        <Link prefetch={false} href="/massage-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Massage Kampala</Link>
       </div>
     </div>
   );

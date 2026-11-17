@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { executeD1Query } from "@/lib/d1";
+import { slugify } from "@/lib/utils";
 
 export async function POST(req: Request) {
   try {
@@ -55,7 +57,8 @@ export async function POST(req: Request) {
         phone = COALESCE(?, phone),
         whatsapp = COALESCE(?, whatsapp),
         services = COALESCE(?, services),
-        passcode = ?
+        passcode = ?,
+        updated_at = datetime('now')
       WHERE id = ?;
     `;
 
@@ -80,8 +83,22 @@ export async function POST(req: Request) {
 
     await executeD1Query(sql, params);
 
+    try {
+      revalidateTag("profiles");
+      revalidatePath("/", "layout");
+      revalidatePath("/api/profiles");
+      revalidatePath("/sitemap.xml");
+      const profileSlug = slugify(updates.name);
+      if (profileSlug) revalidatePath(`/profile/${profileSlug}`);
+      const locationSlug = slugify(updates.location);
+      if (locationSlug) revalidatePath(`/escorts-in/${locationSlug}`);
+    } catch {}
+
     return NextResponse.json({
       success: true,
+      name: updates.name || null,
+      location: updates.location || null,
+      id: profileId,
       newPasscode,
       message: "Profile updated successfully!",
     });

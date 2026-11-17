@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
           
           <div className="flex flex-col items-center md:items-start space-y-4">
-            <Link href="/" title="Uganda Escorts - Hex Escorts">
+            <Link href="/" title="Uganda Escorts - Hex Escorts Uganda">
               <Logo size={40} textSize="2xl" />
             </Link>
             <p className="text-gray-400 text-sm max-w-xs text-center md:text-left">
@@ -21,11 +21,11 @@ const Footer = () => {
           <div className="flex flex-col items-center md:items-start space-y-4">
             <h4 className="font-bold text-lg text-primary">Top Locations</h4>
             <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-gray-400 text-center md:text-left">
-              <Link href="/escorts-in/kampala" className="hover:text-pink-500 transition-colors">Kampala</Link>
-              <Link href="/escorts-in/entebbe" className="hover:text-pink-500 transition-colors">Entebbe</Link>
-              <Link href="/escorts-in/jinja" className="hover:text-pink-500 transition-colors">Jinja</Link>
-              <Link href="/escorts-in/mbarara" className="hover:text-pink-500 transition-colors">Mbarara</Link>
-              <Link href="/escorts-in/gulu" className="hover:text-pink-500 transition-colors">Gulu</Link>
+              <Link prefetch={false} href="/escorts-in/kampala" className="hover:text-pink-500 transition-colors">Kampala</Link>
+              <Link prefetch={false} href="/escorts-in/entebbe" className="hover:text-pink-500 transition-colors">Entebbe</Link>
+              <Link prefetch={false} href="/escorts-in/jinja" className="hover:text-pink-500 transition-colors">Jinja</Link>
+              <Link prefetch={false} href="/escorts-in/mbarara" className="hover:text-pink-500 transition-colors">Mbarara</Link>
+              <Link prefetch={false} href="/escorts-in/gulu" className="hover:text-pink-500 transition-colors">Gulu</Link>
             </div>
           </div>
 
@@ -62,7 +62,7 @@ const Footer = () => {
               </a>
             </div>
             <p className="text-gray-500 text-xs mt-4">
-              © {new Date().getFullYear()} Hex Escorts UG. All Rights Reserved.
+              © {new Date().getFullYear()} Hex Escorts Uganda. All Rights Reserved.
             </p>
           </div>
           

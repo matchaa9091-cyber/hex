@@ -34,7 +34,6 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
 
   useEffect(() => {
     setIsMounted(true);
-    setImgSrc(getMediaUrl(profile.profileImage));
   }, [profile.profileImage]);
 
   const handleImageError = () => {

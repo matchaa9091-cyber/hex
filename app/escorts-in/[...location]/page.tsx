@@ -1,5 +1,8 @@
 import LocationPageClient from "@/screens/LocationPage";
-import { fetchAllProfiles } from "@/data/allProfiles";
+import { fetchAllProfiles, getGlobalShuffleSeed } from "@/data/allProfiles";
+import { getCitySeo } from "@/data/locationSeo";
+import { buildItemListSchema, getListingProfiles } from "@/lib/listingSchema";
+import { isKnownLocation } from "@/lib/seoIndexing";
 import type { Metadata } from 'next';
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -19,21 +22,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locationName = rawLocation.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   const routePath = params.location.join('/');
   
+  const citySeo = suburb ? null : getCitySeo(city);
+
+  const pageTitle = citySeo?.title || `${locationName} Escorts | Verified Call Girls & Companions`;
+  const pageDesc =
+    citySeo?.description ||
+    `Verified ${locationName} escorts and call girls with real photos, direct WhatsApp contacts, and discreet companionship in ${locationName}, Uganda.`;
+
   return {
-    title: `${locationName} Escorts | #1 Verified Escorts in ${locationName} & Call Girls`,
-    description: `Find top verified ${locationName} escorts & call girls. 100% genuine photos, direct WhatsApp numbers, discreet VIP hookups & independent companions in ${locationName}.`,
+    title: pageTitle,
+    description: pageDesc,
     keywords: `escorts in ${locationName}, ${locationName} escorts, call girls ${locationName}, hookups ${locationName}, ${locationName} escort girls`,
     openGraph: {
-      title: `Top Escorts & Call Girls in ${locationName}`,
-      description: `Browse verified sexy escorts and hot girls available in ${locationName}, Uganda. 100% Real & Verified profiles.`,
+      title: pageTitle,
+      description: pageDesc,
       url: `https://www.hexescortsug.com/escorts-in/${routePath}`,
       siteName: 'Hex Escorts Uganda',
+      type: 'website',
     },
     alternates: {
       canonical: `https://www.hexescortsug.com/escorts-in/${routePath}`,
     },
     robots: {
-      index: true,
+      index: isKnownLocation(city, suburb),
       follow: true,
     }
   }
@@ -46,47 +57,58 @@ export default async function EscortsInLocationPage({ params }: Props) {
   const rawLocation = suburb ? `${suburb}, ${city}` : city;
   const locationName = rawLocation.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 
-  // Seed for deterministic shuffling (1-hour block)
-  const seed = Math.floor(Date.now() / (1000 * 3600)).toString(36);
+  // Seed for deterministic shuffling (5-minute global block)
+  const seed = getGlobalShuffleSeed();
   const rawProfiles = await fetchAllProfiles(seed);
 
-  // Generate FAQ Schema for Google Rich Snippets
+  const citySeo = suburb ? null : getCitySeo(city);
+  const faqItems = citySeo?.faqs || [
+    {
+      question: `Are the escorts in ${locationName} verified?`,
+      answer: `Yes, all escorts listed on Hex Escorts UG for ${locationName} go through a strict verification process to ensure authenticity, safety, and a premium experience.`,
+    },
+    {
+      question: `How much do escorts cost in ${locationName}?`,
+      answer: `Prices vary depending on the companion, duration, and specific services. You can view individual rates on each verified profile for escorts available in ${locationName}.`,
+    },
+    {
+      question: `Can I book an outcall to my hotel in ${locationName}?`,
+      answer: `Absolutely. Many of our high-class call girls in ${locationName} offer discreet outcall services to premium hotels, apartments, and private residences.`,
+    },
+  ];
+
+  // Generate FAQ Schema for Google Rich Snippets. The visible FAQ in
+  // LocationPage uses the same shared city SEO data.
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": `Are the escorts in ${locationName} verified?`,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `Yes, all escorts listed on Hex Escorts UG for ${locationName} go through a strict verification process to ensure authenticity, safety, and a premium experience.`
-        }
+    "mainEntity": faqItems.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
       },
-      {
-        "@type": "Question",
-        "name": `How much do escorts cost in ${locationName}?`,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `Prices vary depending on the companion, duration, and specific services. You can view individual rates on each verified profile for escorts available in ${locationName}.`
-        }
-      },
-      {
-        "@type": "Question",
-        "name": `Can I book an outcall to my hotel in ${locationName}?`,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `Absolutely. Many of our high-class call girls in ${locationName} offer discreet outcall services to premium hotels, apartments, and private residences.`
-        }
-      }
-    ]
+    })),
   };
 
+  const cityLabel = city.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   const breadcrumbItems = [
     { label: "Escorts in Uganda", href: "/escorts-in" },
-    ...(city ? [{ label: city.charAt(0).toUpperCase() + city.slice(1), href: `/escorts-in/${city}` }] : []),
-    ...(suburb ? [{ label: suburb.charAt(0).toUpperCase() + suburb.slice(1), href: `/escorts-in/${city}/${suburb.replace(/\s+/g, '-')}`, current: true }] : (city ? [{ label: "All Areas", href: "#", current: true }] : []))
+    ...(suburb
+      ? [
+          { label: cityLabel, href: `/escorts-in/${params.location[0]}` },
+          { label: suburb.charAt(0).toUpperCase() + suburb.slice(1), href: `/escorts-in/${params.location.join('/')}`, current: true },
+        ]
+      : city
+        ? [{ label: cityLabel, href: `/escorts-in/${params.location.join('/')}`, current: true }]
+        : []),
   ];
+
+  const itemListSchema = buildItemListSchema(
+    getListingProfiles(rawProfiles, city, suburb || undefined),
+    `${locationName} Escorts`
+  );
 
   return (
     <main className="min-h-screen bg-black pt-4 pb-8">
@@ -96,6 +118,12 @@ export default async function EscortsInLocationPage({ params }: Props) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
+        {itemListSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+          />
+        )}
         <LocationPageClient 
           cityParam={city} 
           suburbParam={suburb || undefined}

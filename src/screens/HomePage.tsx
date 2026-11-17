@@ -11,8 +11,9 @@ import { AdCarousel } from "@/components/profiles/AdCarousel";
 import { NudeTrendsAdBanner } from "@/components/ads/NudeTrendsAdBanner";
 import { Crown, ChevronDown, MapPin, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { HOME_FAQS } from "@/data/homeFaqs";
 
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 10;
 const cities = [
   { name: "Kampala", path: "/escorts-in/kampala" },
   { name: "Entebbe", path: "/escorts-in/entebbe" },
@@ -57,7 +58,8 @@ interface HomePageProps {
 const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [showOtherEscorts, setShowOtherEscorts] = useState(false);
+  const [vipVisibleCount, setVipVisibleCount] = useState(10);
+  const [showOrdinary, setShowOrdinary] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -73,11 +75,14 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
   const vipProfiles = allProfiles.filter(p => p.isPinned && !p.isBoosted);
   const ordinaryProfiles = allProfiles.filter(p => !p.isPinned && !p.isBoosted);
   
+  const visibleVip = vipProfiles.slice(0, vipVisibleCount);
+  const hasMoreVip = vipVisibleCount < vipProfiles.length;
+
   const visibleOrdinary = ordinaryProfiles.slice(0, visibleCount);
   const hasMore = visibleCount < ordinaryProfiles.length;
 
   return (
-    <div className="pt-20 lg:pt-6 min-h-screen max-w-[100vw] overflow-x-hidden">
+    <div className="pt-[88px] sm:pt-[98px] lg:pt-6 min-h-screen max-w-[100vw] overflow-x-hidden">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4">
         {/* SEO Header */}
         <div className="mb-6 sm:mb-8">
@@ -106,7 +111,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
 
           {/* Subtitle with High-Contrast Highlights */}
           <p className="text-xs sm:text-sm text-gray-300/90 mb-5 max-w-3xl leading-relaxed">
-            Welcome to <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#fff8f0]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#ffd700]">UG</span></strong>, Uganda&apos;s leading platform for verified <strong className="text-pink-300 font-medium">Uganda escorts</strong>, <strong className="text-pink-300 font-medium">Kampala escorts</strong>, and discreet companions. Chat directly on WhatsApp with authentic independent models in Kampala, Entebbe, Jinja, and across the country.
+            Welcome to <strong className="font-extrabold inline-flex items-center gap-1"><span className="text-[#fff8f0]">Hex</span><span className="bg-gradient-to-r from-[#ff2079] via-[#ff6036] to-[#ff9800] bg-clip-text text-transparent">Escorts</span><span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[#2a081a] border border-[#9b1b58] text-[#ffd700]">UG</span></strong>, the leading platform for verified Ugandan call girls and discreet VIP companions. Chat directly on WhatsApp with authentic independent models in Kampala, Entebbe, Jinja, and across the country.
           </p>
           
           {/* Top Sliding Section */}
@@ -120,6 +125,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
               <Link
                 key={c.name}
                 href={c.path}
+                prefetch={false}
                 className="text-[10px] sm:text-[11px] px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold transition-all duration-300 active:scale-95 text-center break-words max-w-full bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 text-white shadow-[0_2px_12px_rgba(236,72,153,0.35)] hover:shadow-[0_2px_18px_rgba(236,72,153,0.5)] hover:-translate-y-0.5"
               >
                 {c.name}
@@ -136,6 +142,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
               <Link
                 key={sub.name}
                 href={sub.path}
+                prefetch={false}
                 className="text-[9px] sm:text-[10px] bg-black/60 border border-gray-800/80 text-gray-300 hover:text-pink-300 hover:border-pink-500/40 px-2.5 py-1 rounded-full transition-all"
               >
                 {sub.name}
@@ -154,7 +161,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
                 <motion.h2 
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  className="text-2xl sm:text-3xl lg:text-5xl font-black italic uppercase tracking-tighter bg-gradient-to-r from-red-500 via-pink-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(255,20,147,0.5)] animate-pulse flex items-center gap-3"
+                  className="text-2xl sm:text-3xl lg:text-5xl font-black italic uppercase tracking-tighter bg-gradient-to-r from-red-500 via-pink-400 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(255,20,147,0.5)] flex items-center gap-3"
                 >
                   {/* Show Emoji on Mobile, Hide on Desktop */}
                   <span className="lg:hidden">🔥</span>
@@ -179,7 +186,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
                 <motion.h2 
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  className="text-2xl sm:text-3xl lg:text-5xl font-black italic uppercase tracking-tighter bg-gradient-to-r from-yellow-400 via-white to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(255,215,0,0.4)] animate-pulse flex items-center gap-3"
+                  className="text-2xl sm:text-3xl lg:text-5xl font-black italic uppercase tracking-tighter bg-gradient-to-r from-yellow-400 via-white to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(255,215,0,0.4)] flex items-center gap-3"
                 >
                   {/* Show Emoji on Mobile, Hide on Desktop */}
                   <span className="lg:hidden">👑</span>
@@ -190,50 +197,53 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
                 <div className="h-1 w-32 bg-gradient-to-r from-yellow-500 to-transparent mt-1" />
               </div>
               <ProfileGrid
-                profiles={vipProfiles}
-                featuredIds={vipProfiles.map(p => p.id)}
+                profiles={visibleVip}
+                featuredIds={visibleVip.map(p => p.id)}
                 loading={isInitialLoading}
               />
+              {!isInitialLoading && hasMoreVip && (
+                <div className="flex justify-center pt-2 pb-4">
+                  <Button
+                    onClick={() => setVipVisibleCount((c) => c + 10)}
+                    className="bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-700 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold shadow-[0_0_18px_4px_rgba(234,179,8,0.4)] transition-all duration-300"
+                  >
+                    Load More VIP Escorts ({vipProfiles.length - visibleVip.length} remaining)
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 
+          {/* Ad Banner right below VIP Section / Load More VIP button and before Ordinary Escorts */}
+          <div className="my-8">
+            <NudeTrendsAdBanner />
+          </div>
+
           {/* OTHER SECTION */}
           <div className="space-y-6">
-            <div className="flex flex-col items-center sm:items-start">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white/90 tracking-tight">
-                Other Escorts
-              </h2>
-              <div className="h-0.5 w-24 bg-gray-700 mt-1" />
-            </div>
-
-            {!showOtherEscorts ? (
-              <div className="space-y-6">
-                <div className="flex flex-col items-center justify-center py-10 px-4 bg-gradient-to-b from-gray-900/50 via-gray-900/30 to-black/60 rounded-2xl border border-gray-800 text-center space-y-4 shadow-xl">
-                  <p className="text-xs sm:text-sm text-gray-400 max-w-md">
-                    Looking for more verified profiles? Tap below to explore standard escort listings.
-                  </p>
-                  <Button
-                    onClick={() => setShowOtherEscorts(true)}
-                    size="lg"
-                    className="bg-gradient-to-r from-[#db0061] via-[#ff1493] to-[#db0061] hover:from-[#ff1493] hover:to-[#db0061] text-white font-black text-sm sm:text-base px-8 py-6 rounded-full shadow-[0_4px_20px_rgba(255,20,147,0.4)] hover:shadow-[0_4px_30px_rgba(255,20,147,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2.5 cursor-pointer uppercase tracking-wider"
-                  >
-                    <span>Other Escorts</span>
-                    <ChevronDown className="w-5 h-5 animate-bounce" />
-                  </Button>
-                </div>
-
-                {/* Nude Trends Live Cams & Leaks Banner */}
-                <NudeTrendsAdBanner />
+            {!showOrdinary ? (
+              <div className="flex justify-center py-4">
+                <Button
+                  onClick={() => setShowOrdinary(true)}
+                  className="bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 hover:from-pink-500 hover:to-rose-500 text-white font-bold px-10 py-3.5 rounded-full text-sm sm:text-base shadow-[0_4px_22px_rgba(236,72,153,0.4)] hover:shadow-[0_4px_30px_rgba(236,72,153,0.6)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                >
+                  <span>Other Escorts ({ordinaryProfiles.length})</span>
+                  <ChevronDown className="w-5 h-5" />
+                </Button>
               </div>
             ) : (
               <>
+                <div className="flex flex-col items-center sm:items-start">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white/90 tracking-tight">
+                    Other Escorts
+                  </h2>
+                  <div className="h-0.5 w-24 bg-gray-700 mt-1" />
+                </div>
+
                 <ProfileGrid
                   profiles={visibleOrdinary}
                   loading={isInitialLoading}
                 />
-
-                {/* Nude Trends Live Cams & Leaks Banner */}
-                <NudeTrendsAdBanner />
 
                 {!isInitialLoading && hasMore && (
                   <div className="flex justify-center pt-8 pb-4">
@@ -241,7 +251,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
                       onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                       className="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white px-8 py-2 rounded-full font-semibold shadow-[0_0_18px_4px_rgba(236,72,153,0.55)] hover:shadow-[0_0_28px_8px_rgba(236,72,153,0.75)] transition-shadow duration-300"
                     >
-                      Load More Profiles
+                      Load More Profiles ({ordinaryProfiles.length - visibleOrdinary.length} remaining)
                     </Button>
                   </div>
                 )}
@@ -251,41 +261,15 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
         </div>
 
         {/* FAQ Section for SEO Keywords */}
-        <div className="mt-20 border-t border-gray-800 pt-16">
+        <div className="mt-20 border-t border-gray-800 pt-16 below-fold-section">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 text-center">Frequently Asked Questions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">How do I find verified Escorts in Kampala Uganda?</h4>
-              <p className="text-sm text-gray-400">Finding verified Escorts in Kampala Uganda is easy on our Uganda escorts directory. Every companion listed as a Kampala call girl or Entebbe escorts has been manually vetted to ensure they are real and professional. We offer direct contacts for Ntinda escorts, Escorts in Ntinda, Call girls Najjera, escorts near Makerere, and Kawempe escorts.</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">Are the photos of Ugandan call girls 100% real?</h4>
-              <p className="text-sm text-gray-400">Yes. We pride ourselves on being the only Uganda escort directory that enforces strict photo verification. When you book a sexy girl or Kampala call girls in Uganda from our site, you meet who you see.</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">Can I get direct WhatsApp contacts for hookups?</h4>
-              <p className="text-sm text-gray-400">Absolutely. We provide direct WhatsApp links for every Kampala hookup, Entebbe escorts, Ntinda escorts, and Kawempe escorts listed. There are no middlemen, just direct contact between you and the companion.</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">Do you have VIP companions for high-end events?</h4>
-              <p className="text-sm text-gray-400">Yes, our VIP section features elite Ugandan companions, Verified escorts Kampala (and verified escortd Kampala), and high-class call girls perfect for corporate dinners, travel companionship, and exclusive private encounters.</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">Is it discreet to book a hookup in Uganda?</h4>
-              <p className="text-sm text-gray-400">Privacy is our #1 priority. Whether you are looking for an escort in Ntinda, Call girls Najjera, or escorts near Makerere, our platform ensures your search for hookups in Uganda remains 100% confidential.</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">Where can I find independent escorts in Jinja or Mbarara?</h4>
-              <p className="text-sm text-gray-400">We have a growing directory of independent companions in Jinja, Mbarara, and Gulu. Simply filter by location to find the best call girls or Entebbe escorts available in your specific city.</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">What types of sexy girls in Uganda are available?</h4>
-              <p className="text-sm text-gray-400">Our directory features a diverse range of **sexy escorts**, including **ebony** beauties, slim models, and curvy **Ugandan escorts**. Whether you want a college girl or a mature companion, we have the best **sexy girls** and Kampala call girls in the country.</p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-primary font-bold">How do I book a hookup with Uganda escorts?</h4>
-              <p className="text-sm text-gray-400">You can book **escorts in Uganda** by contacting them directly via the WhatsApp numbers provided on their profiles. We make it easy to find **uganda escorts** and girls in uganda to fuck for quick hookups or overnight stays.</p>
-            </div>
+            {HOME_FAQS.map((faq) => (
+              <div key={faq.question} className="space-y-2">
+                <h4 className="text-primary font-bold">{faq.question}</h4>
+                <p className="text-sm text-gray-400">{faq.answer}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -300,7 +284,7 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
         </div>
 
         {/* SEO Guide & Editorial Content Section */}
-        <div className="mt-16 text-left prose prose-invert mx-auto max-w-4xl pt-8 pb-12 border-t border-gray-800">
+        <div className="mt-16 text-left prose prose-invert mx-auto max-w-4xl pt-8 pb-12 border-t border-gray-800 below-fold-section">
           <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6 text-center">
             Uganda Escorts: The Premier Directory of Verified Ugandan Call Girls
           </h2>

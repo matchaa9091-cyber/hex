@@ -39,6 +39,7 @@ out/
 # Build outputs
 build_output.txt
 new_build_output.txt
+scripts/build-id.generated.mjs
 
 # Backup and Migration
 # backup/

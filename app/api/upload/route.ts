@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 const R2_ACCOUNT_ID = process.env.CLOUDFLARE_D1_ACCOUNT_ID || "b07234f65853d0f9f8e6fa1896cf06db";
 const R2_BUCKET = process.env.CLOUDFLARE_R2_BUCKET || "hexescorts-media";
 const R2_PUBLIC_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL || "https://pub-aa01e6dca81f482ab084275e93025a99.r2.dev";
-const R2_ACCESS_KEY = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || "7dd0399854775e1fb6eacee70f5a1a49";
-const R2_SECRET_KEY = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || "2bfa7f87c5ba92ecc1a243b494c10c28d4d61a4f469bce8629fd82247d02341a";
+const R2_ACCESS_KEY = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || "";
+const R2_SECRET_KEY = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || "";
 const R2_ENDPOINT = process.env.CLOUDFLARE_R2_ENDPOINT || `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
 
 // HMAC-SHA256 using WebCrypto (works in both Node.js and Cloudflare Workers)
