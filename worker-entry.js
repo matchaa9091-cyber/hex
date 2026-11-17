@@ -290,6 +290,25 @@ export default {
       });
     }
 
+    // robots.txt is a prerendered Next artifact. Patch the generated file in
+    // place so the tiny generation probe can be crawled by Googlebot without a
+    // full rebuild (which would rotate BUILD_ID and invalidate every cached
+    // page). The guard makes this a no-op once app/robots.ts is rebuilt.
+    if (url.pathname === "/robots.txt" && (request.method === "GET" || request.method === "HEAD")) {
+      const upstream = await openNextWorker.fetch(request, env, ctx);
+      if (upstream.status === 200) {
+        const body = await upstream.text();
+        const patched = body.includes("Allow: /api/cache-generation")
+          ? body
+          : body.replace(
+              "Allow: /_next/static/",
+              "Allow: /_next/static/\nAllow: /api/cache-generation"
+            );
+        return new Response(patched, upstream);
+      }
+      return upstream;
+    }
+
     const edgeCache = caches.default;
     const staleCache = await caches.open(STALE_CACHE_NAME);
 
