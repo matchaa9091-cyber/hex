@@ -58,7 +58,6 @@ interface HomePageProps {
 const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [vipVisibleCount, setVipVisibleCount] = useState(10);
   const [showOrdinary, setShowOrdinary] = useState(false);
 
   useEffect(() => {
@@ -75,9 +74,6 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
   const vipProfiles = allProfiles.filter(p => p.isPinned && !p.isBoosted);
   const ordinaryProfiles = allProfiles.filter(p => !p.isPinned && !p.isBoosted);
   
-  const visibleVip = vipProfiles.slice(0, vipVisibleCount);
-  const hasMoreVip = vipVisibleCount < vipProfiles.length;
-
   const visibleOrdinary = ordinaryProfiles.slice(0, visibleCount);
   const hasMore = visibleCount < ordinaryProfiles.length;
 
@@ -197,24 +193,14 @@ const HomePage = ({ initialProfiles = [], shuffleSeed }: HomePageProps) => {
                 <div className="h-1 w-32 bg-gradient-to-r from-yellow-500 to-transparent mt-1" />
               </div>
               <ProfileGrid
-                profiles={visibleVip}
-                featuredIds={visibleVip.map(p => p.id)}
+                profiles={vipProfiles}
+                featuredIds={vipProfiles.map(p => p.id)}
                 loading={isInitialLoading}
               />
-              {!isInitialLoading && hasMoreVip && (
-                <div className="flex justify-center pt-2 pb-4">
-                  <Button
-                    onClick={() => setVipVisibleCount((c) => c + 10)}
-                    className="bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-700 hover:to-yellow-600 text-black px-8 py-2 rounded-full font-bold shadow-[0_0_18px_4px_rgba(234,179,8,0.4)] transition-all duration-300"
-                  >
-                    Load More VIP Escorts ({vipProfiles.length - visibleVip.length} remaining)
-                  </Button>
-                </div>
-              )}
             </div>
           )}
 
-          {/* Ad Banner right below VIP Section / Load More VIP button and before Ordinary Escorts */}
+          {/* Ad Banner right below VIP Section and before Ordinary Escorts */}
           <div className="my-8">
             <NudeTrendsAdBanner />
           </div>
