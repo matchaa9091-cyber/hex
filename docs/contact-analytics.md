@@ -30,11 +30,14 @@ Open `https://www.hexescortsug.com/hx-ctrl-7k9`, sign in, then select the
 **Contact analytics** tab. enter the analytics access key
 (the `HX_ADMIN_KEY` Worker secret) and click **Unlock**. The table shows
 WhatsApp taps, call taps, phone copies, total, and last-contact time per escort,
-with 7 / 30 / 90-day filters and a refresh button.
+with **Today / Yesterday / Last 7 days / Last 30 days** filters and a refresh button.
 
 The key is a Worker secret and is never committed. The admin API is
-`GET /api/admin/clicks?days=7|30|90` with `Authorization: Bearer <key>`;
-all responses are `no-store`. Without the key it returns 401.
+`GET /api/admin/clicks?range=today|yesterday|7d|30d` with
+`Authorization: Bearer <key>`; all responses are `no-store`. Without the key it
+returns 401. Today and Yesterday use Africa/Kampala (UTC+3) calendar-day
+boundaries and return an explicit `since`/`until` window; 7d/30d are rolling
+windows. The legacy `days=7|30` query param is still accepted for older tabs.
 
 ## PostHog event schema
 

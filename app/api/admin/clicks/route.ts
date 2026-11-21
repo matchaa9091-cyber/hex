@@ -17,9 +17,72 @@ function isAuthorized(req: NextRequest): boolean {
   return token === expected || headerKey === expected;
 }
 
-function daysToSince(days: number): string {
-  const safe = [7, 30, 90].includes(days) ? days : 30;
-  return new Date(Date.now() - safe * 24 * 60 * 60 * 1000).toISOString();
+type RangeKey = "today" | "yesterday" | "7d" | "30d";
+
+const RANGE_LABELS: Record<RangeKey, string> = {
+  today: "today",
+  yesterday: "yesterday",
+  "7d": "in the last 7 days",
+  "30d": "in the last 30 days",
+};
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+// Uganda is UTC+3 year-round (no DST), so calendar-day maths use a fixed offset.
+const KAMPALA_OFFSET_MS = 3 * 60 * 60 * 1000;
+
+/** Start of the current Kampala calendar day, expressed as a UTC instant. */
+function kampalaDayStart(now: Date): Date {
+  const shifted = new Date(now.getTime() + KAMPALA_OFFSET_MS);
+  return new Date(
+    Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate()) -
+      KAMPALA_OFFSET_MS
+  );
+}
+
+/**
+ * Resolve the requested range to a half-open [since, until) UTC window.
+ * `days=7|30` is accepted as a legacy fallback for older admin tabs.
+ */
+function resolveRange(
+  req: NextRequest,
+  now: Date
+): { key: RangeKey; since: Date; until: Date } {
+  const raw = (req.nextUrl.searchParams.get("range") || "").trim();
+  let key: RangeKey;
+  if (raw === "today" || raw === "yesterday" || raw === "7d" || raw === "30d") {
+    key = raw;
+  } else {
+    const legacy = Number(req.nextUrl.searchParams.get("days") || 30);
+    key = legacy === 7 ? "7d" : "30d";
+  }
+
+  const todayStart = kampalaDayStart(now);
+  switch (key) {
+    case "today":
+      return {
+        key,
+        since: todayStart,
+        until: new Date(todayStart.getTime() + DAY_MS),
+      };
+    case "yesterday":
+      return {
+        key,
+        since: new Date(todayStart.getTime() - DAY_MS),
+        until: todayStart,
+      };
+    case "7d":
+      return {
+        key,
+        since: new Date(now.getTime() - 7 * DAY_MS),
+        until: new Date(now.getTime() + 1000),
+      };
+    case "30d":
+      return {
+        key,
+        since: new Date(now.getTime() - 30 * DAY_MS),
+        until: new Date(now.getTime() + 1000),
+      };
+  }
 }
 
 export async function GET(req: NextRequest) {
@@ -30,9 +93,10 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const requested = Number(req.nextUrl.searchParams.get("days") || 30);
-  const since = daysToSince(requested);
-  const days = [7, 30, 90].includes(requested) ? requested : 30;
+  const now = new Date();
+  const { key, since, until } = resolveRange(req, now);
+  const sinceIso = since.toISOString();
+  const untilIso = until.toISOString();
 
   try {
     const [rows, totals] = await Promise.all([
@@ -48,11 +112,11 @@ export async function GET(req: NextRequest) {
            MAX(ce.created_at) AS last_contact
          FROM click_events ce
          JOIN profiles p ON p.id = ce.profile_id
-         WHERE ce.created_at >= ?
+         WHERE ce.created_at >= ? AND ce.created_at < ?
          GROUP BY p.id, p.name, p.location
          ORDER BY total DESC
          LIMIT 500`,
-        [since]
+        [sinceIso, untilIso]
       ),
       executeD1Query(
         `SELECT
@@ -63,13 +127,21 @@ export async function GET(req: NextRequest) {
            COUNT(DISTINCT profile_id) AS profiles,
            MAX(created_at) AS last_contact
          FROM click_events
-         WHERE created_at >= ?`,
-        [since]
+         WHERE created_at >= ? AND created_at < ?`,
+        [sinceIso, untilIso]
       ),
     ]);
 
     return NextResponse.json(
-      { days, since, rows: rows || [], totals: totals?.[0] || null, generatedAt: new Date().toISOString() },
+      {
+        range: key,
+        label: RANGE_LABELS[key],
+        since: sinceIso,
+        until: untilIso,
+        rows: rows || [],
+        totals: totals?.[0] || null,
+        generatedAt: new Date().toISOString(),
+      },
       { headers: { "Cache-Control": "no-store" } }
     );
   } catch {

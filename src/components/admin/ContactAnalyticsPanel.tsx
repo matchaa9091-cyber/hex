@@ -28,9 +28,20 @@ interface ClickTotals {
 interface ClickResponse {
   rows: ClickRow[];
   totals: ClickTotals | null;
+  range?: string;
+  label?: string;
   generatedAt?: string;
   error?: string;
 }
+
+type RangeKey = "today" | "yesterday" | "7d" | "30d";
+
+const RANGES: { key: RangeKey; label: string }[] = [
+  { key: "today", label: "Today" },
+  { key: "yesterday", label: "Yesterday" },
+  { key: "7d", label: "Last 7 days" },
+  { key: "30d", label: "Last 30 days" },
+];
 
 const STORAGE_KEY = "hx_clicks_admin_key";
 
@@ -48,7 +59,7 @@ function formatWhen(value?: string | null) {
 
 export default function ContactAnalyticsPanel() {
   const [key, setKey] = useState("");
-  const [days, setDays] = useState<7 | 30 | 90>(30);
+  const [range, setRange] = useState<RangeKey>("30d");
   const [data, setData] = useState<ClickResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -59,7 +70,7 @@ export default function ContactAnalyticsPanel() {
     } catch {}
   }, []);
 
-  const load = useCallback(async (activeKey: string, activeDays: number) => {
+  const load = useCallback(async (activeKey: string, activeRange: RangeKey) => {
     if (!activeKey.trim()) {
       setError("Enter the analytics access key to view contact counts.");
       return;
@@ -67,7 +78,7 @@ export default function ContactAnalyticsPanel() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`/api/admin/clicks?days=${activeDays}&t=${Date.now()}`, {
+      const res = await fetch(`/api/admin/clicks?range=${activeRange}&t=${Date.now()}`, {
         headers: { Authorization: `Bearer ${activeKey.trim()}` },
         cache: "no-store",
       });
@@ -89,9 +100,9 @@ export default function ContactAnalyticsPanel() {
   }, []);
 
   useEffect(() => {
-    if (key) load(key, days);
+    if (key) load(key, range);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [days]);
+  }, [range]);
 
   const totals = data?.totals;
   const rows = data?.rows || [];
@@ -106,27 +117,27 @@ export default function ContactAnalyticsPanel() {
               type="password"
               value={key}
               onChange={(e) => setKey(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") load(key, days); }}
+              onKeyDown={(e) => { if (e.key === "Enter") load(key, range); }}
               placeholder="Analytics access key"
               className="pl-9 w-full sm:w-56 bg-gray-950"
             />
           </div>
-          <Button size="sm" onClick={() => load(key, days)} disabled={loading}>
+          <Button size="sm" onClick={() => load(key, range)} disabled={loading}>
             {loading ? "Loading…" : "Unlock"}
           </Button>
         </div>
-        <div className="flex items-center gap-2">
-          {([7, 30, 90] as const).map((d) => (
+        <div className="flex flex-wrap items-center gap-2">
+          {RANGES.map((r) => (
             <Button
-              key={d}
+              key={r.key}
               size="sm"
-              variant={days === d ? "default" : "outline"}
-              onClick={() => setDays(d)}
+              variant={range === r.key ? "default" : "outline"}
+              onClick={() => setRange(r.key)}
             >
-              {d} days
+              {r.label}
             </Button>
           ))}
-          <Button size="sm" variant="ghost" onClick={() => load(key, days)} disabled={loading}>
+          <Button size="sm" variant="ghost" onClick={() => load(key, range)} disabled={loading}>
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
         </div>
@@ -165,7 +176,7 @@ export default function ContactAnalyticsPanel() {
                 {rows.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="px-3 py-8 text-center text-gray-500">
-                      No contact taps recorded in the last {days} days.
+                      No contact taps recorded {data.label || "in this period"}.
                     </td>
                   </tr>
                 ) : (
