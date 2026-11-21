@@ -58,24 +58,28 @@ Event name: `contact_click`
 Events are sent from the Worker (`/i/v0/e/`), not from the browser. This avoids
 double counting and survives ad blockers / tracker-blocking browser settings.
 
-## PostHog dashboard (created 2026-11-22)
+## PostHog dashboard (simplified 2026-11-22)
 
-Dashboard **`Hex - Contact Clicks`** (id `2393932`) exists in PostHog project
-`385893` (the project whose public key is `NEXT_PUBLIC_POSTHOG_KEY`). It has four
-insights, all on event `contact_click`, last 30 days:
+Dashboard **`Hex - Contact Analytics`** (id `2393932`) in PostHog project
+`385893` now mirrors the admin Contact analytics tab. Open:
+`https://us.posthog.com/project/385893/dashboard/2393932`
 
-| Insight | Breakdown |
-|---|---|
-| Contact clicks by escort | `profile_name` |
-| Contact clicks by location page | `path` |
-| Contact clicks by device and channel | `$device_type` + `channel` |
-| Contact intent over time by channel | `channel` |
+It has two sections and six tiles (last 30 days, event `contact_click`):
 
-The public project key cannot create dashboards; the above was created with a
-personal API key (or can be recreated in the UI: **Dashboards → New Dashboard**,
-then add one Trends insight per row, event `contact_click`, aggregate = count).
-All insights use the same event, so a saved view can be duplicated and
-re-broken-down quickly.
+| Section | Tile | Definition |
+|---|---|---|
+| Overview | Total contacts | all `contact_click` events |
+| Overview | WhatsApp taps | `channel = whatsapp` |
+| Overview | Call taps (mobile) | `channel = call` |
+| Overview | Phone copies (desktop) | `channel = phone_copy` |
+| Overview | Escorts contacted | distinct `profile_name` |
+| Per escort | Per-escort contacts | HogQL table: escort, whatsapp, calls, copies, total, last_contact |
+
+The five overview tiles use the **BoldNumber** display so they read like the
+admin stat cards; the per-escort tile is a real table with the same columns as
+the admin table. The noisy trend/breakdown charts from the first version were
+removed (old insights were soft-deleted, not just unlinked). Device/location
+exploration is still possible from PostHog's event explorer when needed.
 
 ## Verification checklist
 
@@ -89,3 +93,6 @@ re-broken-down quickly.
   present, escort breakdown returns 14 labels, device+channel breakdown returns
   `Mobile | whatsapp`, `Mobile | call`, `Desktop | whatsapp`, `Desktop | phone_copy`.
   Direct ingestion also returned `{"status":"Ok"}` from `/i/v0/e/`.
+- Simplified dashboard verified via the PostHog query API: all six tiles return
+  data (47 total, 38 WhatsApp, 10 calls, 1 phone copy, 34 distinct escorts, and
+  a 37-row per-escort table with all six columns).
