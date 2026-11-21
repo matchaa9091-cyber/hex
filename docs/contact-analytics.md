@@ -55,23 +55,23 @@ Event name: `contact_click`
 Events are sent from the Worker (`/i/v0/e/`), not from the browser. This avoids
 double counting and survives ad blockers / tracker-blocking browser settings.
 
-## Creating the PostHog dashboard
+## PostHog dashboard (created 2026-11-22)
 
-The public project key cannot create dashboards; a PostHog **personal API key**
-(or the UI) is required. In the PostHog UI:
+Dashboard **`Hex - Contact Clicks`** (id `2393932`) exists in PostHog project
+`385893` (the project whose public key is `NEXT_PUBLIC_POSTHOG_KEY`). It has four
+insights, all on event `contact_click`, last 30 days:
 
-1. **Dashboards → New Dashboard** → name it `Hex — Contact Clicks`.
-2. Add these insights (event = `contact_click` for all three):
-   - **Contact clicks by escort** — trend or bar chart, breakdown by
-     `profile_name`, aggregate = count.
-   - **Contact clicks by location page** — bar chart, breakdown by `path`
-     (or `location` for a cleaner city-level view).
-   - **Contact clicks by device and channel** — bar chart, breakdown by
-     `$device_type`, then by `channel` as a secondary breakdown.
-3. Optional fourth insight: **Contact intent over time** — trend, grouped by
-   `channel`, last 30 days.
+| Insight | Breakdown |
+|---|---|
+| Contact clicks by escort | `profile_name` |
+| Contact clicks by location page | `path` |
+| Contact clicks by device and channel | `$device_type` + `channel` |
+| Contact intent over time by channel | `channel` |
 
-All insights use the same event, so a single saved view can be duplicated and
+The public project key cannot create dashboards; the above was created with a
+personal API key (or can be recreated in the UI: **Dashboards → New Dashboard**,
+then add one Trends insight per row, event `contact_click`, aggregate = count).
+All insights use the same event, so a saved view can be duplicated and
 re-broken-down quickly.
 
 ## Verification checklist
@@ -82,5 +82,7 @@ re-broken-down quickly.
 - `GET /api/admin/clicks` without key → 401; with key → 200 + `no-store`.
 - Admin tab renders totals and per-escort rows after entering the key.
 - PostHog project activity shows `contact_click` with `channel`, `path`,
-  `device` properties (verify in the UI once a personal API key is available;
-  direct ingestion was confirmed with `{"status":"Ok"}` from `/i/v0/e/`).
+  `device` properties — VERIFIED 2026-11-22 via the PostHog REST API: 17 events
+  present, escort breakdown returns 14 labels, device+channel breakdown returns
+  `Mobile | whatsapp`, `Mobile | call`, `Desktop | whatsapp`, `Desktop | phone_copy`.
+  Direct ingestion also returned `{"status":"Ok"}` from `/i/v0/e/`.
