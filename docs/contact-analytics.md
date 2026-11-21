@@ -81,6 +81,26 @@ the admin table. The noisy trend/breakdown charts from the first version were
 removed (old insights were soft-deleted, not just unlinked). Device/location
 exploration is still possible from PostHog's event explorer when needed.
 
+### Test-event cleanup (2026-11-22)
+PostHog's self-service event deletion is alpha-gated and the legacy
+`DELETE /api/event/{id}/` endpoint rejects personal API keys, so the raw events
+could NOT be deleted with the available credential. Instead, all six saved tile
+queries now exclude 10 verification-era event UUIDs:
+
+- 7 browser-SDK duplicates (distinct_id `01a1…`) captured before browser capture
+  was removed
+- 1 `hex-connectivity-probe` direct ingestion probe
+- 2 direct server probes for one profile (including the only `phone_copy` event)
+
+The five TrendsQuery tiles use a HogQL property filter
+`{type:"hogql", key:"uuid NOT IN (...)"}`; the HogQL table adds
+`AND uuid NOT IN (...)`. Result of a synchronised event-level diff after the
+exclusion: **0 PostHog events without a D1 row**, 2 D1 rows without a PostHog
+event (the known best-effort delivery loss). The dashboard therefore reads like
+D1 apart from that small, documented gap. To delete the raw events from
+PostHog's storage, a logged-in user must use the Events UI; API deletion is not
+available to a personal API key.
+
 ## Verification checklist
 
 - `POST /api/clicks` with a live `profileId` → `200 {"ok":true}`.
@@ -94,5 +114,5 @@ exploration is still possible from PostHog's event explorer when needed.
   `Mobile | whatsapp`, `Mobile | call`, `Desktop | whatsapp`, `Desktop | phone_copy`.
   Direct ingestion also returned `{"status":"Ok"}` from `/i/v0/e/`.
 - Simplified dashboard verified via the PostHog query API: all six tiles return
-  data (47 total, 38 WhatsApp, 10 calls, 1 phone copy, 34 distinct escorts, and
-  a 37-row per-escort table with all six columns).
+  data, and after the test-event exclusion the numbers match D1 within the
+  documented 2-event delivery gap (D1 source of truth remains the admin tab).
