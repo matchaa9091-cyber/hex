@@ -9,12 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone, KeyRound, Flame } from "lucide-react";
+import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone, KeyRound, Flame, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { mockProfiles } from "@/data/mockProfiles";
 import { staticProfiles } from "@/data/staticProfiles";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
+import ContactAnalyticsPanel from "@/components/admin/ContactAnalyticsPanel";
 
 interface DbProfile {
   id: string;
@@ -116,7 +117,7 @@ const AdminPage = () => {
   const [saving, setSaving] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [adminTab, setAdminTab] = useState<'profiles' | 'apps'>('profiles');
+  const [adminTab, setAdminTab] = useState<'profiles' | 'apps' | 'clicks'>('profiles');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const adGalleryInputRef = useRef<HTMLInputElement>(null);
@@ -918,8 +919,8 @@ const AdminPage = () => {
         </div>
       </div>
 
-      {/* Main page tabs: Profiles | Applications */}
-      <div className="flex gap-2 mb-6 border-b border-gray-800 pb-2">
+      {/* Main page tabs: Profiles | Applications | Contact analytics */}
+      <div className="flex gap-2 mb-6 border-b border-gray-800 pb-2 flex-wrap">
         <button
           onClick={() => setAdminTab('profiles')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -937,10 +938,22 @@ const AdminPage = () => {
           <ClipboardList className="h-4 w-4" />
           Applications
         </button>
+        <button
+          onClick={() => setAdminTab('clicks')}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            adminTab === 'clicks' ? 'bg-pink-600 text-white' : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          <BarChart3 className="h-4 w-4" />
+          Contact analytics
+        </button>
       </div>
 
       {/* Applications Panel */}
       {adminTab === 'apps' && <ApplicationsPanel />}
+
+      {/* Contact analytics Panel */}
+      {adminTab === 'clicks' && <ContactAnalyticsPanel />}
 
       {/* Profiles Panel */}
       {adminTab === 'profiles' && (

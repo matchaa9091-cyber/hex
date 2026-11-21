@@ -8,6 +8,7 @@ import { MapPin, Phone, Star, Heart, Share2 } from "lucide-react";
 import { ProfileType } from "@/types/profile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePhoneHandler } from "@/hooks/use-phone-handler";
+import { trackContact } from "@/lib/track-contact";
 import Image from "next/image";
 import { getMediaUrl } from "@/lib/utils";
 import { PhotoModal } from "@/components/photos/PhotoModal";
@@ -45,7 +46,11 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
 
   const handleContactClick = () => {
     if (phoneNumber) {
-      handlePhoneClick(phoneNumber);
+      handlePhoneClick(phoneNumber, {
+        profileId: profile.id,
+        profileName: profile.name,
+        surface: "detail",
+      });
     }
   };
 
@@ -157,6 +162,14 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 flex items-center justify-center bg-[#25D366] hover:bg-[#128C7E] text-white rounded-md h-9 lg:h-11 transition-all hover:scale-105 shadow-lg shadow-green-500/20 overflow-hidden font-medium text-xs lg:text-sm gap-2"
+                      onClick={() =>
+                        trackContact({
+                          profileId: profile.id,
+                          profileName: profile.name,
+                          kind: "whatsapp",
+                          surface: "detail",
+                        })
+                      }
                       aria-label="Contact on WhatsApp"
                     >
                       <Image

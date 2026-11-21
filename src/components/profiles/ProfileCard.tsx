@@ -8,6 +8,7 @@ import { cn, getMediaUrl, slugify } from "@/lib/utils";
 import { ProfileType } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import { usePhoneHandler } from "@/hooks/use-phone-handler";
+import { trackContact } from "@/lib/track-contact";
 
 interface ProfileCardProps {
   profile: ProfileType;
@@ -55,7 +56,11 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
     e.preventDefault();
     e.stopPropagation();
     if (phoneNumber) {
-      handlePhoneClick(phoneNumber);
+      handlePhoneClick(phoneNumber, {
+        profileId: profile.id,
+        profileName: profile.name,
+        surface: "card",
+      });
     }
   };
 
@@ -156,7 +161,15 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-none flex items-center justify-center bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full w-5 h-5 sm:w-7 sm:h-7 shadow-sm overflow-hidden shrink-0"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  trackContact({
+                    profileId: profile.id,
+                    profileName: profile.name,
+                    kind: "whatsapp",
+                    surface: "card",
+                  });
+                }}
                 aria-label="Contact on WhatsApp"
               >
                 <Image

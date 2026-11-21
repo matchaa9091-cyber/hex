@@ -4,6 +4,7 @@ import { ProfileType } from "@/types/profile";
 import Link from "next/link";
 import { slugify } from "@/lib/utils";
 import { Sparkles, MapPin, ArrowRight, MessageCircle, Flame } from "lucide-react";
+import { trackContact } from "@/lib/track-contact";
 
 interface AdCarouselProps {
   profiles: ProfileType[];
@@ -67,6 +68,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
     const waNumber = toWhatsAppNumber(p.whatsapp || p.phone);
     return rawImages.map((img, imgIdx) => ({
       id: `${p.id}-${imgIdx}`,
+      profileId: p.id,
       name: p.name || "Featured Spa",
       image: resolveImg(img),
       slug: slugify(p.name || String(p.id)),
@@ -203,6 +205,14 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#25D366] hover:bg-[#20bd5a] active:scale-95 text-white text-[11px] font-black rounded-xl shadow-lg shadow-green-500/25 transition-all"
+                          onClick={() =>
+                            trackContact({
+                              profileId: item.profileId,
+                              profileName: item.name,
+                              kind: "whatsapp",
+                              surface: "carousel",
+                            })
+                          }
                         >
                           <MessageCircle className="w-4 h-4 fill-white text-[#25D366]" />
                           WhatsApp
