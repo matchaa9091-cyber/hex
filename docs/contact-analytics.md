@@ -35,9 +35,14 @@ with **Today / Yesterday / Last 7 days / Last 30 days** filters and a refresh bu
 The key is a Worker secret and is never committed. The admin API is
 `GET /api/admin/clicks?range=today|yesterday|7d|30d` with
 `Authorization: Bearer <key>`; all responses are `no-store`. Without the key it
-returns 401. Today and Yesterday use Africa/Kampala (UTC+3) calendar-day
-boundaries and return an explicit `since`/`until` window; 7d/30d are rolling
-windows. The legacy `days=7|30` query param is still accepted for older tabs.
+returns 401. Every range now uses the **PostHog project's UTC day boundary** —
+00:00 UTC, which is 03:00 in East Africa — so both dashboards agree on what a
+day is. Today is 03:00 EAT today to 03:00 EAT tomorrow; Yesterday is the
+previous UTC day; Last 7/30 days are UTC calendar-day windows starting 03:00
+EAT and ending 02:59:59 EAT today, the same inclusive-of-today semantics as
+PostHog's `-7d` / `-30d`. The response always includes the explicit
+`since`/`until` window. The legacy `days=7|30` query param is still accepted
+for older tabs.
 
 ## PostHog event schema
 
@@ -80,6 +85,11 @@ admin stat cards; the per-escort tile is a real table with the same columns as
 the admin table. The noisy trend/breakdown charts from the first version were
 removed (old insights were soft-deleted, not just unlinked). Device/location
 exploration is still possible from PostHog's event explorer when needed.
+
+Both dashboards now share the same day boundary: the PostHog project timezone
+is UTC, so a fresh day starts at 00:00 UTC = 03:00 East Africa. The admin
+ranges were changed on 2026-11-22 to use that boundary and PostHog's
+inclusive-of-today `-7d` / `-30d` semantics.
 
 ### Test-event cleanup (2026-11-22)
 PostHog's self-service event deletion is alpha-gated and the legacy

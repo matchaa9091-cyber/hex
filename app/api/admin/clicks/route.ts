@@ -27,16 +27,12 @@ const RANGE_LABELS: Record<RangeKey, string> = {
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-// Uganda is UTC+3 year-round (no DST), so calendar-day maths use a fixed offset.
-const KAMPALA_OFFSET_MS = 3 * 60 * 60 * 1000;
-
-/** Start of the current Kampala calendar day, expressed as a UTC instant. */
-function kampalaDayStart(now: Date): Date {
-  const shifted = new Date(now.getTime() + KAMPALA_OFFSET_MS);
-  return new Date(
-    Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate()) -
-      KAMPALA_OFFSET_MS
-  );
+// PostHog project 385893 is set to UTC, so its day starts at 00:00 UTC —
+// 03:00 in East Africa (UTC+3). Match that boundary exactly so the admin tab
+// and the PostHog dashboard agree on what "today" and "yesterday" mean.
+/** Start of the current UTC day (= 03:00 EAT), expressed as a UTC instant. */
+function posthogDayStart(now: Date): Date {
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 }
 
 /**
@@ -56,7 +52,7 @@ function resolveRange(
     key = legacy === 7 ? "7d" : "30d";
   }
 
-  const todayStart = kampalaDayStart(now);
+  const todayStart = posthogDayStart(now);
   switch (key) {
     case "today":
       return {
@@ -71,16 +67,18 @@ function resolveRange(
         until: todayStart,
       };
     case "7d":
+      // PostHog's -7d starts 7 UTC days before today and includes today.
       return {
         key,
-        since: new Date(now.getTime() - 7 * DAY_MS),
-        until: new Date(now.getTime() + 1000),
+        since: new Date(todayStart.getTime() - 7 * DAY_MS),
+        until: new Date(todayStart.getTime() + DAY_MS),
       };
     case "30d":
+      // PostHog's -30d starts 30 UTC days before today and includes today.
       return {
         key,
-        since: new Date(now.getTime() - 30 * DAY_MS),
-        until: new Date(now.getTime() + 1000),
+        since: new Date(todayStart.getTime() - 30 * DAY_MS),
+        until: new Date(todayStart.getTime() + DAY_MS),
       };
   }
 }
