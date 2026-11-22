@@ -69,7 +69,8 @@ Dashboard **`Hex - Contact Analytics`** (id `2393932`) in PostHog project
 `385893` now mirrors the admin Contact analytics tab. Open:
 `https://us.posthog.com/project/385893/dashboard/2393932`
 
-It has two sections and six tiles (last 30 days, event `contact_click`):
+It has two sections and six tiles (event `contact_click`, saved default
+**Last 30 days**; the dashboard date picker overrides that range):
 
 | Section | Tile | Definition |
 |---|---|---|
@@ -111,6 +112,16 @@ D1 apart from that small, documented gap. To delete the raw events from
 PostHog's storage, a logged-in user must use the Events UI; API deletion is not
 available to a personal API key.
 
+The per-escort table originally had a hardcoded `timestamp >= now() - INTERVAL
+30 DAY`, so changing the dashboard date range or adding a filter left it static.
+On 2026-11-22 that clause was replaced with PostHog's `{filters}` placeholder.
+The table now follows the dashboard date picker and any dashboard property
+filters, while keeping the event name, `contact_click`, and the 10-UUID
+exclusion. Verified through the PostHog query API: Today = 53 rows / 135
+events, Last 7 days = 64 / 212, a single UTC day = 46 / 77, and a `channel =
+whatsapp` filter = 60 / 160; the compiled SQL contains the selected date
+bounds and no `INTERVAL 30 DAY`.
+
 ## Verification checklist
 
 - `POST /api/clicks` with a live `profileId` → `200 {"ok":true}`.
@@ -126,3 +137,6 @@ available to a personal API key.
 - Simplified dashboard verified via the PostHog query API: all six tiles return
   data, and after the test-event exclusion the numbers match D1 within the
   documented 2-event delivery gap (D1 source of truth remains the admin tab).
+- Per-escort table verified with four dashboard filter combinations (Today,
+  Last 7 days, one explicit UTC day, Last 7 days + `channel = whatsapp`). Row
+  counts and event totals changed for each; no hardcoded 30-day bound remains.
