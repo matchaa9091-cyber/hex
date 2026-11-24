@@ -16,6 +16,8 @@ import { mockProfiles } from "@/data/mockProfiles";
 import { staticProfiles } from "@/data/staticProfiles";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import ContactAnalyticsPanel from "@/components/admin/ContactAnalyticsPanel";
+import { PROFILE_TYPE_OPTIONS, normalizeProfileType } from "@/lib/profile-type";
+import type { ProfileCategoryType } from "@/types/profile";
 
 interface DbProfile {
   id: string;
@@ -42,6 +44,8 @@ interface DbProfile {
   is_verified?: boolean;
   is_boosted?: boolean;
   ad_images?: string[];
+  profile_type?: ProfileCategoryType | null;
+  profileType?: ProfileCategoryType | null;
   passcode?: string;
 }
 
@@ -70,6 +74,7 @@ interface EditProfile {
   isVerified?: boolean;
   isBoosted?: boolean;
   adImages: string[];
+  profileType: ProfileCategoryType;
   passcode?: string;
 }
 
@@ -99,6 +104,7 @@ const getInitialDbProfiles = (): DbProfile[] => {
     is_verified: p.isVerified || false,
     is_boosted: p.isBoosted || false,
     ad_images: p.adImages || [],
+    profile_type: normalizeProfileType(p.profileType, { name: p.name, isAd: p.isAd, adImages: p.adImages || [] }),
   }));
 };
 
@@ -210,6 +216,11 @@ const AdminPage = () => {
             is_verified: Boolean(p.isVerified ?? p.is_verified),
             is_boosted: Boolean(p.isBoosted ?? p.is_boosted),
             ad_images: p.adImages || p.ad_images || [],
+            profile_type: normalizeProfileType(p.profileType ?? p.profile_type, {
+              name: p.name,
+              isAd: Boolean(p.isAd ?? p.is_ad),
+              adImages: p.adImages || p.ad_images || [],
+            }),
             passcode: p.passcode || "",
           }));
           setProfiles(mappedDbProfiles);
@@ -246,6 +257,7 @@ const AdminPage = () => {
       is_verified: p.isVerified || false,
       is_boosted: Boolean(p.isBoosted || false),
       ad_images: p.adImages || [],
+      profile_type: normalizeProfileType(p.profileType, { name: p.name, isAd: p.isAd, adImages: p.adImages || [] }),
     }));
 
     setProfiles(fallbackDbProfiles);
@@ -299,7 +311,8 @@ const AdminPage = () => {
     toast({ title: "Logged out" });
   };
 
-  const emptyProfile = (): EditProfile => ({
+  const emptyProfile = (profileType: ProfileCategoryType = "escort"): EditProfile => ({
+    profileType,
     name: "",
     age: 20,
     height: "5'5\"",
@@ -328,6 +341,11 @@ const AdminPage = () => {
 
   const dbToEdit = (p: DbProfile): EditProfile => ({
     id: p.id,
+    profileType: normalizeProfileType(p.profile_type ?? p.profileType, {
+      name: p.name,
+      isAd: p.is_ad,
+      adImages: p.ad_images,
+    }),
     name: p.name,
     age: p.age || 20,
     height: p.height || "",
@@ -472,6 +490,11 @@ const AdminPage = () => {
       is_verified: editingProfile.isVerified ?? false,
       is_boosted: Boolean(editingProfile.isBoosted),
       ad_images: editingProfile.adImages || [],
+      profile_type: normalizeProfileType(editingProfile.profileType, {
+        name: editingProfile.name,
+        isAd: editingProfile.isAd,
+        adImages: editingProfile.adImages,
+      }),
       passcode: editingProfile.passcode ? String(editingProfile.passcode).trim() : undefined,
     };
 
@@ -702,6 +725,29 @@ const AdminPage = () => {
         </div>
 
         <div className="space-y-4">
+          <div className="space-y-2 rounded-lg border border-gray-700 bg-muted/20 p-3">
+            <Label>Profile Type</Label>
+            <p className="text-xs text-muted-foreground">Choose where this profile appears on the public site.</p>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              {PROFILE_TYPE_OPTIONS.map((option) => (
+                <Button
+                  key={option.value}
+                  type="button"
+                  variant={editingProfile.profileType === option.value ? "default" : "outline"}
+                  className={
+                    editingProfile.profileType === option.value
+                      ? "bg-pink-600 hover:bg-pink-700 text-white"
+                      : "border-pink-500/40 text-pink-300 hover:bg-pink-500/10"
+                  }
+                  onClick={() => setEditingProfile({ ...editingProfile, profileType: option.value })}
+                  title={option.description}
+                >
+                  {option.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label>Profile Image</Label>
             {editingProfile.profileImage && (
@@ -909,10 +955,12 @@ const AdminPage = () => {
       <div className="lg:hidden h-16" />
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Admin Panel</h1>
-        <div className="flex gap-2">
-          <Button onClick={() => setEditingProfile(emptyProfile())}>
-            <Plus className="w-4 h-4 mr-1" /> Add Profile
-          </Button>
+        <div className="flex flex-wrap justify-end gap-2">
+          {PROFILE_TYPE_OPTIONS.map((option) => (
+            <Button key={option.value} size="sm" onClick={() => setEditingProfile(emptyProfile(option.value))}>
+              <Plus className="w-4 h-4 mr-1" /> {option.label === "Escort Agency" ? "Add Agency" : `Add ${option.label}`}
+            </Button>
+          ))}
           <Button variant="ghost" size="icon" onClick={handleLogout}>
             <LogOut className="w-4 h-4" />
           </Button>

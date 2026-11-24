@@ -8,6 +8,7 @@ import { MapPin, Phone, Star, Heart, Share2 } from "lucide-react";
 import { ProfileType } from "@/types/profile";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePhoneHandler } from "@/hooks/use-phone-handler";
+import { getProfileType } from "@/lib/profile-type";
 import { trackContact } from "@/lib/track-contact";
 import Image from "next/image";
 import { getMediaUrl } from "@/lib/utils";
@@ -23,10 +24,13 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
   const { handlePhoneClick } = usePhoneHandler();
   const [showMainPhoto, setShowMainPhoto] = useState(false);
 
-  // Spa detection — spas don't have individual body stats
-  const isSpa = (profile.name || '').toLowerCase().includes('spa')
-    || Boolean(profile.isAd)
-    || (Array.isArray(profile.adImages) && profile.adImages.length > 0);
+  // Durable profile type — venues don't have individual body stats.
+  const profileType = getProfileType(profile);
+  const isVenue = profileType !== "escort";
+  const typeBadge = profileType === "spa" ? "SPA" : profileType === "agency" ? "AGENCY" : "VIP";
+  const aboutTitle = profileType === "spa" ? "About This Spa" : profileType === "agency" ? "About This Agency" : "About Me";
+  const callLabel = profileType === "spa" ? "Call Spa" : profileType === "agency" ? "Call Agency" : "Contact";
+  const whatsappLabel = profileType === "spa" ? "Book a Session" : profileType === "agency" ? "WhatsApp Agency" : "WhatsApp";
 
   // Use the phone number from the profile data
   const phoneNumber = profile.phone || "";
@@ -75,14 +79,18 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
             {isVip && (
               <div className="absolute top-2 left-2 lg:top-3 lg:left-3 z-10">
                 <Badge className="bg-gradient-to-r from-pink-600 to-pink-500 text-white border-0 font-bold text-[10px] h-5 sm:text-xs">
-                  {isSpa ? "SPA" : "VIP"}
+                  {typeBadge}
                 </Badge>
               </div>
             )}
 
             <Image
               src={getMediaUrl(profile.profileImage)}
-              alt={`${profile.name} - verified high class sexy escort in ${profile.location} - Hex Escorts UG`}
+              alt={
+                profileType === "escort"
+                  ? `${profile.name} - verified high class sexy escort in ${profile.location} - Hex Escorts UG`
+                  : `${profile.name} - verified ${profileType === "spa" ? "spa" : "escort agency"} in ${profile.location} - Hex Escorts UG`
+              }
               fill
               priority
               className="object-cover transition-transform duration-700"
@@ -116,13 +124,13 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
               <div className="space-y-3 lg:space-y-4 mb-4 lg:mb-5">
                 <div>
                   <h3 className="font-semibold mb-1 lg:mb-2 text-white text-sm lg:text-base">
-                    {isSpa ? "About This Spa" : "About Me"}
+                    {aboutTitle}
                   </h3>
                   <p className="text-xs lg:text-sm text-gray-300 leading-relaxed">{profile.description || profile.shortBio}</p>
                 </div>
 
-                {/* Body stats — hidden for spa profiles */}
-                {!isSpa && (
+                {/* Body stats — hidden for spa and agency profiles */}
+                {!isVenue && (
                   <div>
                     <h3 className="font-semibold mb-1 lg:mb-2 text-white text-sm lg:text-base">Details</h3>
                     <div className="grid grid-cols-2 gap-x-2 lg:gap-x-4 gap-y-1 lg:gap-y-2 text-xs lg:text-sm">
@@ -154,7 +162,7 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
                     onClick={handleContactClick}
                   >
                     <Phone className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
-                    {isSpa ? "Call Spa" : "Contact"}
+                    {callLabel}
                   </Button>
                   {waNumber && (
                     <a
@@ -179,7 +187,7 @@ export function ProfileDetail({ profile, onShare }: ProfileDetailProps) {
                         height={20}
                         className="w-5 h-5 lg:w-6 lg:h-6 object-cover rounded-full"
                       />
-                      {isSpa ? "Book a Session" : "WhatsApp"}
+                      {whatsappLabel}
                     </a>
                   )}
                 </div>

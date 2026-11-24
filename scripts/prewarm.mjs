@@ -7,6 +7,8 @@ const PRIORITY_PATHS = [
   "/",
   "/vip",
   "/escorts-in",
+  "/spas",
+  "/escorts-agency",
   "/directory",
   "/api/profiles",
   "/escorts-in/kampala",

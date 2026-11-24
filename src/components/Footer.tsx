@@ -30,6 +30,15 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-col items-center md:items-start space-y-4">
+            <h4 className="font-bold text-lg text-primary">Browse by Type</h4>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-gray-400 text-center md:text-left">
+              <Link prefetch={false} href="/escorts-in" className="hover:text-pink-500 transition-colors">Escorts</Link>
+              <Link prefetch={false} href="/spas" className="hover:text-pink-500 transition-colors">Spas</Link>
+              <Link prefetch={false} href="/escorts-agency" className="col-span-2 hover:text-pink-500 transition-colors">Escort Agencies</Link>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center md:items-start space-y-4">
             <h4 className="font-bold text-lg text-primary">Connect With Us</h4>
             <div className="flex space-x-6">
               {/* X / Twitter */}

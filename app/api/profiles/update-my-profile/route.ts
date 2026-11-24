@@ -87,6 +87,8 @@ export async function POST(req: Request) {
       revalidateTag("profiles");
       revalidatePath("/", "layout");
       revalidatePath("/api/profiles");
+      revalidatePath("/spas");
+      revalidatePath("/escorts-agency");
       revalidatePath("/sitemap.xml");
       const profileSlug = slugify(updates.name);
       if (profileSlug) revalidatePath(`/profile/${profileSlug}`);

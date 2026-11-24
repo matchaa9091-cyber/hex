@@ -3,6 +3,7 @@ import { mockProfiles } from "@/data/mockProfiles";
 import { staticProfiles } from "@/data/staticProfiles";
 import { slugify } from "@/lib/utils";
 import { matchProfilesByLocation } from '@/lib/locationMatcher';
+import { normalizeProfileType } from '@/lib/profile-type';
 import { cache } from 'react';
 
 // Set this to true ONLY if you want to bypass Supabase entirely and use static data
@@ -84,7 +85,12 @@ function transformUrl(url: string | null | undefined): string {
 /**
  * Pre-filtered active (non-archived) static profiles for instant zero-CPU access.
  */
-const ACTIVE_STATIC_PROFILES = staticProfiles.filter(p => !p.isArchived);
+const ACTIVE_STATIC_PROFILES = staticProfiles
+  .filter(p => !p.isArchived)
+  .map((profile) => ({
+    ...profile,
+    profileType: normalizeProfileType(profile.profileType, profile),
+  }));
 
 function getActiveStaticProfiles() {
   return ACTIVE_STATIC_PROFILES;
@@ -123,6 +129,7 @@ function mapDbProfile(p: any): ProfileType {
     isAd: Boolean(p.is_ad || hasAdImgs),
     isVerified: Boolean(p.is_verified),
     adImages,
+    profileType: normalizeProfileType(p.profile_type, { name: p.name, isAd: Boolean(p.is_ad || hasAdImgs), adImages }),
     createdAt: p.created_at ?? undefined,
     updatedAt: p.updated_at ?? undefined,
   };
@@ -224,6 +231,7 @@ export async function fetchAllProfiles(seed?: string, fresh = false): Promise<Pr
           images: Array.isArray(p.images) ? p.images.map(transformUrl) : [],
           videos: Array.isArray(p.videos) ? p.videos.map(transformUrl) : [],
           adImages: Array.isArray(p.adImages) ? p.adImages.map(transformUrl) : [],
+          profileType: normalizeProfileType(p.profileType ?? p.profile_type, p),
         }));
         return seed ? sortAndShuffleProfiles(mapped, seed) : mapped;
       }

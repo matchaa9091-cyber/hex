@@ -4,6 +4,8 @@ import { fetchAllProfiles } from '@/data/allProfiles';
 import { CITY_AREAS, KAMPALA_AREAS } from '@/lib/locationMatcher';
 import { CITY_SEO } from '@/data/locationSeo';
 import { CATEGORY_SLUGS, categoryPath } from '@/data/categorySeo';
+import { getProfileType } from '@/lib/profile-type';
+import type { ProfileCategoryType } from '@/types/profile';
 
 // Render on every request so profile edits/new profiles are reflected in
 // lastmod immediately. The worker edge cache (keyed by DO generation) still
@@ -22,6 +24,8 @@ const STATIC_LASTMOD = {
   becomeEscort: '2026-11-10T00:00:00.000Z',
   vip: '2026-11-17T00:00:00.000Z',
   escortsIn: '2026-11-17T00:00:00.000Z',
+  spas: '2026-11-24T00:00:00.000Z',
+  agencies: '2026-11-24T00:00:00.000Z',
   categories: '2026-11-17T00:00:00.000Z',
   guides: '2026-11-17T00:00:00.000Z',
   priceGuide: '2026-11-17T00:00:00.000Z',
@@ -88,6 +92,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const profileDrivenLastMod = (fixed: string) =>
     new Date(later(fixed, new Date(latestProfileChange).toISOString()));
 
+  // The new entity pages are backed by durable profile types. Move their
+  // lastmod only when a profile of that type is added or edited.
+  const profileTypeLastMod = (type: ProfileCategoryType, fixed: string) => {
+    const newest = activeProfiles
+      .filter((p) => getProfileType(p) === type)
+      .reduce((latest, p) => {
+        const ms = toMs(p.updatedAt || p.createdAt);
+        return ms > latest ? ms : latest;
+      }, 0);
+    return new Date(later(fixed, new Date(newest).toISOString()));
+  };
+
   // Static Pages
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/`, lastModified: profileDrivenLastMod(STATIC_LASTMOD.home), changeFrequency: 'daily', priority: 1 },
@@ -96,6 +112,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/become-escort`, lastModified: new Date(STATIC_LASTMOD.becomeEscort), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/vip`, lastModified: profileDrivenLastMod(STATIC_LASTMOD.vip), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE_URL}/escorts-in`, lastModified: profileDrivenLastMod(STATIC_LASTMOD.escortsIn), changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${BASE_URL}/spas`, lastModified: profileTypeLastMod('spa', STATIC_LASTMOD.spas), changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${BASE_URL}/escorts-agency`, lastModified: profileTypeLastMod('agency', STATIC_LASTMOD.agencies), changeFrequency: 'weekly', priority: 0.85 },
     { url: `${BASE_URL}/directory`, lastModified: new Date(STATIC_LASTMOD.guides), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE_URL}/guides`, lastModified: new Date(STATIC_LASTMOD.guides), changeFrequency: 'monthly', priority: 0.8 },
     ...['kampala-by-neighbourhood', 'entebbe-airport-stopover', 'jinja-weekend', 'safe-booking-checklist'].map((slug) => ({

@@ -5,6 +5,7 @@ import { CITY_AREAS, KAMPALA_AREAS } from "@/lib/locationMatcher";
 import { CATEGORY_SLUGS, categoryPath, getCategorySeo } from "@/data/categorySeo";
 import { slugify } from "@/lib/utils";
 import { GUIDES } from "@/data/guides";
+import { PROFILE_TYPE_OPTIONS, PROFILE_TYPE_PAGES } from "@/lib/profile-type";
 
 // Render fresh so new profiles appear in the directory immediately. The worker
 // edge cache (keyed by the DO generation) absorbs repeat traffic.
@@ -83,7 +84,17 @@ export default async function DirectoryPage() {
     }))
   );
 
+  const profileTypeLinks = PROFILE_TYPE_OPTIONS.map((option) => ({
+    label: PROFILE_TYPE_PAGES[option.value].breadcrumb,
+    href: PROFILE_TYPE_PAGES[option.value].path,
+  }));
+
   const sections = [
+    {
+      title: "Profile types",
+      intro: "Browse independent escorts, spas and escort agencies as separate verified listings.",
+      links: profileTypeLinks,
+    },
     {
       title: `All verified profiles (${profiles.length})`,
       intro: "Every active profile in the directory, with a direct link to the full profile page.",
@@ -167,6 +178,9 @@ export default async function DirectoryPage() {
             <Link href="/reviews" prefetch={false} className="text-pink-300 hover:underline">Reviews &amp; trust</Link>
             <Link href="/faq" prefetch={false} className="text-pink-300 hover:underline">FAQ</Link>
             <Link href="/escorts-in" prefetch={false} className="text-pink-300 hover:underline">Location hub</Link>
+            {profileTypeLinks.map((link) => (
+              <Link key={link.href} href={link.href} prefetch={false} className="text-pink-300 hover:underline">{link.label}</Link>
+            ))}
           </div>
         </div>
       </div>

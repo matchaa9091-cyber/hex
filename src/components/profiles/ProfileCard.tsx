@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn, getMediaUrl, slugify } from "@/lib/utils";
+import { getProfileType } from "@/lib/profile-type";
 import { ProfileType } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import { usePhoneHandler } from "@/hooks/use-phone-handler";
@@ -41,10 +42,18 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
     setImgSrc("/placeholder.svg");
   };
 
-  // Spa detection
-  const isSpa = (profile.name || '').toLowerCase().includes('spa')
-    || Boolean(profile.isAd)
-    || (Array.isArray(profile.adImages) && profile.adImages.length > 0);
+  // Durable type from the admin selector, with legacy fallback for unsaved rows.
+  const profileType = getProfileType(profile);
+  const typeLabel =
+    profileType === "spa"
+      ? "Featured Spa"
+      : profileType === "agency"
+        ? "Escort Agency"
+        : profile.isBoosted
+          ? "🔥 Recommended"
+          : profile.isPinned
+            ? "VIP Call Girl"
+            : "Verified Hookup";
 
   const phoneNumber = profile.phone || "";
   const waNumber = toWhatsAppNumber(profile.whatsapp || phoneNumber);
@@ -115,7 +124,11 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
               <div className="w-full h-full overflow-hidden">
                 <Image
                   src={imgSrc}
-                  alt={`${profile.name} - verified sexy call girl and erotic companion in ${profile.location} - Hex Escorts UG`}
+                  alt={
+                    profileType === "escort"
+                      ? `${profile.name} - verified sexy call girl and erotic companion in ${profile.location} - Hex Escorts UG`
+                      : `${profile.name} - verified ${profileType === "spa" ? "spa" : "escort agency"} in ${profile.location} - Hex Escorts UG`
+                  }
                   className="w-full h-full object-cover"
                   priority={priority}
                   width={300}
@@ -134,7 +147,7 @@ function ProfileCardComponent({ profile, featured = false, priority = false }: P
                   <span className="truncate">{profile.location}</span>
                 </div>
                 <p className="text-[7px] sm:text-[8px] text-pink-500/80 font-bold uppercase tracking-widest">
-                  {isSpa ? "Featured Spa" : profile.isBoosted ? "🔥 Recommended" : profile.isPinned ? "VIP Call Girl" : "Verified Hookup"}
+                  {typeLabel}
                 </p>
               </div>
             </div>

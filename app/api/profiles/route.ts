@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { slugify } from "@/lib/utils";
+import { normalizeProfileType } from "@/lib/profile-type";
 
 const ACCOUNT_ID = process.env.CLOUDFLARE_D1_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID || "b07234f65853d0f9f8e6fa1896cf06db";
 const DB_ID = process.env.CLOUDFLARE_D1_DATABASE_ID || "9914bf44-9661-4a24-903f-d49c73d6b1fe";
@@ -56,37 +57,44 @@ export async function GET(req: Request) {
       : "SELECT * FROM profiles WHERE is_archived = 0 ORDER BY is_boosted DESC, is_pinned DESC, created_at DESC;";
 
     const results = await executeD1Query(sql);
-    const dbProfiles = results.map((p: any) => ({
-      id: String(p.id),
-      name: p.name,
-      age: p.age ?? undefined,
-      height: p.height ?? undefined,
-      bodyType: p.body_type ?? undefined,
-      complexion: p.complexion ?? undefined,
-      location: p.location,
-      rating: Number(p.rating) || 4.5,
-      profileImage: resolveImageUrl(p.profile_image),
-      images: resolveImageArray(p.images),
-      videos: typeof p.videos === "string" ? JSON.parse(p.videos) : (p.videos || []),
-      shortBio: p.short_bio || "",
-      description: p.description || "",
-      phone: p.phone ?? undefined,
-      whatsapp: p.whatsapp ?? undefined,
-      email: p.email ?? undefined,
-      instagram: p.instagram ?? undefined,
-      services: typeof p.services === "string" ? JSON.parse(p.services) : (p.services || []),
-      isPinned: Boolean(p.is_pinned),
-      isBoosted: Boolean(p.is_boosted),
-      isArchived: Boolean(p.is_archived),
-      isVip: Boolean(p.is_vip),
-      isPremium: Boolean(p.is_premium),
-      isAd: Boolean(p.is_ad || (p.ad_images && p.ad_images !== "[]" && p.ad_images !== "" && p.ad_images !== "null")),
-      isVerified: Boolean(p.is_verified),
-      adImages: resolveImageArray(p.ad_images),
-      createdAt: p.created_at ?? undefined,
-      updatedAt: p.updated_at ?? undefined,
-      ...(isAdmin ? { passcode: p.passcode || "" } : {}),
-    }));
+    const dbProfiles = results.map((p: any) => {
+      const images = resolveImageArray(p.images);
+      const adImages = resolveImageArray(p.ad_images);
+      const isAd = Boolean(p.is_ad || adImages.length > 0);
+
+      return {
+        id: String(p.id),
+        name: p.name,
+        age: p.age ?? undefined,
+        height: p.height ?? undefined,
+        bodyType: p.body_type ?? undefined,
+        complexion: p.complexion ?? undefined,
+        location: p.location,
+        rating: Number(p.rating) || 4.5,
+        profileImage: resolveImageUrl(p.profile_image),
+        images,
+        videos: typeof p.videos === "string" ? JSON.parse(p.videos) : (p.videos || []),
+        shortBio: p.short_bio || "",
+        description: p.description || "",
+        phone: p.phone ?? undefined,
+        whatsapp: p.whatsapp ?? undefined,
+        email: p.email ?? undefined,
+        instagram: p.instagram ?? undefined,
+        services: typeof p.services === "string" ? JSON.parse(p.services) : (p.services || []),
+        isPinned: Boolean(p.is_pinned),
+        isBoosted: Boolean(p.is_boosted),
+        isArchived: Boolean(p.is_archived),
+        isVip: Boolean(p.is_vip),
+        isPremium: Boolean(p.is_premium),
+        isAd,
+        isVerified: Boolean(p.is_verified),
+        adImages,
+        profileType: normalizeProfileType(p.profile_type, { name: p.name, isAd, adImages }),
+        createdAt: p.created_at ?? undefined,
+        updatedAt: p.updated_at ?? undefined,
+        ...(isAdmin ? { passcode: p.passcode || "" } : {}),
+      };
+    });
     return NextResponse.json(dbProfiles, {
       headers: {
         "Cache-Control": isAdmin
@@ -115,8 +123,8 @@ export async function POST(req: Request) {
         id, name, age, height, body_type, complexion, location, rating,
         profile_image, images, videos, short_bio, description, phone, whatsapp,
         email, instagram, services, is_pinned, is_archived, is_vip, is_premium,
-        is_ad, is_verified, ad_images, is_boosted, passcode, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+        is_ad, profile_type, is_verified, ad_images, is_boosted, passcode, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         age = excluded.age,
@@ -140,6 +148,7 @@ export async function POST(req: Request) {
         is_vip = excluded.is_vip,
         is_premium = excluded.is_premium,
         is_ad = excluded.is_ad,
+        profile_type = excluded.profile_type,
         is_verified = excluded.is_verified,
         ad_images = excluded.ad_images,
         is_boosted = excluded.is_boosted,
@@ -171,6 +180,11 @@ export async function POST(req: Request) {
       toBit(body.is_vip ?? body.isVip),
       toBit(body.is_premium ?? body.isPremium),
       toBit(body.is_ad ?? body.isAd ?? ((body.ad_images || body.adImages)?.length > 0)),
+      normalizeProfileType(body.profile_type ?? body.profileType, {
+        name: body.name,
+        isAd: body.is_ad ?? body.isAd ?? ((body.ad_images || body.adImages)?.length > 0),
+        adImages: body.ad_images || body.adImages || [],
+      }),
       toBit(body.is_verified ?? body.isVerified),
       JSON.stringify(body.ad_images || body.adImages || []),
       toBit(body.is_boosted ?? body.isBoosted),
@@ -185,6 +199,8 @@ export async function POST(req: Request) {
       revalidatePath("/", "layout");
       revalidatePath("/api/profiles");
       revalidatePath("/vip");
+      revalidatePath("/spas");
+      revalidatePath("/escorts-agency");
       revalidatePath("/sitemap.xml");
       const profileSlug = slugify(body.name);
       if (profileSlug) revalidatePath(`/profile/${profileSlug}`);
@@ -250,6 +266,8 @@ export async function PUT(req: Request) {
         revalidatePath("/", "layout");
         revalidatePath("/api/profiles");
         revalidatePath("/vip");
+        revalidatePath("/spas");
+        revalidatePath("/escorts-agency");
         revalidatePath("/sitemap.xml");
         const profileSlug = slugify(profileName);
         if (profileSlug) revalidatePath(`/profile/${profileSlug}`);
@@ -309,6 +327,8 @@ export async function DELETE(req: Request) {
       revalidatePath("/", "layout");
       revalidatePath("/api/profiles");
       revalidatePath("/vip");
+      revalidatePath("/spas");
+      revalidatePath("/escorts-agency");
       revalidatePath("/sitemap.xml");
       const profileSlug = slugify(profileName);
       if (profileSlug) revalidatePath(`/profile/${profileSlug}`);

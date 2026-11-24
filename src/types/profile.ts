@@ -1,3 +1,5 @@
+export type ProfileCategoryType = "escort" | "spa" | "agency";
+
 export interface ReviewType {
   name: string;
   rating: number;
@@ -32,6 +34,7 @@ export interface ProfileType {
   isAd?: boolean;
   isVerified?: boolean;
   adImages?: string[];
+  profileType?: ProfileCategoryType | null;
   passcode?: string;
   createdAt?: string;
   updatedAt?: string;

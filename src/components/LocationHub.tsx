@@ -68,6 +68,11 @@ const LocationHub = () => {
         <Link prefetch={false} href="/massage-escorts-in/kampala" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Massage Kampala</Link>
       </div>
       <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 border-t border-gray-900/30 pt-4">
+        <Link prefetch={false} href="/escorts-in" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Escorts in Uganda</Link>
+        <Link prefetch={false} href="/spas" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Spas in Uganda</Link>
+        <Link prefetch={false} href="/escorts-agency" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Escort Agencies in Uganda</Link>
+      </div>
+      <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 border-t border-gray-900/30 pt-4">
         <Link prefetch={false} href="/directory" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Complete directory</Link>
         <Link prefetch={false} href="/guides" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Travel &amp; booking guides</Link>
         <Link prefetch={false} href="/guides/kampala-by-neighbourhood" className="text-gray-500 hover:text-pink-400 transition-colors text-[10px] font-medium">Kampala neighbourhoods</Link>

@@ -31,7 +31,11 @@ export function getListingProfiles(
   return category ? matched.filter((profile) => matchesCategory(profile, category)) : matched;
 }
 
-export function buildItemListSchema(profiles: ProfileType[], name: string) {
+export function buildItemListSchema(
+  profiles: ProfileType[],
+  name: string,
+  schemaType: "Person" | "HealthClub" | "Organization" = "Person"
+) {
   const items = profiles.filter((profile) => profile.name).slice(0, MAX_ITEM_LIST_ENTRIES);
   if (items.length === 0) return null;
 
@@ -44,7 +48,7 @@ export function buildItemListSchema(profiles: ProfileType[], name: string) {
       "@type": "ListItem",
       "position": index + 1,
       "item": {
-        "@type": "Person",
+        "@type": schemaType,
         "name": profile.name,
         "url": `${BASE_URL}/profile/${slugify(profile.name)}`,
         ...(profile.profileImage ? { image: profile.profileImage } : {}),
