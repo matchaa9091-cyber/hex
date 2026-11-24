@@ -3,6 +3,7 @@
 import { ProfileType } from "@/types/profile";
 import Link from "next/link";
 import { slugify } from "@/lib/utils";
+import { getProfileType } from "@/lib/profile-type";
 import { Sparkles, MapPin, ArrowRight, MessageCircle, Flame } from "lucide-react";
 import { trackContact } from "@/lib/track-contact";
 
@@ -66,12 +67,18 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
       : (p.images && p.images.length > 0 ? p.images : (p.profileImage ? [p.profileImage] : []));
 
     const waNumber = toWhatsAppNumber(p.whatsapp || p.phone);
+    const profileType = getProfileType(p);
+    const slug = slugify(p.name || String(p.id));
     return rawImages.map((img, imgIdx) => ({
       id: `${p.id}-${imgIdx}`,
       profileId: p.id,
-      name: p.name || "Featured Spa",
+      name: p.name || (profileType === "agency" ? "Escort Agency" : profileType === "spa" ? "Featured Spa" : "Featured Escort"),
       image: resolveImg(img),
-      slug: slugify(p.name || String(p.id)),
+      slug,
+      profileType,
+      viewLabel: profileType === "agency" ? "View Escorts" : profileType === "spa" ? "View Spa" : "View Profile",
+      featuredLabel: profileType === "agency" ? "FEATURED AGENCY" : profileType === "spa" ? "FEATURED SPA" : "FEATURED ESCORT",
+      topLabel: profileType === "agency" ? "TOP RECOMMENDED AGENCY" : profileType === "spa" ? "TOP RECOMMENDED SPA" : "TOP RECOMMENDED ESCORT",
       location: p.location || "Kampala",
       description: p.description || p.shortBio || "Experience premier relaxation, skilled massage therapies, and royal pampering in a serene private setting.",
       services: p.services && p.services.length > 0 ? p.services : ["Full Body Massage", "Sensual Care", "Private Suites"],
@@ -111,11 +118,11 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
               <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none flex flex-col justify-end p-3 lg:p-4">
                 {item.isBoosted ? (
                   <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 mb-0.5 flex items-center gap-1 bg-gradient-to-r from-red-600 to-pink-600 px-2 py-0.5 rounded-full w-max shadow-lg shadow-pink-600/30 border border-amber-300/40">
-                    <Flame className="w-3 h-3 fill-amber-300 text-amber-300 animate-pulse" /> TOP RECOMMENDED SPA
+                    <Flame className="w-3 h-3 fill-amber-300 text-amber-300 animate-pulse" /> {item.topLabel}
                   </span>
                 ) : (
                   <span className="text-[10px] font-black uppercase text-pink-400 mb-0.5 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" /> FEATURED SPA
+                    <Sparkles className="w-3 h-3" /> {item.featuredLabel}
                   </span>
                 )}
                 <span className="text-white font-bold text-sm lg:text-base drop-shadow-md group-hover:text-pink-300 transition-colors">
@@ -176,7 +183,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                       </span>
                     ) : (
                       <span className="absolute top-2 left-2 z-20 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-pink-600 text-white rounded-full shadow-md flex items-center gap-1">
-                        <Sparkles className="w-2.5 h-2.5" /> FEATURED SPA
+                        <Sparkles className="w-2.5 h-2.5" /> {item.featuredLabel}
                       </span>
                     )}
                     <span className="absolute top-2 right-2 z-20 px-2 py-0.5 text-[9px] font-bold text-gray-200 bg-black/60 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-1">
@@ -196,7 +203,7 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                       </p>
                     </Link>
 
-                    {/* Action Buttons Row: WhatsApp Left, View Spa Right */}
+                    {/* Action Buttons Row: WhatsApp Left, type-aware view button right */}
                     <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-gray-900">
                       {/* Left Side: Green WhatsApp Button */}
                       {item.waUrl ? (
@@ -221,12 +228,12 @@ export const AdCarousel = ({ profiles }: AdCarouselProps) => {
                         <div className="flex-1" />
                       )}
 
-                      {/* Right Side: Pink View Spa Button */}
+                      {/* Right Side: Pink type-aware view button (View Spa only for spas) */}
                       <Link
                         href={`/profile/${item.slug}`}
                         className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 active:scale-95 text-white text-[11px] font-bold rounded-xl shadow-md transition-all"
                       >
-                        View Spa <ArrowRight className="w-3 h-3" />
+                        {item.viewLabel} <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>
                   </div>

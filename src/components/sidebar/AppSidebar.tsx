@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MapPin, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send, Edit3, Flame, Info } from "lucide-react";
+import { Home, MapPin, HelpCircle, Menu, ChevronDown, ChevronRight, UserPlus, Star, Send, Edit3, Flame, Info, Sparkles, Building2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
@@ -71,6 +71,8 @@ interface MainItem {
 const mainItems: MainItem[] = [
   { title: "Home", path: "/", icon: Home },
   { title: "VIP Escorts", path: "/vip", icon: Star },
+  { title: "Spas", path: "/spas", icon: Sparkles },
+  { title: "Escort Agencies", path: "/escorts-agency", icon: Building2 },
   { title: "Locations", path: "/escorts-in", icon: MapPin, children: locations },
   { title: "About", path: "/about", icon: Info },
   { title: "FAQ", path: "/faq", icon: HelpCircle },
@@ -281,7 +283,7 @@ export function AppSidebar() {
           <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-background border-l border-gray-800">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Menu</h2>
+                <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
               </div>
               <nav className="space-y-2">
                 {mainItems.map((item) => (
