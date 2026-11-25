@@ -32,12 +32,13 @@ function shuffleList<T>(array: T[]): T[] {
 }
 
 export const AdCarousel = ({ profiles }: AdCarouselProps) => {
-  // Select profiles marked as ads, or having adImages, or identified as a spa
+  // Select profiles explicitly promoted as ads or saved as spas. Name substrings
+  // must not promote a profile: "Spaicy" is an escort, not a spa banner.
   const adProfiles = profiles.filter(p => {
     const hasAdImgs = Array.isArray(p.adImages) && p.adImages.length > 0;
     const isExplicitAd = Boolean(p.isAd);
-    const isSpa = (p.name || '').toLowerCase().includes('spa');
-    return hasAdImgs || isExplicitAd || isSpa;
+    const isSavedSpa = getProfileType(p) === "spa";
+    return hasAdImgs || isExplicitAd || isSavedSpa;
   });
 
   // Separate boosted ads (boosted spas/ads) and regular ads
