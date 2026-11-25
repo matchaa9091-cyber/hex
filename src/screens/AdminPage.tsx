@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone, KeyRound, Flame, BarChart3 } from "lucide-react";
+import { Trash2, Plus, LogOut, Video, Star, Archive, ArchiveRestore, ClipboardList, Megaphone, KeyRound, Flame, BarChart3, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { mockProfiles } from "@/data/mockProfiles";
@@ -78,6 +78,11 @@ interface EditProfile {
   passcode?: string;
 }
 
+const normalizePhoneForSearch = (value: string | null | undefined) => {
+  const digits = (value || "").replace(/\D/g, "");
+  return digits.length > 9 ? digits.slice(-9) : digits;
+};
+
 const getInitialDbProfiles = (): DbProfile[] => {
   return staticProfiles.map((p) => ({
     id: p.id,
@@ -122,6 +127,7 @@ const AdminPage = () => {
   const [editingProfile, setEditingProfile] = useState<EditProfile | null>(null);
   const [saving, setSaving] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
+  const [profileSearch, setProfileSearch] = useState("");
   const [uploading, setUploading] = useState(false);
   const [adminTab, setAdminTab] = useState<'profiles' | 'apps' | 'clicks'>('profiles');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -949,6 +955,16 @@ const AdminPage = () => {
   const activeProfiles = profiles.filter(p => !p.is_archived);
   const archivedProfiles = profiles.filter(p => p.is_archived);
   const displayedProfiles = showArchived ? archivedProfiles : activeProfiles;
+  const searchText = profileSearch.trim().toLowerCase();
+  const searchPhone = normalizePhoneForSearch(profileSearch);
+  const isSearching = searchText.length > 0;
+  const searchedProfiles = !isSearching
+    ? displayedProfiles
+    : profiles.filter((p) => {
+        if (p.name.toLowerCase().includes(searchText)) return true;
+        if (!searchPhone) return false;
+        return [p.phone, p.whatsapp].some((value) => normalizePhoneForSearch(value).includes(searchPhone));
+      });
 
   return (
     <div className="container mx-auto px-4 py-6 lg:pl-72">
@@ -1006,6 +1022,22 @@ const AdminPage = () => {
       {/* Profiles Panel */}
       {adminTab === 'profiles' && (
         <>
+      <div className="relative mb-3 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <Input
+          type="search"
+          value={profileSearch}
+          onChange={(e) => setProfileSearch(e.target.value)}
+          placeholder="Search by name or phone..."
+          aria-label="Search profiles by name or phone"
+          className="pl-10"
+        />
+      </div>
+      <p className="text-sm text-muted-foreground mb-4">
+        {isSearching
+          ? `Found ${searchedProfiles.length} ${searchedProfiles.length === 1 ? "profile" : "profiles"} across active and archived.`
+          : "Search active and archived profiles by name, phone, or WhatsApp."}
+      </p>
       <div className="flex gap-2 mb-6">
         <Button
           variant={!showArchived ? "default" : "outline"}
@@ -1025,9 +1057,9 @@ const AdminPage = () => {
       </div>
 
       {/* DB Profiles */}
-      {displayedProfiles.length > 0 ? (
+      {searchedProfiles.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-8">
-          {displayedProfiles.map((p) => (
+          {searchedProfiles.map((p) => (
             <Card key={p.id} className={p.is_archived ? "border-orange-500/40 opacity-75" : ""}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-3">
@@ -1056,6 +1088,12 @@ const AdminPage = () => {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{p.short_bio}</p>
+                {isSearching && (
+                  <p className="text-xs text-muted-foreground mb-3 break-all">
+                    Phone: {p.phone || "—"}
+                    {p.whatsapp && p.whatsapp !== p.phone ? ` · WhatsApp: ${p.whatsapp}` : ""}
+                  </p>
+                )}
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" className="flex-1" onClick={() => setEditingProfile(dbToEdit(p))}>Edit</Button>
                   <Button 
@@ -1117,7 +1155,11 @@ const AdminPage = () => {
         </div>
       ) : (
         <p className="text-muted-foreground text-center py-8">
-          {showArchived ? "No archived profiles." : "No active profiles."}
+          {isSearching
+            ? "No profiles match your search."
+            : showArchived
+              ? "No archived profiles."
+              : "No active profiles."}
         </p>
       )}
 
