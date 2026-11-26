@@ -35,6 +35,9 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
     slugify(p.name) === targetSlug
   ) : undefined) ?? initialProfile;
   const isSpaProfile = Boolean(profile && getProfileType(profile) === "spa");
+  const isAgencyProfile = Boolean(profile && getProfileType(profile) === "agency");
+  const theme = (spaClass: string, agencyClass: string, fallback: string) =>
+    isSpaProfile ? spaClass : isAgencyProfile ? agencyClass : fallback;
 
   const [isManaging, setIsManaging] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -108,7 +111,7 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
   };
 
   return (
-    <div className={`lg:pl-64 relative${isSpaProfile ? " spa-executive-detail" : ""}`}>
+    <div className={`lg:pl-64 relative${theme(" spa-executive-detail", " agency-executive-detail", "")}`}>
       <div className="lg:hidden h-16"></div>
       
       <div className="container mx-auto px-4 py-4">
@@ -118,9 +121,11 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
             variant="default"
             size="sm"
             asChild
-            className={`font-semibold shadow-md ${
-              isSpaProfile ? "spa-executive-action" : "bg-pink-600 hover:bg-pink-700 text-white"
-            }`}
+            className={`font-semibold shadow-md ${theme(
+              "spa-executive-action",
+              "agency-executive-action",
+              "bg-pink-600 hover:bg-pink-700 text-white"
+            )}`}
           >
             <Link href="/">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -132,11 +137,11 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
             <Button
               onClick={() => setShowEditModal(true)}
               size="sm"
-              className={`font-bold shadow-md flex items-center gap-1.5 ${
-                isSpaProfile
-                  ? "spa-executive-action-strong"
-                  : "bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 hover:opacity-95 text-white"
-              }`}
+              className={`font-bold shadow-md flex items-center gap-1.5 ${theme(
+                "spa-executive-action-strong",
+                "agency-executive-action-strong",
+                "bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 hover:opacity-95 text-white"
+              )}`}
             >
               <Edit3 className="h-4 w-4" />
               Edit Profile
@@ -146,11 +151,11 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
 
         {/* Profile Owner Management Banner */}
         {isManaging && (
-          <div className={`mb-6 p-4 rounded-2xl border-2 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in ${
-            isSpaProfile
-              ? "spa-executive-owner-banner"
-              : "bg-gradient-to-r from-pink-950/70 via-purple-950/50 to-gray-900 border-pink-500/50 shadow-xl shadow-pink-950/40"
-          }`}>
+          <div className={`mb-6 p-4 rounded-2xl border-2 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in ${theme(
+            "spa-executive-owner-banner",
+            "agency-executive-owner-banner",
+            "bg-gradient-to-r from-pink-950/70 via-purple-950/50 to-gray-900 border-pink-500/50 shadow-xl shadow-pink-950/40"
+          )}`}>
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <div className="w-11 h-11 rounded-2xl bg-pink-500/20 border border-pink-500/50 flex items-center justify-center text-pink-400 shrink-0 shadow-[0_0_15px_rgba(236,72,153,0.3)]">
                 <KeyRound className="h-6 w-6" />
@@ -169,9 +174,11 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
             </div>
             <Button
               onClick={() => setShowEditModal(true)}
-              className={`w-full sm:w-auto font-black px-6 py-3 rounded-xl flex items-center justify-center gap-2 shrink-0 text-sm ${
-                isSpaProfile ? "spa-executive-action-strong" : "bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 hover:opacity-95 text-white shadow-lg shadow-pink-600/30"
-              }`}
+              className={`w-full sm:w-auto font-black px-6 py-3 rounded-xl flex items-center justify-center gap-2 shrink-0 text-sm ${theme(
+                "spa-executive-action-strong",
+                "agency-executive-action-strong",
+                "bg-gradient-to-r from-pink-600 via-rose-600 to-pink-500 hover:opacity-95 text-white shadow-lg shadow-pink-600/30"
+              )}`}
             >
               <Edit3 className="h-4 w-4" /> Edit Profile
             </Button>
@@ -205,7 +212,7 @@ const ProfileDetailPage = ({ profileId, initialProfile }: ProfileDetailPageProps
 
         {/* Similar Profiles Section for SEO Internal Linking */}
         <div className="mt-12 pt-8 border-t border-gray-800">
-          <h2 className={`text-xl font-bold mb-6 ${isSpaProfile ? "spa-executive-heading" : "text-pink-500"}`}>More Similar Sexy Girls in {profile.location}</h2>
+          <h2 className={`text-xl font-bold mb-6 ${theme("spa-executive-heading", "agency-executive-heading", "text-pink-500")}`}>More Similar Sexy Girls in {profile.location}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {allProfiles
               .filter(p => p.id !== profile.id && (p.location === profile.location || (p.location && profile.location && p.location.toLowerCase().includes(profile.location.toLowerCase()))))

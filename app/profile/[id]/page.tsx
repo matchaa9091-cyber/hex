@@ -124,7 +124,13 @@ export default async function Page({ params }: Props) {
 
   return (
     <main
-      className={`${seo?.profileType === "spa" ? "spa-executive-page" : "bg-black"} min-h-screen pt-4 pb-8`}
+      className={`${
+        seo?.profileType === "spa"
+          ? "spa-executive-page"
+          : seo?.profileType === "agency"
+            ? "agency-executive-page"
+            : "bg-black"
+      } min-h-screen pt-4 pb-8`}
     >
       <div className="container mx-auto px-4">
         <Breadcrumbs items={breadcrumbItems} />

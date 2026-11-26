@@ -23,7 +23,7 @@ export default async function Page() {
   const itemListSchema = buildItemListSchema(agencyProfiles, page.schemaName, page.schemaType);
 
   return (
-    <main className="min-h-screen bg-black pt-4 pb-8">
+    <main className="agency-executive-page min-h-screen pt-4 pb-8">
       <div className="container mx-auto px-4">
         <Breadcrumbs items={[{ label: page.breadcrumb, href: page.path, current: true }]} />
         {itemListSchema && (

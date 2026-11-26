@@ -543,3 +543,189 @@ body:has(.spa-executive-page) footer .text-gray-500 {
 body:has(.spa-executive-page) footer .text-primary {
   color: #b08b43 !important;
 }
+
+/* Dark rose executive theme — scoped to escort agency routes only */
+.agency-executive-page {
+  --background: 330 33% 6%;
+  --foreground: 330 42% 86%;
+  --card: 330 43% 7%;
+  --card-foreground: 330 42% 84%;
+  --popover: 330 43% 7%;
+  --popover-foreground: 330 42% 84%;
+  --primary: 333 56% 31%;
+  --primary-foreground: 330 45% 92%;
+  --secondary: 329 45% 18%;
+  --secondary-foreground: 330 42% 84%;
+  --muted: 328 28% 10%;
+  --muted-foreground: 330 25% 65%;
+  --accent: 333 55% 32%;
+  --accent-foreground: 330 45% 92%;
+  --border: 332 45% 28%;
+  --input: 330 35% 22%;
+  --ring: 333 55% 36%;
+
+  color: #d99ab8;
+  background-color: #0b080b;
+  background-image:
+    radial-gradient(circle at 8% 0%, rgba(180, 45, 105, 0.2) 0, rgba(180, 45, 105, 0) 38%),
+    radial-gradient(circle at 92% 95%, rgba(44, 12, 28, 0.58) 0, rgba(44, 12, 28, 0) 38%),
+    linear-gradient(135deg, #070507 0%, #190c14 52%, #2c1022 100%);
+}
+
+.agency-executive-surface {
+  background: transparent !important;
+}
+
+.agency-executive-hero {
+  border-color: rgba(196, 72, 132, 0.45) !important;
+  background: linear-gradient(135deg, rgba(16, 7, 12, 0.96), rgba(46, 13, 29, 0.92)) !important;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(196, 72, 132, 0.18);
+}
+
+.agency-executive-title,
+.agency-executive-page .text-gradient-primary {
+  background-image: linear-gradient(90deg, #d99ab8 0%, #8a2b58 50%, #c77698 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.agency-executive-lede,
+.agency-executive-empty {
+  color: #cfa2b6 !important;
+}
+
+.agency-executive-panel {
+  border-color: rgba(196, 72, 132, 0.38) !important;
+  background: rgba(14, 6, 11, 0.9) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.42);
+}
+
+.agency-executive-heading,
+.agency-executive-page .text-pink-500,
+.agency-executive-page [class~="text-pink-500/80"] {
+  color: #d99ab8 !important;
+}
+
+.agency-executive-page .text-gray-400 {
+  color: #b794a4 !important;
+}
+
+.agency-executive-pill-active {
+  border-color: #c46a94 !important;
+  background: linear-gradient(135deg, #8a2b58, #4d0f2c) !important;
+  color: #f0c9dc !important;
+}
+
+.agency-executive-pill {
+  border-color: rgba(196, 72, 132, 0.34) !important;
+  background: rgba(14, 6, 11, 0.78) !important;
+  color: #c49aae !important;
+}
+
+.agency-executive-pill:hover {
+  border-color: #c46a94 !important;
+  color: #e6b9d0 !important;
+}
+
+.agency-executive-page nav[aria-label="Breadcrumb"],
+.agency-executive-page nav[aria-label="Breadcrumb"] .text-gray-500,
+.agency-executive-page nav[aria-label="Breadcrumb"] .text-gray-600,
+.agency-executive-page nav[aria-label="Breadcrumb"] a,
+.agency-executive-page nav[aria-label="Breadcrumb"] .text-primary {
+  color: #a4597d !important;
+}
+
+.agency-executive-page nav[aria-label="Breadcrumb"] a:hover {
+  color: #cf87a9 !important;
+}
+
+.agency-executive-page .bg-card,
+.agency-executive-detail .bg-card {
+  background-color: rgba(22, 10, 17, 0.96) !important;
+  border-color: rgba(196, 72, 132, 0.4) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45) !important;
+}
+
+.agency-executive-page .border-gray-800,
+.agency-executive-detail .border-gray-700,
+.agency-executive-detail .border-gray-800 {
+  border-color: rgba(196, 72, 132, 0.3) !important;
+}
+
+.agency-executive-page .bg-primary,
+.agency-executive-page .agency-executive-action,
+.agency-executive-page .agency-executive-action-strong,
+.agency-executive-detail .agency-executive-action,
+.agency-executive-detail .agency-executive-action-strong {
+  background-color: #7a244e !important;
+  background-image: linear-gradient(135deg, #8a2b58, #4d0f2c) !important;
+  color: #f0c9dc !important;
+  border: 1px solid rgba(196, 72, 132, 0.58) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.agency-executive-page .bg-primary:hover,
+.agency-executive-page .agency-executive-action:hover,
+.agency-executive-page .agency-executive-action-strong:hover,
+.agency-executive-detail .agency-executive-action:hover,
+.agency-executive-detail .agency-executive-action-strong:hover {
+  background-color: #8a2b58 !important;
+}
+
+.agency-executive-owner-banner {
+  border-color: rgba(196, 72, 132, 0.45) !important;
+  background: linear-gradient(90deg, rgba(16, 7, 12, 0.96), rgba(46, 13, 29, 0.92)) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45) !important;
+  color: #d99ab8 !important;
+}
+
+.agency-executive-owner-banner .text-white,
+.agency-executive-owner-banner .text-gray-300 {
+  color: #f0c9dc !important;
+}
+
+.agency-executive-detail .text-pink-500,
+.agency-executive-detail .text-pink-400,
+.agency-executive-detail .text-pink-300 {
+  color: #d99ab8 !important;
+}
+
+.agency-executive-detail .bg-pink-600,
+.agency-executive-detail .bg-blue-600 {
+  background-color: #7a244e !important;
+  color: #f0c9dc !important;
+}
+
+.agency-executive-detail [class~="hover:bg-blue-700"]:hover,
+.agency-executive-detail [class~="hover:bg-pink-700"]:hover {
+  background-color: #8a2b58 !important;
+}
+
+.agency-executive-detail [class~="bg-pink-500/20"] {
+  background-color: rgba(196, 72, 132, 0.14) !important;
+}
+
+.agency-executive-detail [class~="border-pink-500/50"],
+.agency-executive-detail [class~="border-pink-500/30"] {
+  border-color: rgba(196, 72, 132, 0.42) !important;
+}
+
+body:has(.agency-executive-page) footer {
+  background-color: #0d070b !important;
+  background-image: linear-gradient(90deg, #070406, #2a0d1d 50%, #070406);
+  border-top-color: rgba(196, 72, 132, 0.3) !important;
+}
+
+body:has(.agency-executive-page) footer .text-gray-400 {
+  color: #a98a99 !important;
+}
+
+body:has(.agency-executive-page) footer .text-gray-500 {
+  color: #8d6277 !important;
+}
+
+body:has(.agency-executive-page) footer .text-primary {
+  color: #c46a94 !important;
+}
