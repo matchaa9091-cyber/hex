@@ -14,16 +14,27 @@ interface ProfileTypePageProps {
 
 const ProfileTypePage = ({ profileType, initialProfiles = [], shuffleSeed }: ProfileTypePageProps) => {
   const page = PROFILE_TYPE_PAGES[profileType];
+  const isSpa = profileType === "spa";
+  const pillClass = (value: ProfileCategoryType) => {
+    if (isSpa) {
+      return value === profileType ? "spa-executive-pill-active" : "spa-executive-pill";
+    }
+    return value === profileType
+      ? "border-pink-500 bg-pink-600 text-white"
+      : "border-gray-800 bg-gray-900 text-gray-300 hover:border-pink-500/40 hover:text-pink-300";
+  };
   const { data: queryProfiles } = useAllProfiles(initialProfiles, shuffleSeed);
   const allProfiles = queryProfiles && queryProfiles.length > 0 ? queryProfiles : initialProfiles;
   const matchingProfiles = allProfiles.filter((profile) => getProfileType(profile) === profileType);
 
   return (
-    <div className="pt-[76px] sm:pt-[84px] lg:pt-6 min-h-screen bg-black">
+    <div className={`pt-[76px] sm:pt-[84px] lg:pt-6 min-h-screen ${isSpa ? "spa-executive-surface" : "bg-black"}`}>
       <div className="container mx-auto px-4">
-        <div className="mb-8 rounded-2xl border border-pink-500/20 bg-gradient-to-b from-pink-500/10 to-transparent p-8 text-center">
-          <h1 className="mb-4 text-3xl font-bold text-pink-500 lg:text-5xl">{page.heading}</h1>
-          <p className="mx-auto max-w-2xl text-gray-400">{page.intro}</p>
+        <div className={`mb-8 rounded-2xl border p-8 text-center ${
+          isSpa ? "spa-executive-hero" : "border-pink-500/20 bg-gradient-to-b from-pink-500/10 to-transparent"
+        }`}>
+          <h1 className={`mb-4 text-3xl font-bold lg:text-5xl ${isSpa ? "spa-executive-title" : "text-pink-500"}`}>{page.heading}</h1>
+          <p className={`mx-auto max-w-2xl ${isSpa ? "spa-executive-lede" : "text-gray-400"}`}>{page.intro}</p>
         </div>
 
         <ProfileGrid
@@ -34,26 +45,22 @@ const ProfileTypePage = ({ profileType, initialProfiles = [], shuffleSeed }: Pro
 
         {allProfiles.length > 0 && matchingProfiles.length === 0 && (
           <div className="py-20 text-center">
-            <p className="text-xl text-pink-500/60">{page.empty}</p>
+            <p className={`text-xl ${isSpa ? "spa-executive-empty" : "text-pink-500/60"}`}>{page.empty}</p>
             <Link href="/directory" prefetch={false} className="mt-4 inline-block text-primary hover:underline">
               Browse the full directory
             </Link>
           </div>
         )}
 
-        <section className="mt-12 rounded-2xl border border-gray-800 bg-gray-950/60 p-6">
-          <h2 className="mb-4 text-lg font-bold text-white">Browse by profile type</h2>
+        <section className={`mt-12 rounded-2xl border p-6 ${isSpa ? "spa-executive-panel" : "border-gray-800 bg-gray-950/60"}`}>
+          <h2 className={`mb-4 text-lg font-bold ${isSpa ? "spa-executive-heading" : "text-white"}`}>Browse by profile type</h2>
           <div className="flex flex-wrap gap-2">
             {PROFILE_TYPE_OPTIONS.map((option) => (
               <Link
                 key={option.value}
                 href={PROFILE_TYPE_PAGES[option.value].path}
                 prefetch={false}
-                className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
-                  option.value === profileType
-                    ? "border-pink-500 bg-pink-600 text-white"
-                    : "border-gray-800 bg-gray-900 text-gray-300 hover:border-pink-500/40 hover:text-pink-300"
-                }`}
+                className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${pillClass(option.value)}`}
               >
                 {option.label}
               </Link>

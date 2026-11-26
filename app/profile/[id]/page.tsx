@@ -123,7 +123,9 @@ export default async function Page({ params }: Props) {
       ];
 
   return (
-    <main className="min-h-screen bg-black pt-4 pb-8">
+    <main
+      className={`${seo?.profileType === "spa" ? "spa-executive-page" : "bg-black"} min-h-screen pt-4 pb-8`}
+    >
       <div className="container mx-auto px-4">
         <Breadcrumbs items={breadcrumbItems} />
         {jsonLd && (
